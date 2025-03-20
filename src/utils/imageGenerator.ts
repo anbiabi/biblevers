@@ -1,5 +1,4 @@
 
-import { jsPDF } from "jspdf";
 import { BibleVerse, gradients } from "../data/bibleVerses";
 import html2canvas from "html2canvas";
 
@@ -25,6 +24,9 @@ export const getRandomVerses = (
   count: number,
   selectedTopics: string[] = []
 ): BibleVerse[] => {
+  // Access the verses from the imported gradients file
+  const bibleVerses = Object.values(BibleVerse) as unknown as BibleVerse[];
+  
   const availableVerses = selectedTopics.length 
     ? bibleVerses.filter(verse => 
         verse.topics.some(topic => selectedTopics.includes(topic))
@@ -41,9 +43,9 @@ export const getRandomVerses = (
   return shuffled.slice(0, count);
 };
 
-export const generatePDF = async (
+export const generateImage = async (
   element: HTMLElement,
-  filename: string = "bible-stickers.pdf"
+  filename: string = "bible-stickers.png"
 ): Promise<void> => {
   try {
     // Create a canvas from the DOM element
@@ -54,30 +56,18 @@ export const generatePDF = async (
       backgroundColor: "white",
     });
 
-    // Calculate the PDF dimensions (A4 is 210 x 297 mm)
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-    });
-
-    // Add the image to the PDF (maintaining aspect ratio)
-    pdf.addImage(
-      imgData,
-      "PNG",
-      0,
-      0,
-      210,
-      297, // A4 dimensions
-      undefined,
-      "FAST"
-    );
-
-    // Save the PDF
-    pdf.save(filename);
+    // Convert canvas to an image and download it
+    const imageUrl = canvas.toDataURL("image/png");
+    
+    // Create a link element to download the image
+    const downloadLink = document.createElement("a");
+    downloadLink.href = imageUrl;
+    downloadLink.download = filename;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   } catch (error) {
-    console.error("Error generating PDF:", error);
+    console.error("Error generating image:", error);
     throw error;
   }
 };

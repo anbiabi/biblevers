@@ -61,7 +61,7 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
                 onClick={handleDownload}
               >
                 <Download className="w-4 h-4 mr-2" />
-                Download PDF
+                Download PNG
               </Button>
             </div>
           </div>

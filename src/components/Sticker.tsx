@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { StickerProps } from '../utils/pdfGenerator';
+import { StickerProps } from '../utils/imageGenerator';
 
 const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
   const renderVerseText = () => {

@@ -1,8 +1,7 @@
-
 import { useState } from 'react';
 import { toast } from "sonner";
 import { BibleVerse } from '@/data/bibleVerses';
-import { getRandomVerses, generatePDF } from '@/utils/pdfGenerator';
+import { getRandomVerses, generateImage } from '@/utils/imageGenerator';
 
 export const useSheetGenerator = () => {
   const [previewVerse, setPreviewVerse] = useState<BibleVerse | null>(null);
@@ -54,24 +53,19 @@ export const useSheetGenerator = () => {
     }
     
     try {
-      toast.info("Preparing your PDF. This might take a moment...");
+      toast.info("Preparing your image. This might take a moment...");
       
-      // If we have multiple sheets, merge them into one PDF
-      if (generatedSheets.length === 1 && sheetRefs.current[0]) {
-        await generatePDF(sheetRefs.current[0], "bible-stickers.pdf");
-      } else {
-        // For multiple sheets, download each as a separate PDF
-        for (let i = 0; i < generatedSheets.length; i++) {
-          if (sheetRefs.current[i]) {
-            await generatePDF(sheetRefs.current[i], `bible-stickers-sheet-${i+1}.pdf`);
-          }
+      // If we have multiple sheets, create separate images
+      for (let i = 0; i < generatedSheets.length; i++) {
+        if (sheetRefs.current[i]) {
+          await generateImage(sheetRefs.current[i], `bible-stickers-sheet-${i+1}.png`);
         }
       }
       
-      toast.success("PDF download ready!");
+      toast.success("Image download ready!");
     } catch (error) {
-      console.error("Error downloading PDF:", error);
-      toast.error("There was an error creating your PDF.");
+      console.error("Error downloading image:", error);
+      toast.error("There was an error creating your image.");
     }
   };
 
