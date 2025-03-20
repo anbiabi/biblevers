@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Sticker from './Sticker';
 import { BibleVerse } from '../data/bibleVerses';
-import { getRandomGradient } from '../utils/pdfGenerator';
+import { getRandomGradient } from '../utils/imageGenerator';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 

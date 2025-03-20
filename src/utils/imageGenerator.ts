@@ -24,8 +24,8 @@ export const getRandomVerses = (
   count: number,
   selectedTopics: string[] = []
 ): BibleVerse[] => {
-  // Access the verses from the imported gradients file
-  const bibleVerses = Object.values(BibleVerse) as unknown as BibleVerse[];
+  // Access the verses from the bibleVerses array in the imported file
+  const bibleVerses = [...gradients.bibleVerses] as BibleVerse[];
   
   const availableVerses = selectedTopics.length 
     ? bibleVerses.filter(verse => 

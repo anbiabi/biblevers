@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, Eye } from "lucide-react";
@@ -5,7 +6,6 @@ import { useSheetGenerator } from '@/hooks/useSheetGenerator';
 import EditTab from '@/components/EditTab';
 import PreviewTab from '@/components/PreviewTab';
 import html2canvas from 'html2canvas';
-import jspdf from 'jspdf';
 
 const Index = () => {
   // State for the generator settings
