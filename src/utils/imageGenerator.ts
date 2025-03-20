@@ -1,5 +1,5 @@
 
-import { BibleVerse, gradients } from "../data/bibleVerses";
+import { BibleVerse, gradients, bibleVerses } from "../data/bibleVerses";
 import html2canvas from "html2canvas";
 
 export interface StickerProps {
@@ -24,18 +24,18 @@ export const getRandomVerses = (
   count: number,
   selectedTopics: string[] = []
 ): BibleVerse[] => {
-  // Access the verses from the bibleVerses array in the imported file
-  const bibleVerses = [...gradients.bibleVerses] as BibleVerse[];
+  // Access the verses from the bibleVerses array directly from the import
+  const versesPool = [...bibleVerses];
   
   const availableVerses = selectedTopics.length 
-    ? bibleVerses.filter(verse => 
+    ? versesPool.filter(verse => 
         verse.topics.some(topic => selectedTopics.includes(topic))
       )
-    : bibleVerses;
+    : versesPool;
 
   // If we don't have enough verses for the selected topics, use all verses
   const versesToUse = availableVerses.length < count 
-    ? [...availableVerses, ...bibleVerses.slice(0, count - availableVerses.length)]
+    ? [...availableVerses, ...versesPool.slice(0, count - availableVerses.length)]
     : availableVerses;
 
   // Shuffle and pick random verses
