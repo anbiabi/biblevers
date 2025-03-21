@@ -8,7 +8,7 @@ import { RefreshCw } from 'lucide-react';
 
 interface PreviewProps {
   verse: BibleVerse | null;
-  language: 'english' | 'korean' | 'bilingual';
+  language: string;
 }
 
 const StickerPreview: React.FC<PreviewProps> = ({ verse, language }) => {
