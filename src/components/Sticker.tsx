@@ -23,6 +23,7 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
       );
     } else {
       // For other languages, just show English for now
+      // In a real app, you would have translations for all these languages
       return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.english}</p>;
     }
   };
@@ -40,7 +41,7 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
 
   return (
     <div 
-      className="sticker w-full h-full rounded-lg flex flex-col justify-center items-center p-3" 
+      className="sticker w-full h-full rounded-lg flex flex-col justify-center items-center p-2" 
       style={{ background: gradient }}
     >
       {/* Verse text first */}
