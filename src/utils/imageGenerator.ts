@@ -4,13 +4,13 @@ import html2canvas from "html2canvas";
 
 export interface StickerProps {
   verse: BibleVerse;
-  language: "english" | "korean" | "bilingual";
+  language: string;
   gradient: string;
 }
 
 export interface StickerSheetOptions {
   verses: BibleVerse[];
-  language: "english" | "korean" | "bilingual";
+  language: string;
   randomGradients?: boolean;
 }
 

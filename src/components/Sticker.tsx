@@ -24,10 +24,10 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
 
   return (
     <div 
-      className="sticker w-full rounded-lg" 
+      className="sticker w-full h-full rounded-lg" 
       style={{ background: gradient }}
     >
-      <div className="mt-5 mb-1 font-comic font-bold text-sm sm:text-base">{verse.reference}</div>
+      <div className="font-comic font-bold text-sm sm:text-base">{verse.reference}</div>
       {renderVerseText()}
     </div>
   );
