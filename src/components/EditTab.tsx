@@ -13,8 +13,8 @@ import { BibleVerse } from '@/data/bibleVerses';
 interface EditTabProps {
   selectedTopics: string[];
   setSelectedTopics: (topics: string[]) => void;
-  language: 'english' | 'korean' | 'bilingual';
-  setLanguage: (language: 'english' | 'korean' | 'bilingual') => void;
+  language: string; // Changed from enum type to string to fix type error
+  setLanguage: (language: string) => void; // Changed from enum type to string
   numberOfSheets: number;
   setNumberOfSheets: (num: number) => void;
   randomizeGradients: boolean;
