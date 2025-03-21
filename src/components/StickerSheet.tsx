@@ -6,7 +6,7 @@ import { getRandomGradient } from '../utils/imageGenerator';
 
 interface StickerSheetProps {
   verses: BibleVerse[];
-  language: 'english' | 'korean' | 'bilingual';
+  language: string;
   randomGradients?: boolean;
 }
 
@@ -23,7 +23,7 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
   return (
     <div 
       ref={sheetRef} 
-      className="sticker-sheet bg-white print:mx-auto grid grid-cols-2 gap-4 p-6"
+      className="sticker-sheet bg-white print:mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 p-6 kids-theme-bg print:kids-theme-bg"
     >
       {verses.map((verse, index) => {
         const gradient = randomGradients 

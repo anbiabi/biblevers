@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { StickerProps } from '../utils/imageGenerator';
 
@@ -7,14 +8,17 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
       return <p className="text-center font-comic text-sm sm:text-base">{verse.text.english}</p>;
     } else if (language === 'korean') {
       return <p className="text-center font-comic text-sm sm:text-base">{verse.text.korean}</p>;
-    } else {
-      // Other language options
+    } else if (language === 'bilingual') {
       return (
         <>
           <p className="text-center font-comic text-xs sm:text-sm mb-1">{verse.text.english}</p>
           <p className="text-center font-comic text-xs sm:text-sm">{verse.text.korean}</p>
         </>
       );
+    } else {
+      // For other languages, just show English for now
+      // In a real app, you would have translations for all these languages
+      return <p className="text-center font-comic text-sm sm:text-base">{verse.text.english}</p>;
     }
   };
 

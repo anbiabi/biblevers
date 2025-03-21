@@ -8,7 +8,7 @@ import { BibleVerse } from '@/data/bibleVerses';
 
 interface PreviewTabProps {
   generatedSheets: BibleVerse[][];
-  language: 'english' | 'korean' | 'bilingual';
+  language: string;
   randomGradients: boolean;
   handleDownload: () => void;
   handlePrint: () => void;
@@ -74,15 +74,17 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
       <div className="space-y-12 print:space-y-0">
         {generatedSheets.map((verses, index) => (
           <div key={index} className="space-y-4 print:space-y-0 print:mb-0">
-            <div className="flex items-center space-x-2 print:hidden">
-              <Leaf className="text-green-500 w-5 h-5" />
-              <h3 className="text-lg font-medium text-green-700 font-comic">
-                Sheet {index + 1}
-              </h3>
-            </div>
-            
-            <div className="sticker-topic font-comic text-center text-green-800 bg-green-100 py-1 mb-4 print:mb-1 rounded-lg">
-              {verses[0]?.topics[0] || 'Bible Verses'}
+            <div className="print:kids-theme-bg">
+              <div className="flex items-center space-x-2">
+                <Leaf className="text-green-500 w-5 h-5" />
+                <h3 className="text-lg font-medium text-green-700 font-comic">
+                  Sheet {index + 1}
+                </h3>
+              </div>
+              
+              <div className="sticker-topic font-comic text-center text-green-800 bg-green-100 py-1 mb-4 print:mb-1 rounded-lg">
+                {verses[0]?.topics[0] || 'Bible Verses'}
+              </div>
             </div>
             
             <div 

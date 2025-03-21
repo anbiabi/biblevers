@@ -4,12 +4,11 @@ import { FileText, Eye, Leaf, Cloud, Sun } from "lucide-react";
 import { useSheetGenerator } from '@/hooks/useSheetGenerator';
 import EditTab from '@/components/EditTab';
 import PreviewTab from '@/components/PreviewTab';
-import html2canvas from 'html2canvas';
 
 const Index = () => {
   // State for the generator settings
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
-  const [language, setLanguage] = useState<'english' | 'korean' | 'bilingual'>('english');
+  const [language, setLanguage] = useState<string>('english');
   const [numberOfSheets, setNumberOfSheets] = useState<number>(1);
   const [randomizeGradients, setRandomizeGradients] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>('edit');
