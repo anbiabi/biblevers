@@ -1,7 +1,6 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, Eye } from "lucide-react";
+import { FileText, Eye, Leaf, Cloud, Sun } from "lucide-react";
 import { useSheetGenerator } from '@/hooks/useSheetGenerator';
 import EditTab from '@/components/EditTab';
 import PreviewTab from '@/components/PreviewTab';
@@ -48,25 +47,38 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100">
-      <header className="py-6 md:py-12 px-4 md:px-6 text-center animate-fade-in">
-        <h1 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 mb-2 font-comic">
+    <div className="min-h-screen kids-theme-bg">
+      <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="h-20 w-full">
+          <path 
+            d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" 
+            className="fill-green-200"
+          ></path>
+        </svg>
+      </div>
+      <Cloud className="absolute top-16 left-1/4 text-white opacity-70 w-16 h-16" />
+      <Cloud className="absolute top-24 right-1/4 text-white opacity-50 w-12 h-12" />
+      <Sun className="absolute top-12 right-10 text-yellow-200 w-20 h-20" />
+      
+      <header className="py-8 md:py-16 px-4 md:px-6 text-center animate-fade-in relative z-10">
+        <Leaf className="inline-block text-green-500 w-8 h-8 mr-2 animate-bounce" />
+        <h1 className="text-3xl md:text-5xl font-bold text-green-800 mb-2 font-comic">
           Bible Sticker Sheet Generator
         </h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
+        <p className="text-green-700 max-w-2xl mx-auto font-comic">
           Create beautiful, printable Bible verse stickers for children. Select your topics,
           language, and customize your sheets.
         </p>
       </header>
 
-      <main className="container px-4 lg:px-8 pb-12">
+      <main className="container px-4 lg:px-8 pb-12 relative z-10">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full animate-scale-in">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
-            <TabsTrigger value="edit" className="text-sm md:text-base">
+          <TabsList className="grid w-full grid-cols-2 mb-8 bg-green-100 border-2 border-green-200">
+            <TabsTrigger value="edit" className="text-sm md:text-base font-comic data-[state=active]:bg-green-200 data-[state=active]:text-green-800">
               <FileText className="w-4 h-4 mr-2" />
               Edit Stickers
             </TabsTrigger>
-            <TabsTrigger value="preview" className="text-sm md:text-base">
+            <TabsTrigger value="preview" className="text-sm md:text-base font-comic data-[state=active]:bg-green-200 data-[state=active]:text-green-800">
               <Eye className="w-4 h-4 mr-2" />
               Preview & Download
             </TabsTrigger>
@@ -103,9 +115,12 @@ const Index = () => {
         </Tabs>
       </main>
 
-      <footer className="bg-white border-t border-gray-200 py-6 text-center text-sm text-gray-500">
+      <footer className="bg-green-100 border-t-2 border-green-200 py-6 text-center text-sm text-green-700 font-comic relative z-10">
         <p>Bible Sticker Sheet Generator</p>
         <p className="text-xs mt-1">Create beautiful customizable Bible verse stickers for children</p>
+        <div className="absolute bottom-0 right-0">
+          <Leaf className="text-green-400 w-12 h-12 transform -rotate-45" />
+        </div>
       </footer>
     </div>
   );

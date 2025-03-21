@@ -66,7 +66,7 @@ export default {
 			},
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],
-				comic: ['Comic Neue', 'cursive']
+				comic: ['Bubblegum Sans', 'Comic Neue', 'cursive']
 			},
 			keyframes: {
 				'accordion-down': {

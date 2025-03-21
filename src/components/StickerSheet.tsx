@@ -1,3 +1,4 @@
+
 import React, { useRef } from 'react';
 import Sticker from './Sticker';
 import { BibleVerse } from '../data/bibleVerses';
@@ -22,7 +23,7 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
   return (
     <div 
       ref={sheetRef} 
-      className="sticker-sheet bg-white border border-gray-200 mx-auto grid grid-cols-2 gap-x-3 gap-y-2 p-3"
+      className="sticker-sheet bg-white print:mx-auto grid grid-cols-2 gap-4 p-6"
     >
       {verses.map((verse, index) => {
         const gradient = randomGradients 
@@ -30,24 +31,9 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
           : fixedGradients[index % fixedGradients.length];
         
         return (
-          <React.Fragment key={`${verse.reference}-${index}`}>
+          <div key={`${verse.reference}-${index}`} className="aspect-[2/1] flex">
             <Sticker verse={verse} language={language} gradient={gradient} />
-            
-            {/* Add dashed cutting lines */}
-            {index % 2 === 0 && index < verses.length - 2 && (
-              <div 
-                className="dashed-line vertical" 
-                style={{ left: '50%', top: `${(Math.floor(index / 2) + 1) * (100 / 8)}%` }}
-              />
-            )}
-            
-            {index < verses.length - 2 && (
-              <div 
-                className="dashed-line horizontal" 
-                style={{ top: `${(Math.floor(index / 2) + 1) * (100 / 8)}%` }}
-              />
-            )}
-          </React.Fragment>
+          </div>
         );
       })}
     </div>
