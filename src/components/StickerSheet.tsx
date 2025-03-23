@@ -23,8 +23,15 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
   return (
     <div 
       ref={sheetRef} 
-      className="sticker-sheet grid grid-cols-2 gap-0 relative w-[210mm] h-[297mm] p-0 m-0 bg-white"
-      style={{ pageBreakAfter: 'always' }}
+      className="sticker-sheet grid grid-cols-2 gap-0 relative w-[210mm] h-[297mm] p-0 m-0 mx-auto bg-white"
+      style={{ 
+        pageBreakAfter: 'always',
+        boxSizing: 'border-box',
+        padding: 0,
+        margin: '0 auto',
+        left: 0,
+        right: 0
+      }}
     >
       {/* Semi-transparent topic overlay at the top of sheet */}
       {verses.length > 0 && verses[0]?.topics[0] && (
