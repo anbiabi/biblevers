@@ -2,16 +2,22 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Download, Printer, Leaf } from "lucide-react";
+import { Download, FileText, Leaf } from "lucide-react";
 import StickerSheet from '@/components/StickerSheet';
 import { BibleVerse } from '@/data/bibleVerses';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
 
 interface PreviewTabProps {
   generatedSheets: BibleVerse[][];
   language: string;
   randomGradients: boolean;
   handleDownload: () => void;
-  handlePrint: () => void;
+  handlePdfDownload: () => void;
   setActiveTab: (tab: string) => void;
   sheetRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
 }
@@ -21,7 +27,7 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
   language,
   randomGradients,
   handleDownload,
-  handlePrint,
+  handlePdfDownload,
   setActiveTab,
   sheetRefs
 }) => {
@@ -50,30 +56,32 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
             </div>
             
             <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={handlePrint}
-                className="border-green-300 text-green-700 hover:bg-green-100 font-comic"
-              >
-                <Printer className="w-4 h-4 mr-2" />
-                Print
-              </Button>
-              
-              <Button
-                onClick={handleDownload}
-                className="bg-green-600 hover:bg-green-700 font-comic"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Download PNG
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="bg-green-600 hover:bg-green-700 font-comic">
+                    <Download className="w-4 h-4 mr-2" />
+                    Download
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={handleDownload}>
+                    <Download className="w-4 h-4 mr-2" />
+                    High-Res PNG
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handlePdfDownload}>
+                    <FileText className="w-4 h-4 mr-2" />
+                    PDF Format
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <div className="space-y-12 print:space-y-0">
+      <div className="space-y-12">
         {generatedSheets.map((verses, index) => (
-          <div key={index} className="space-y-4 print:space-y-0 print:mb-0">
+          <div key={index} className="space-y-4">
             <div className="flex items-center space-x-2">
               <Leaf className="text-green-500 w-5 h-5" />
               <h3 className="text-lg font-medium text-green-700 font-comic">
@@ -83,7 +91,7 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
             
             <div 
               ref={(el) => sheetRefs.current[index] = el}
-              className="print:shadow-none print:p-0 overflow-auto max-w-full"
+              className="overflow-auto max-w-full shadow-md"
             >
               <StickerSheet
                 verses={verses}
@@ -97,7 +105,7 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
       
       <Button 
         variant="outline" 
-        className="w-full border-green-300 text-green-700 hover:bg-green-100 font-comic print:hidden"
+        className="w-full border-green-300 text-green-700 hover:bg-green-100 font-comic"
         onClick={() => setActiveTab('edit')}
       >
         Back to Editor

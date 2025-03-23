@@ -1,7 +1,8 @@
+
 import { useState } from 'react';
 import { toast } from "sonner";
 import { BibleVerse } from '@/data/bibleVerses';
-import { getRandomVerses, generateImage } from '@/utils/imageGenerator';
+import { getRandomVerses, generateImage, generatePDF } from '@/utils/imageGenerator';
 
 export const useSheetGenerator = () => {
   const [previewVerse, setPreviewVerse] = useState<BibleVerse | null>(null);
@@ -53,7 +54,7 @@ export const useSheetGenerator = () => {
     }
     
     try {
-      toast.info("Preparing your image. This might take a moment...");
+      toast.info("Preparing your PNG images. This might take a moment...");
       
       // If we have multiple sheets, create separate images
       for (let i = 0; i < generatedSheets.length; i++) {
@@ -62,20 +63,35 @@ export const useSheetGenerator = () => {
         }
       }
       
-      toast.success("Image download ready!");
+      toast.success("PNG image download ready!");
     } catch (error) {
       console.error("Error downloading image:", error);
       toast.error("There was an error creating your image.");
     }
   };
 
-  const handlePrint = () => {
+  const downloadPDF = async (sheetRefs: React.MutableRefObject<(HTMLDivElement | null)[]>) => {
     if (generatedSheets.length === 0) {
-      toast.error("No sticker sheets to print. Generate some first!");
+      toast.error("No sticker sheets to download. Generate some first!");
       return;
     }
     
-    window.print();
+    try {
+      toast.info("Preparing your PDF. This might take a moment...");
+      
+      // Collect all valid sheet elements
+      const elements = sheetRefs.current.filter(ref => ref !== null) as HTMLDivElement[];
+      
+      if (elements.length > 0) {
+        await generatePDF(elements, "bible-stickers.pdf");
+        toast.success("PDF download ready!");
+      } else {
+        toast.error("Could not find sheet elements to convert to PDF.");
+      }
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      toast.error("There was an error creating your PDF.");
+    }
   };
 
   return {
@@ -86,6 +102,6 @@ export const useSheetGenerator = () => {
     refreshPreviewVerse,
     generateSheets,
     downloadSheets,
-    handlePrint
+    downloadPDF
   };
 };

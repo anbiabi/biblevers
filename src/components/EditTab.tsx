@@ -13,8 +13,8 @@ import { BibleVerse } from '@/data/bibleVerses';
 interface EditTabProps {
   selectedTopics: string[];
   setSelectedTopics: (topics: string[]) => void;
-  language: 'english' | 'korean' | 'bilingual';
-  setLanguage: (language: 'english' | 'korean' | 'bilingual') => void;
+  language: string;
+  setLanguage: (language: string) => void;
   numberOfSheets: number;
   setNumberOfSheets: (num: number) => void;
   randomizeGradients: boolean;

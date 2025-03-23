@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, Eye, Leaf, Cloud, Sun } from "lucide-react";
@@ -25,7 +26,7 @@ const Index = () => {
     refreshPreviewVerse,
     generateSheets,
     downloadSheets,
-    handlePrint
+    downloadPDF
   } = useSheetGenerator();
 
   // Update preview verse when topics or language change
@@ -43,6 +44,10 @@ const Index = () => {
 
   const handleDownloadAll = () => {
     downloadSheets(sheetRefs);
+  };
+
+  const handlePdfDownload = () => {
+    downloadPDF(sheetRefs);
   };
 
   return (
@@ -106,7 +111,7 @@ const Index = () => {
               language={language}
               randomGradients={randomizeGradients}
               handleDownload={handleDownloadAll}
-              handlePrint={handlePrint}
+              handlePdfDownload={handlePdfDownload}
               setActiveTab={setActiveTab}
               sheetRefs={sheetRefs}
             />

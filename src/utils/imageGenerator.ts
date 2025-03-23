@@ -1,6 +1,7 @@
 
 import { BibleVerse, gradients, bibleVerses } from "../data/bibleVerses";
 import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 
 export interface StickerProps {
   verse: BibleVerse;
@@ -50,14 +51,14 @@ export const generateImage = async (
   try {
     // Create a canvas from the DOM element
     const canvas = await html2canvas(element, {
-      scale: 2, // Higher scale for better quality
+      scale: 3, // Higher scale for better quality
       useCORS: true,
       logging: false,
       backgroundColor: "white",
     });
 
     // Convert canvas to an image and download it
-    const imageUrl = canvas.toDataURL("image/png");
+    const imageUrl = canvas.toDataURL("image/png", 1.0);
     
     // Create a link element to download the image
     const downloadLink = document.createElement("a");
@@ -68,6 +69,46 @@ export const generateImage = async (
     document.body.removeChild(downloadLink);
   } catch (error) {
     console.error("Error generating image:", error);
+    throw error;
+  }
+};
+
+export const generatePDF = async (
+  elements: HTMLElement[],
+  filename: string = "bible-stickers.pdf"
+): Promise<void> => {
+  try {
+    // Create a new PDF
+    const pdf = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
+    
+    // For each element (sheet)
+    for (let i = 0; i < elements.length; i++) {
+      // Add a new page for each sheet except the first one
+      if (i > 0) {
+        pdf.addPage();
+      }
+      
+      // Convert the element to canvas
+      const canvas = await html2canvas(elements[i], {
+        scale: 2, // Higher scale for better quality
+        useCORS: true,
+        logging: false,
+        backgroundColor: "white",
+      });
+      
+      // Add the canvas to the PDF
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      pdf.addImage(imgData, "JPEG", 0, 0, 210, 297); // A4 size in mm
+    }
+    
+    // Save the PDF
+    pdf.save(filename);
+  } catch (error) {
+    console.error("Error generating PDF:", error);
     throw error;
   }
 };

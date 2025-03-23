@@ -23,7 +23,8 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
   return (
     <div 
       ref={sheetRef} 
-      className="sticker-sheet grid grid-cols-2 gap-0 relative w-[210mm] h-[297mm] p-0 m-0 print:m-0 print:p-0 kids-theme-bg print:kids-theme-bg"
+      className="sticker-sheet grid grid-cols-2 gap-0 relative w-[210mm] h-[297mm] p-0 m-0 bg-white"
+      style={{ pageBreakAfter: 'always' }}
     >
       {/* Semi-transparent topic overlay at the top of sheet */}
       {verses.length > 0 && verses[0]?.topics[0] && (
@@ -39,7 +40,7 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
           : fixedGradients[index % fixedGradients.length];
         
         return (
-          <div key={`${verse.reference}-${index}`} className="relative h-[37.125mm] sticker-container">
+          <div key={`${verse.reference}-${index}`} className="relative h-[37.125mm] sticker-container overflow-hidden">
             {/* Dashed cutting lines */}
             {index % 2 !== 1 && index < 14 && (
               <div className="dashed-line vertical absolute right-0 top-0 bottom-0"></div>
