@@ -1,4 +1,3 @@
-
 import { BibleVerse, gradients, bibleVerses } from "../data/bibleVerses";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
@@ -28,20 +27,29 @@ export const getRandomVerses = (
   // Access the verses from the bibleVerses array directly from the import
   const versesPool = [...bibleVerses];
   
-  const availableVerses = selectedTopics.length 
+  let availableVerses = selectedTopics.length 
     ? versesPool.filter(verse => 
         verse.topics.some(topic => selectedTopics.includes(topic))
       )
     : versesPool;
 
-  // If we don't have enough verses for the selected topics, use all verses
-  const versesToUse = availableVerses.length < count 
-    ? [...availableVerses, ...versesPool.slice(0, count - availableVerses.length)]
-    : availableVerses;
+  // If we don't have enough verses for the selected topics, log a warning and use all verses
+  if (availableVerses.length < count) {
+    console.warn('Not enough verses for selected topics, including additional verses');
+    availableVerses = versesPool;
+  }
 
-  // Shuffle and pick random verses
-  const shuffled = [...versesToUse].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
+  // Shuffle verses while trying to maintain topic consistency
+  const shuffled = [...availableVerses].sort(() => 0.5 - Math.random());
+  
+  // Try to prioritize verses that match multiple selected topics
+  return shuffled
+    .sort((a, b) => {
+      const aTopicMatches = a.topics.filter(t => selectedTopics.includes(t)).length;
+      const bTopicMatches = b.topics.filter(t => selectedTopics.includes(t)).length;
+      return bTopicMatches - aTopicMatches;
+    })
+    .slice(0, count);
 };
 
 export const generateImage = async (

@@ -20,6 +20,10 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
   // Generate fixed gradients if we're not using random ones
   const fixedGradients = Array(16).fill(null).map(() => getRandomGradient());
 
+  // Get all unique topics from the verses
+  const sheetTopics = [...new Set(verses.flatMap(verse => verse.topics))];
+  const mainTopic = sheetTopics[0] || '';
+
   return (
     <div 
       ref={sheetRef} 
@@ -34,9 +38,9 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
       }}
     >
       {/* Semi-transparent topic overlay at the top of sheet */}
-      {verses.length > 0 && verses[0]?.topics[0] && (
+      {mainTopic && (
         <div className="absolute top-2 left-0 right-0 z-10 text-center pointer-events-none">
-          <span className="sticker-topic opacity-50 text-sm">{verses[0]?.topics[0]}</span>
+          <span className="sticker-topic opacity-50 text-sm">{mainTopic}</span>
         </div>
       )}
       

@@ -1,6 +1,4 @@
 
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { 
   Select,
   SelectContent,
@@ -30,13 +28,6 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ language, onChange 
         <SelectContent>
           <SelectItem value="english" className="font-comic">English</SelectItem>
           <SelectItem value="korean" className="font-comic">Korean</SelectItem>
-          <SelectItem value="spanish" className="font-comic">Spanish</SelectItem>
-          <SelectItem value="french" className="font-comic">French</SelectItem>
-          <SelectItem value="german" className="font-comic">German</SelectItem>
-          <SelectItem value="chinese" className="font-comic">Chinese</SelectItem>
-          <SelectItem value="japanese" className="font-comic">Japanese</SelectItem>
-          <SelectItem value="arabic" className="font-comic">Arabic</SelectItem>
-          <SelectItem value="hindi" className="font-comic">Hindi</SelectItem>
           <SelectItem value="bilingual" className="font-comic">Bilingual (Eng/Kor)</SelectItem>
         </SelectContent>
       </Select>
