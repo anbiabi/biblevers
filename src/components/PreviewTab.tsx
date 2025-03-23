@@ -20,6 +20,7 @@ interface PreviewTabProps {
   handlePdfDownload: () => void;
   setActiveTab: (tab: string) => void;
   sheetRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
+  selectedTopics: string[]; // Added this prop
 }
 
 const PreviewTab: React.FC<PreviewTabProps> = ({
@@ -29,7 +30,8 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
   handleDownload,
   handlePdfDownload,
   setActiveTab,
-  sheetRefs
+  sheetRefs,
+  selectedTopics
 }) => {
   if (generatedSheets.length === 0) {
     return (
@@ -97,6 +99,7 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
                 verses={verses}
                 language={language}
                 randomGradients={randomGradients}
+                selectedTopics={selectedTopics}
               />
             </div>
           </div>

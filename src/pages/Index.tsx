@@ -114,6 +114,7 @@ const Index = () => {
               handlePdfDownload={handlePdfDownload}
               setActiveTab={setActiveTab}
               sheetRefs={sheetRefs}
+              selectedTopics={selectedTopics}
             />
           </TabsContent>
         </Tabs>

@@ -8,12 +8,14 @@ interface StickerSheetProps {
   verses: BibleVerse[];
   language: string;
   randomGradients?: boolean;
+  selectedTopics?: string[]; // Added this prop
 }
 
 const StickerSheet: React.FC<StickerSheetProps> = ({ 
   verses, 
   language, 
-  randomGradients = true 
+  randomGradients = true,
+  selectedTopics = []
 }) => {
   const sheetRef = useRef<HTMLDivElement>(null);
   
@@ -22,7 +24,27 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
 
   // Get all unique topics from the verses
   const sheetTopics = [...new Set(verses.flatMap(verse => verse.topics))];
-  const mainTopic = sheetTopics[0] || '';
+  
+  // Choose main topic prioritizing the selected topics
+  let mainTopic = '';
+  
+  // If there are selected topics, try to find a match with the sheet topics
+  if (selectedTopics.length > 0 && sheetTopics.length > 0) {
+    // Find the first selected topic that exists in sheet topics
+    const matchingTopic = selectedTopics.find(topic => 
+      sheetTopics.includes(topic)
+    );
+    
+    if (matchingTopic) {
+      mainTopic = matchingTopic;
+    } else {
+      // If no match found, fall back to the first sheet topic
+      mainTopic = sheetTopics[0] || '';
+    }
+  } else {
+    // If no selected topics, use the first sheet topic
+    mainTopic = sheetTopics[0] || '';
+  }
 
   return (
     <div 
