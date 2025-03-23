@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BibleVerse } from '../data/bibleVerses';
 
@@ -10,28 +9,52 @@ export interface StickerProps {
 
 const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
   const renderVerseText = () => {
-    if (language === 'english') {
-      return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.english}</p>;
-    } else if (language === 'korean') {
-      return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.korean || verse.text.english}</p>;
-    } else if (language === 'bilingual') {
-      return (
-        <>
-          <p className="text-center font-comic text-xs sm:text-sm mb-1 line-clamp-2">{verse.text.english}</p>
-          <p className="text-center font-comic text-xs sm:text-sm line-clamp-2">{verse.text.korean || ''}</p>
-        </>
-      );
-    } else {
-      // For other languages, just show English for now
-      return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.english}</p>;
+    switch (language) {
+      case 'english':
+        return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.english}</p>;
+      case 'korean':
+        return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.korean || verse.text.english}</p>;
+      case 'spanish':
+        return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.spanish || verse.text.english}</p>;
+      case 'french':
+        return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.french || verse.text.english}</p>;
+      case 'german':
+        return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.german || verse.text.english}</p>;
+      case 'bilingual':
+        return (
+          <>
+            <p className="text-center font-comic text-xs sm:text-sm mb-1 line-clamp-2">{verse.text.english}</p>
+            <p className="text-center font-comic text-xs sm:text-sm line-clamp-2">{verse.text.korean || ''}</p>
+          </>
+        );
+      default:
+        return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.english}</p>;
     }
   };
 
   // Calculate text size class based on verse length
   const getTextSizeClass = () => {
-    const text = language === 'english' ? verse.text.english 
-              : language === 'korean' ? (verse.text.korean || verse.text.english)
-              : verse.text.english;
+    let text = '';
+    
+    switch (language) {
+      case 'english':
+        text = verse.text.english;
+        break;
+      case 'korean':
+        text = verse.text.korean || verse.text.english;
+        break;
+      case 'spanish':
+        text = verse.text.spanish || verse.text.english;
+        break;
+      case 'french':
+        text = verse.text.french || verse.text.english;
+        break;
+      case 'german':
+        text = verse.text.german || verse.text.english;
+        break;
+      default:
+        text = verse.text.english;
+    }
     
     if (text.length > 150) return 'text-xs';
     if (text.length > 100) return 'text-sm';
@@ -138,6 +161,288 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
       
       // Return the formatted Korean reference
       return `${koreanBookName} ${chapterVerse}`;
+    } else if (language === 'spanish') {
+      // Spanish reference formatting
+      const referenceMap: {[key: string]: string} = {
+        'Genesis': 'Génesis',
+        'Exodus': 'Éxodo',
+        'Leviticus': 'Levítico',
+        'Numbers': 'Números',
+        'Deuteronomy': 'Deuteronomio',
+        'Joshua': 'Josué',
+        'Judges': 'Jueces',
+        'Ruth': 'Rut',
+        'Samuel': 'Samuel',
+        '1 Samuel': '1 Samuel',
+        '2 Samuel': '2 Samuel',
+        'Kings': 'Reyes',
+        '1 Kings': '1 Reyes',
+        '2 Kings': '2 Reyes',
+        'Chronicles': 'Crónicas',
+        '1 Chronicles': '1 Crónicas',
+        '2 Chronicles': '2 Crónicas',
+        'Ezra': 'Esdras',
+        'Nehemiah': 'Nehemías',
+        'Esther': 'Ester',
+        'Job': 'Job',
+        'Psalm': 'Salmo',
+        'Psalms': 'Salmos',
+        'Proverbs': 'Proverbios',
+        'Ecclesiastes': 'Eclesiastés',
+        'Song of Solomon': 'Cantares',
+        'Isaiah': 'Isaías',
+        'Jeremiah': 'Jeremías',
+        'Lamentations': 'Lamentaciones',
+        'Ezekiel': 'Ezequiel',
+        'Daniel': 'Daniel',
+        'Hosea': 'Oseas',
+        'Joel': 'Joel',
+        'Amos': 'Amós',
+        'Obadiah': 'Abdías',
+        'Jonah': 'Jonás',
+        'Micah': 'Miqueas',
+        'Nahum': 'Nahúm',
+        'Habakkuk': 'Habacuc',
+        'Zephaniah': 'Sofonías',
+        'Haggai': 'Hageo',
+        'Zechariah': 'Zacarías',
+        'Malachi': 'Malaquías',
+        'Matthew': 'Mateo',
+        'Mark': 'Marcos',
+        'Luke': 'Lucas',
+        'John': 'Juan',
+        'Acts': 'Hechos',
+        'Romans': 'Romanos',
+        'Corinthians': 'Corintios',
+        '1 Corinthians': '1 Corintios',
+        '2 Corinthians': '2 Corintios',
+        'Galatians': 'Gálatas',
+        'Ephesians': 'Efesios',
+        'Philippians': 'Filipenses',
+        'Colossians': 'Colosenses',
+        'Thessalonians': 'Tesalonicenses',
+        '1 Thessalonians': '1 Tesalonicenses',
+        '2 Thessalonians': '2 Tesalonicenses',
+        'Timothy': 'Timoteo',
+        '1 Timothy': '1 Timoteo',
+        '2 Timothy': '2 Timoteo',
+        'Titus': 'Tito',
+        'Philemon': 'Filemón',
+        'Hebrews': 'Hebreos',
+        'James': 'Santiago',
+        'Peter': 'Pedro',
+        '1 Peter': '1 Pedro',
+        '2 Peter': '2 Pedro',
+        '1 John': '1 Juan',
+        '2 John': '2 Juan',
+        '3 John': '3 Juan',
+        'Jude': 'Judas',
+        'Revelation': 'Apocalipsis'
+      };
+      
+      // Parse the reference
+      const parts = verse.reference.split(/\s+/);
+      let bookName = "";
+      let chapterVerse = "";
+      
+      if (parts.length > 1 && (parts[0] === '1' || parts[0] === '2' || parts[0] === '3')) {
+        bookName = `${parts[0]} ${parts[1]}`;
+        chapterVerse = parts.slice(2).join(' ');
+      } else {
+        bookName = parts[0];
+        chapterVerse = parts.slice(1).join(' ');
+      }
+      
+      const spanishBookName = referenceMap[bookName] || bookName;
+      return `${spanishBookName} ${chapterVerse}`;
+    } else if (language === 'french') {
+      // French reference formatting
+      const referenceMap: {[key: string]: string} = {
+        'Genesis': 'Genèse',
+        'Exodus': 'Exode',
+        'Leviticus': 'Lévitique',
+        'Numbers': 'Nombres',
+        'Deuteronomy': 'Deutéronome',
+        'Joshua': 'Josué',
+        'Judges': 'Juges',
+        'Ruth': 'Ruth',
+        'Samuel': 'Samuel',
+        '1 Samuel': '1 Samuel',
+        '2 Samuel': '2 Samuel',
+        'Kings': 'Rois',
+        '1 Kings': '1 Rois',
+        '2 Kings': '2 Rois',
+        'Chronicles': 'Chroniques',
+        '1 Chronicles': '1 Chroniques',
+        '2 Chronicles': '2 Chroniques',
+        'Ezra': 'Esdras',
+        'Nehemiah': 'Néhémie',
+        'Esther': 'Esther',
+        'Job': 'Job',
+        'Psalm': 'Psaume',
+        'Psalms': 'Psaumes',
+        'Proverbs': 'Proverbes',
+        'Ecclesiastes': 'Ecclésiaste',
+        'Song of Solomon': 'Cantique des Cantiques',
+        'Isaiah': 'Ésaïe',
+        'Jeremiah': 'Jérémie',
+        'Lamentations': 'Lamentations',
+        'Ezekiel': 'Ézéchiel',
+        'Daniel': 'Daniel',
+        'Hosea': 'Osée',
+        'Joel': 'Joël',
+        'Amos': 'Amos',
+        'Obadiah': 'Abdias',
+        'Jonah': 'Jonas',
+        'Micah': 'Michée',
+        'Nahum': 'Nahum',
+        'Habakkuk': 'Habacuc',
+        'Zephaniah': 'Sophonie',
+        'Haggai': 'Aggée',
+        'Zechariah': 'Zacharie',
+        'Malachi': 'Malachie',
+        'Matthew': 'Matthieu',
+        'Mark': 'Marc',
+        'Luke': 'Luc',
+        'John': 'Jean',
+        'Acts': 'Actes',
+        'Romans': 'Romains',
+        'Corinthians': 'Corinthiens',
+        '1 Corinthians': '1 Corinthiens',
+        '2 Corinthians': '2 Corinthiens',
+        'Galatians': 'Galates',
+        'Ephesians': 'Éphésiens',
+        'Philippians': 'Philippiens',
+        'Colossians': 'Colossiens',
+        'Thessalonians': 'Thessaloniciens',
+        '1 Thessalonians': '1 Thessaloniciens',
+        '2 Thessaloniciens': '2 Thessaloniciens',
+        'Timothy': 'Timothée',
+        '1 Timothy': '1 Timothée',
+        '2 Timothy': '2 Timothée',
+        'Titus': 'Tite',
+        'Philemon': 'Philémon',
+        'Hebrews': 'Hébreux',
+        'James': 'Jacques',
+        'Peter': 'Pierre',
+        '1 Peter': '1 Pierre',
+        '2 Peter': '2 Pierre',
+        '1 John': '1 Jean',
+        '2 John': '2 Jean',
+        '3 John': '3 Jean',
+        'Jude': 'Jude',
+        'Revelation': 'Apocalypse'
+      };
+      
+      // Parse the reference
+      const parts = verse.reference.split(/\s+/);
+      let bookName = "";
+      let chapterVerse = "";
+      
+      if (parts.length > 1 && (parts[0] === '1' || parts[0] === '2' || parts[0] === '3')) {
+        bookName = `${parts[0]} ${parts[1]}`;
+        chapterVerse = parts.slice(2).join(' ');
+      } else {
+        bookName = parts[0];
+        chapterVerse = parts.slice(1).join(' ');
+      }
+      
+      const frenchBookName = referenceMap[bookName] || bookName;
+      return `${frenchBookName} ${chapterVerse}`;
+    } else if (language === 'german') {
+      // German reference formatting
+      const referenceMap: {[key: string]: string} = {
+        'Genesis': '1. Mose',
+        'Exodus': '2. Mose',
+        'Leviticus': '3. Mose',
+        'Numbers': '4. Mose',
+        'Deuteronomy': '5. Mose',
+        'Joshua': 'Josua',
+        'Judges': 'Richter',
+        'Ruth': 'Ruth',
+        'Samuel': 'Samuel',
+        '1 Samuel': '1. Samuel',
+        '2 Samuel': '2. Samuel',
+        'Kings': 'Könige',
+        '1 Kings': '1. Könige',
+        '2 Kings': '2. Könige',
+        'Chronicles': 'Chronik',
+        '1 Chronicles': '1. Chronik',
+        '2 Chronicles': '2. Chronik',
+        'Ezra': 'Esra',
+        'Nehemiah': 'Nehemia',
+        'Esther': 'Ester',
+        'Job': 'Hiob',
+        'Psalm': 'Psalm',
+        'Psalms': 'Psalmen',
+        'Proverbs': 'Sprüche',
+        'Ecclesiastes': 'Prediger',
+        'Song of Solomon': 'Hohelied',
+        'Isaiah': 'Jesaja',
+        'Jeremiah': 'Jeremia',
+        'Lamentations': 'Klagelieder',
+        'Ezekiel': 'Hesekiel',
+        'Daniel': 'Daniel',
+        'Hosea': 'Hosea',
+        'Joel': 'Joel',
+        'Amos': 'Amos',
+        'Obadiah': 'Obadja',
+        'Jonah': 'Jona',
+        'Micah': 'Micha',
+        'Nahum': 'Nahum',
+        'Habakkuk': 'Habakuk',
+        'Zephaniah': 'Zefanja',
+        'Haggai': 'Haggai',
+        'Zechariah': 'Sacharja',
+        'Malachi': 'Maleachi',
+        'Matthew': 'Matthäus',
+        'Mark': 'Markus',
+        'Luke': 'Lukas',
+        'John': 'Johannes',
+        'Acts': 'Apostelgeschichte',
+        'Romans': 'Römer',
+        'Corinthians': 'Korinther',
+        '1 Corinthians': '1. Korinther',
+        '2 Corinthians': '2. Korinther',
+        'Galatians': 'Galater',
+        'Ephesians': 'Epheser',
+        'Philippians': 'Philipper',
+        'Colossians': 'Kolosser',
+        'Thessalonians': 'Thessalonicher',
+        '1 Thessalonians': '1. Thessalonicher',
+        '2 Thessalonians': '2. Thessalonicher',
+        'Timothy': 'Timotheus',
+        '1 Timothy': '1. Timotheus',
+        '2 Timothy': '2. Timotheus',
+        'Titus': 'Titus',
+        'Philemon': 'Philemon',
+        'Hebrews': 'Hebräer',
+        'James': 'Jakobus',
+        'Peter': 'Petrus',
+        '1 Peter': '1. Petrus',
+        '2 Peter': '2. Petrus',
+        '1 John': '1. Johannes',
+        '2 John': '2. Johannes',
+        '3 John': '3. Johannes',
+        'Jude': 'Judas',
+        'Revelation': 'Offenbarung'
+      };
+      
+      // Parse the reference
+      const parts = verse.reference.split(/\s+/);
+      let bookName = "";
+      let chapterVerse = "";
+      
+      if (parts.length > 1 && (parts[0] === '1' || parts[0] === '2' || parts[0] === '3')) {
+        bookName = `${parts[0]} ${parts[1]}`;
+        chapterVerse = parts.slice(2).join(' ');
+      } else {
+        bookName = parts[0];
+        chapterVerse = parts.slice(1).join(' ');
+      }
+      
+      const germanBookName = referenceMap[bookName] || bookName;
+      return `${germanBookName} ${chapterVerse}`;
     }
     
     return verse.reference;

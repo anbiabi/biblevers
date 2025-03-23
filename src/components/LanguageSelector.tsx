@@ -28,6 +28,9 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ language, onChange 
         <SelectContent>
           <SelectItem value="english" className="font-comic">English</SelectItem>
           <SelectItem value="korean" className="font-comic">Korean</SelectItem>
+          <SelectItem value="spanish" className="font-comic">Spanish</SelectItem>
+          <SelectItem value="french" className="font-comic">French</SelectItem>
+          <SelectItem value="german" className="font-comic">German</SelectItem>
           <SelectItem value="bilingual" className="font-comic">Bilingual (Eng/Kor)</SelectItem>
         </SelectContent>
       </Select>
