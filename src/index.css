@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Bubblegum+Sans&display=swap');
 
 @tailwind base;
@@ -93,10 +94,10 @@
     }
     
     .sticker-sheet {
-      box-shadow: none;
+      box-shadow: none !important;
       margin: 0 !important;
       padding: 0 !important;
-      page-break-after: always;
+      page-break-after: always !important;
       width: 210mm !important;
       height: 297mm !important;
     }
@@ -109,25 +110,32 @@
       height: 100% !important;
       page-break-inside: avoid !important;
       overflow: visible !important;
+      box-shadow: none !important;
+      border: 1px solid rgba(0, 0, 0, 0.1) !important;
     }
     
-    /* Enhanced print styles for verse text and reference */
-    .sticker .font-comic.print\:font-bold {
+    /* Force print styles for verse text and reference */
+    .sticker .font-comic.print\:text-base.print\:font-bold {
       font-weight: bold !important;
-      font-size: 1rem !important;
+      font-size: 11pt !important;
+      line-height: 1.3 !important;
+      margin-bottom: 4pt !important;
     }
     
-    .sticker .font-comic.print\:font-normal {
+    .sticker .font-comic.print\:text-xs.print\:font-normal {
       font-weight: normal !important;
-      font-size: 0.75rem !important;
-      margin-top: 0.5rem !important;
+      font-size: 7pt !important;
       opacity: 0.8 !important;
+      margin-top: 3pt !important;
     }
     
     .kids-theme-bg::before,
     .kids-theme-bg::after {
-      display: block !important;
-      opacity: 0.3;
+      display: none !important;
+    }
+    
+    .dashed-line {
+      display: none !important;
     }
     
     @page {

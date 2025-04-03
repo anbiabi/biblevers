@@ -49,7 +49,7 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
   return (
     <div 
       ref={sheetRef} 
-      className="sticker-sheet grid grid-cols-2 gap-0 relative w-[210mm] h-[297mm] p-0 m-0 mx-auto bg-white"
+      className="sticker-sheet grid grid-cols-2 gap-0 relative w-[210mm] h-[297mm] p-0 m-0 mx-auto bg-white print:border-0 print:shadow-none"
       style={{ 
         pageBreakAfter: 'always',
         boxSizing: 'border-box',
@@ -61,7 +61,7 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
     >
       {/* Semi-transparent topic overlay at the top of sheet */}
       {mainTopic && (
-        <div className="absolute top-2 left-0 right-0 z-10 text-center pointer-events-none">
+        <div className="absolute top-2 left-0 right-0 z-10 text-center pointer-events-none print:hidden">
           <span className="sticker-topic opacity-50 text-sm">{mainTopic}</span>
         </div>
       )}
@@ -73,16 +73,16 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
           : fixedGradients[index % fixedGradients.length];
         
         return (
-          <div key={`${verse.reference}-${index}`} className="relative h-[37.125mm] sticker-container overflow-hidden">
+          <div key={`${verse.reference}-${index}`} className="relative h-[37.125mm] sticker-container overflow-hidden print:overflow-visible">
             {/* Dashed cutting lines */}
             {index % 2 !== 1 && index < 14 && (
-              <div className="dashed-line vertical absolute right-0 top-0 bottom-0"></div>
+              <div className="dashed-line vertical absolute right-0 top-0 bottom-0 print:hidden"></div>
             )}
             {index < 14 && (
-              <div className="dashed-line horizontal absolute left-0 right-0 bottom-0"></div>
+              <div className="dashed-line horizontal absolute left-0 right-0 bottom-0 print:hidden"></div>
             )}
             
-            <div className="h-full p-1 print:overflow-visible">
+            <div className="h-full p-1 print:overflow-visible print:p-0.5">
               <Sticker verse={verse} language={language} gradient={gradient} />
             </div>
           </div>
