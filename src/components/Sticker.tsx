@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BibleVerse } from '../data/bibleVerses';
 
@@ -453,9 +454,9 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
     if (language === 'bilingual') {
       return (
         <div className="flex flex-col items-center justify-center h-full w-full">
-          <div className="font-comic text-xs sm:text-sm mb-1 text-center">{verse.text.english}</div>
-          <div className="font-comic text-xs sm:text-sm text-center">{verse.text.korean || ''}</div>
-          <div className="font-comic font-bold text-sm mt-2 text-center">{formatReference()}</div>
+          <div className="font-comic text-xs sm:text-sm mb-1 text-center print:font-bold">{verse.text.english}</div>
+          <div className="font-comic text-xs sm:text-sm text-center print:font-bold">{verse.text.korean || ''}</div>
+          <div className="font-comic font-bold text-sm mt-2 text-center print:font-normal">{formatReference()}</div>
         </div>
       );
     } else {
@@ -464,8 +465,8 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
       
       return (
         <div className="flex flex-col items-center justify-center h-full w-full">
-          <div className={`font-comic ${textSizeClass} text-center mb-2`}>{textContent}</div>
-          <div className="font-comic font-bold text-sm text-center">{formatReference()}</div>
+          <div className={`font-comic ${textSizeClass} text-center mb-2 print:font-bold print:text-base`}>{textContent}</div>
+          <div className="font-comic font-bold text-sm text-center print:font-normal print:text-xs">{formatReference()}</div>
         </div>
       );
     }
