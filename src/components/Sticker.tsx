@@ -11,15 +11,15 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
   const renderVerseText = () => {
     switch (language) {
       case 'english':
-        return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.english}</p>;
+        return verse.text.english;
       case 'korean':
-        return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.korean || verse.text.english}</p>;
+        return verse.text.korean || verse.text.english;
       case 'spanish':
-        return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.spanish || verse.text.english}</p>;
+        return verse.text.spanish || verse.text.english;
       case 'french':
-        return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.french || verse.text.english}</p>;
+        return verse.text.french || verse.text.english;
       case 'german':
-        return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.german || verse.text.english}</p>;
+        return verse.text.german || verse.text.english;
       case 'bilingual':
         return (
           <>
@@ -28,7 +28,7 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
           </>
         );
       default:
-        return <p className="text-center font-comic text-sm sm:text-base line-clamp-4">{verse.text.english}</p>;
+        return verse.text.english;
     }
   };
 
@@ -315,7 +315,7 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
         'Philippians': 'Philippiens',
         'Colossians': 'Colossiens',
         'Thessalonians': 'Thessaloniciens',
-        '1 Thessalonians': '1 Thessaloniciens',
+        '1 Thessaloniciens': '1 Thessaloniciens',
         '2 Thessaloniciens': '2 Thessaloniciens',
         'Timothy': 'Timothée',
         '1 Timothy': '1 Timothée',
@@ -448,19 +448,36 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
     return verse.reference;
   };
 
+  // Combined rendering for verse text and reference in a single container
+  const renderVerseContent = () => {
+    if (language === 'bilingual') {
+      return (
+        <>
+          <div className="font-comic text-xs sm:text-sm mb-1 line-clamp-2 text-center">{verse.text.english}</div>
+          <div className="font-comic text-xs sm:text-sm line-clamp-2 text-center">{verse.text.korean || ''}</div>
+          <div className="font-comic font-bold text-sm mt-2 text-center">{formatReference()}</div>
+        </>
+      );
+    } else {
+      const textContent = renderVerseText();
+      const textSizeClass = getTextSizeClass();
+      
+      return (
+        <>
+          <div className={`font-comic ${textSizeClass} line-clamp-4 text-center`}>{textContent}</div>
+          <div className="font-comic font-bold text-sm mt-2 text-center">{formatReference()}</div>
+        </>
+      );
+    }
+  };
+
   return (
     <div 
-      className="sticker w-full h-full rounded-lg flex flex-col justify-center items-center p-2" 
+      className="sticker w-full h-full rounded-lg flex flex-col justify-between items-center p-2" 
       style={{ background: gradient }}
     >
-      {/* Verse text first */}
-      <div className={`font-comic ${getTextSizeClass()} text-center mb-2 flex-1 flex items-center`}>
-        {renderVerseText()}
-      </div>
-      
-      {/* Reference at the bottom */}
-      <div className="font-comic font-bold text-sm mt-auto">
-        {formatReference()}
+      <div className="w-full flex-1 flex flex-col justify-center items-center">
+        {renderVerseContent()}
       </div>
     </div>
   );
