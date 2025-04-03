@@ -101,6 +101,16 @@
       height: 297mm !important;
     }
     
+    .sticker {
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+      height: 100% !important;
+      page-break-inside: avoid !important;
+      overflow: visible !important;
+    }
+    
     .kids-theme-bg::before,
     .kids-theme-bg::after {
       display: block !important;

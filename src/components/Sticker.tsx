@@ -452,33 +452,31 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
   const renderVerseContent = () => {
     if (language === 'bilingual') {
       return (
-        <>
-          <div className="font-comic text-xs sm:text-sm mb-1 line-clamp-2 text-center">{verse.text.english}</div>
-          <div className="font-comic text-xs sm:text-sm line-clamp-2 text-center">{verse.text.korean || ''}</div>
+        <div className="flex flex-col items-center justify-center h-full w-full">
+          <div className="font-comic text-xs sm:text-sm mb-1 text-center">{verse.text.english}</div>
+          <div className="font-comic text-xs sm:text-sm text-center">{verse.text.korean || ''}</div>
           <div className="font-comic font-bold text-sm mt-2 text-center">{formatReference()}</div>
-        </>
+        </div>
       );
     } else {
       const textContent = renderVerseText();
       const textSizeClass = getTextSizeClass();
       
       return (
-        <>
-          <div className={`font-comic ${textSizeClass} line-clamp-4 text-center`}>{textContent}</div>
-          <div className="font-comic font-bold text-sm mt-2 text-center">{formatReference()}</div>
-        </>
+        <div className="flex flex-col items-center justify-center h-full w-full">
+          <div className={`font-comic ${textSizeClass} text-center mb-2`}>{textContent}</div>
+          <div className="font-comic font-bold text-sm text-center">{formatReference()}</div>
+        </div>
       );
     }
   };
 
   return (
     <div 
-      className="sticker w-full h-full rounded-lg flex flex-col justify-between items-center p-2" 
+      className="sticker w-full h-full rounded-lg p-3" 
       style={{ background: gradient }}
     >
-      <div className="w-full flex-1 flex flex-col justify-center items-center">
-        {renderVerseContent()}
-      </div>
+      {renderVerseContent()}
     </div>
   );
 };

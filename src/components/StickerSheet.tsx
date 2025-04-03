@@ -8,7 +8,7 @@ interface StickerSheetProps {
   verses: BibleVerse[];
   language: string;
   randomGradients?: boolean;
-  selectedTopics?: string[]; // Added this prop
+  selectedTopics?: string[];
 }
 
 const StickerSheet: React.FC<StickerSheetProps> = ({ 
@@ -82,7 +82,7 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
               <div className="dashed-line horizontal absolute left-0 right-0 bottom-0"></div>
             )}
             
-            <div className="h-full p-1">
+            <div className="h-full p-1 print:overflow-visible">
               <Sticker verse={verse} language={language} gradient={gradient} />
             </div>
           </div>
