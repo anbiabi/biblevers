@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BibleVerse } from '../data/bibleVerses';
 
@@ -24,7 +23,7 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
       case 'bilingual':
         return (
           <>
-            <p className="text-center font-comic text-xs sm:text-sm mb-0.5 line-clamp-2">{verse.text.english}</p>
+            <p className="text-center font-comic text-xs sm:text-sm mb-1 line-clamp-2">{verse.text.english}</p>
             <p className="text-center font-comic text-xs sm:text-sm line-clamp-2">{verse.text.korean || ''}</p>
           </>
         );
@@ -473,25 +472,10 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
 
   return (
     <div 
-      className="sticker w-full h-full rounded-lg flex flex-col items-center justify-center" 
+      className="sticker w-full h-full rounded-lg p-2 print:p-1" 
       style={{ background: gradient }}
     >
-      {language === 'bilingual' ? (
-        <>
-          <div className="font-comic text-xs sm:text-sm mb-0.5 text-center print:text-lg print:font-bold px-1">{verse.text.english}</div>
-          <div className="font-comic text-xs sm:text-sm text-center print:text-lg print:font-bold px-1">{verse.text.korean || ''}</div>
-          <div className="font-comic font-bold text-xs mt-0.5 text-center print:text-xs print:font-normal print:opacity-75">{formatReference()}</div>
-        </>
-      ) : (
-        <>
-          <div className={`font-comic ${getTextSizeClass()} text-center mb-0.5 print:text-lg print:font-bold px-1`}>
-            {renderVerseText()}
-          </div>
-          <div className="font-comic font-bold text-xs text-center print:text-xs print:font-normal print:opacity-75">
-            {formatReference()}
-          </div>
-        </>
-      )}
+      {renderVerseContent()}
     </div>
   );
 };
