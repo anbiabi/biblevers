@@ -453,8 +453,8 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
     if (language === 'bilingual') {
       return (
         <div className="flex flex-col items-center justify-center h-full w-full">
-          <div className="font-comic text-xs sm:text-sm mb-1 text-center print:text-base print:font-bold">{verse.text.english}</div>
-          <div className="font-comic text-xs sm:text-sm text-center print:text-base print:font-bold">{verse.text.korean || ''}</div>
+          <div className="font-comic text-xs sm:text-sm mb-1 text-center print:text-lg print:font-bold">{verse.text.english}</div>
+          <div className="font-comic text-xs sm:text-sm text-center print:text-lg print:font-bold">{verse.text.korean || ''}</div>
           <div className="font-comic font-bold text-sm mt-2 text-center print:text-xs print:font-normal print:opacity-75">{formatReference()}</div>
         </div>
       );
@@ -464,7 +464,7 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
       
       return (
         <div className="flex flex-col items-center justify-center h-full w-full">
-          <div className={`font-comic ${textSizeClass} text-center mb-2 print:text-base print:font-bold`}>{textContent}</div>
+          <div className={`font-comic ${textSizeClass} text-center mb-2 print:text-lg print:font-bold`}>{textContent}</div>
           <div className="font-comic font-bold text-sm text-center print:text-xs print:font-normal print:opacity-75 print:mt-1">{formatReference()}</div>
         </div>
       );
@@ -473,7 +473,7 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
 
   return (
     <div 
-      className="sticker w-full h-full rounded-lg p-3 print:p-2" 
+      className="sticker w-full h-full rounded-lg p-3 print:p-1" 
       style={{ background: gradient }}
     >
       {renderVerseContent()}
