@@ -82,7 +82,7 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
               <div className="dashed-line horizontal absolute left-0 right-0 bottom-0 print:hidden"></div>
             )}
             
-            <div className="h-full p-1 print:overflow-visible print:p-0">
+            <div className="h-full p-0.5 print:overflow-visible print:p-0">
               <Sticker verse={verse} language={language} gradient={gradient} />
             </div>
           </div>
