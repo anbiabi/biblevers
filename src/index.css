@@ -115,7 +115,7 @@
       padding: 2pt !important;
     }
     
-    /* Force print styles for verse text and reference */
+    /* Force print styles - SWAPPED formatting between verse and reference */
     .sticker .font-comic.print\:text-lg.print\:font-bold {
       font-weight: bold !important;
       font-size: 13pt !important;
