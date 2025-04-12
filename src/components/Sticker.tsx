@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BibleVerse } from '../data/bibleVerses';
 
@@ -451,28 +452,28 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
   const renderVerseContent = () => {
     if (language === 'bilingual') {
       return (
-        <div className="flex flex-col items-center justify-center h-full w-full py-1">
-          <div className="font-comic text-xs sm:text-sm mb-0.5 text-center print:text-lg print:font-bold">{verse.text.english}</div>
-          <div className="font-comic text-xs sm:text-sm text-center print:text-lg print:font-bold">{verse.text.korean || ''}</div>
-          <div className="font-comic font-bold text-sm mt-1 text-center print:text-xs print:font-normal print:opacity-75">{formatReference()}</div>
-        </div>
+        <>
+          <div className="font-comic text-xs sm:text-sm mb-0.5 text-center print:text-xl print:font-bold print:leading-tight">{verse.text.english}</div>
+          <div className="font-comic text-xs sm:text-sm text-center print:text-xl print:font-bold print:leading-tight">{verse.text.korean || ''}</div>
+          <div className="font-comic font-bold text-sm mt-1 text-center print:text-xs print:font-normal print:opacity-50 print:text-[6pt]">{formatReference()}</div>
+        </>
       );
     } else {
       const textContent = renderVerseText();
       const textSizeClass = getTextSizeClass();
       
       return (
-        <div className="flex flex-col items-center justify-center h-full w-full py-1">
-          <div className={`font-comic ${textSizeClass} text-center mb-1 print:text-lg print:font-bold`}>{textContent}</div>
-          <div className="font-comic font-bold text-sm text-center print:text-xs print:font-normal print:opacity-75">{formatReference()}</div>
-        </div>
+        <>
+          <div className={`font-comic ${textSizeClass} text-center mb-1 print:text-2xl print:font-bold print:leading-tight`}>{textContent}</div>
+          <div className="font-comic font-bold text-sm text-center print:text-xs print:font-normal print:opacity-50 print:text-[6pt]">{formatReference()}</div>
+        </>
       );
     }
   };
 
   return (
     <div 
-      className="sticker w-full h-full rounded-lg p-2 print:p-1" 
+      className="sticker w-full h-full rounded-lg flex flex-col items-center justify-center print:p-0"
       style={{ background: gradient }}
     >
       {renderVerseContent()}

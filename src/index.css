@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Bubblegum+Sans&display=swap');
 
 @tailwind base;
@@ -111,29 +112,42 @@
       overflow: visible !important;
       box-shadow: none !important;
       border: 1px solid rgba(0, 0, 0, 0.1) !important;
-      padding: 1pt !important;
+      padding: 0 !important;
     }
     
-    /* Optimized print styles - verse text is prominent, reference is small */
-    .sticker .font-comic.print\:text-lg.print\:font-bold {
+    /* Optimized print styles - verse text is prominent, reference is tiny */
+    .sticker .font-comic.print\:text-2xl.print\:font-bold.print\:leading-tight {
       font-weight: bold !important;
-      font-size: 13pt !important;
+      font-size: 16pt !important;
       line-height: 1.1 !important;
-      margin-bottom: 1pt !important;
-      max-height: 90% !important;
+      margin-bottom: 0 !important;
+      max-height: 95% !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
-      padding: 0 !important;
+      padding: 0 1pt !important;
     }
     
-    .sticker .font-comic.print\:text-xs.print\:font-normal {
+    .sticker .font-comic.print\:text-xl.print\:font-bold.print\:leading-tight {
+      font-weight: bold !important;
+      font-size: 14pt !important;
+      line-height: 1.1 !important;
+      margin-bottom: 0 !important;
+      max-height: 95% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 0 1pt !important;
+    }
+    
+    .sticker .font-comic.print\:text-xs.print\:font-normal.print\:opacity-50.print\:text-\[6pt\] {
       font-weight: normal !important;
-      font-size: 7pt !important;
-      opacity: 0.8 !important;
+      font-size: 6pt !important;
+      opacity: 0.5 !important;
       margin-top: 0 !important;
       padding: 0 !important;
       line-height: 1 !important;
+      margin-bottom: 1pt !important;
     }
     
     .kids-theme-bg::before,
