@@ -73,7 +73,7 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
           : fixedGradients[index % fixedGradients.length];
         
         return (
-          <div key={`${verse.reference}-${index}`} className="relative h-[37.125mm] sticker-container overflow-hidden print:overflow-visible">
+          <div key={`${verse.reference}-${index}`} className="relative h-[37.125mm] sticker-container overflow-hidden print:overflow-visible p-[1mm]">
             {/* Dashed cutting lines */}
             {index % 2 !== 1 && index < 14 && (
               <div className="dashed-line vertical absolute right-0 top-0 bottom-0 print:hidden"></div>

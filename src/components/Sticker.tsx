@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BibleVerse } from '../data/bibleVerses';
 
@@ -61,7 +60,7 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
     if (text.length > 100) return 'text-sm';
     return 'text-base';
   };
-
+  
   const formatReference = () => {
     if (language === 'korean') {
       // Korean style reference names
@@ -473,7 +472,7 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
 
   return (
     <div 
-      className="sticker w-full h-full rounded-lg flex flex-col items-center justify-center print:p-0"
+      className="sticker w-full h-full rounded-lg flex flex-col items-center justify-center p-0"
       style={{ background: gradient }}
     >
       {renderVerseContent()}

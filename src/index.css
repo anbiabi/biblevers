@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Bubblegum+Sans&display=swap');
 
 @tailwind base;
@@ -125,7 +124,7 @@
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
-      padding: 0 1pt !important;
+      padding: 0 0.5pt !important;
     }
     
     .sticker .font-comic.print\:text-xl.print\:font-bold.print\:leading-tight {
@@ -137,7 +136,7 @@
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
-      padding: 0 1pt !important;
+      padding: 0 0.5pt !important;
     }
     
     .sticker .font-comic.print\:text-xs.print\:font-normal.print\:opacity-50.print\:text-\[6pt\] {
@@ -147,9 +146,10 @@
       margin-top: 0 !important;
       padding: 0 !important;
       line-height: 1 !important;
-      margin-bottom: 1pt !important;
+      margin-bottom: 0.5pt !important;
     }
     
+    /* Hide decorations when printing */
     .kids-theme-bg::before,
     .kids-theme-bg::after {
       display: none !important;
@@ -198,7 +198,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 8px;
+    padding: 0;
     box-sizing: border-box;
   }
   
