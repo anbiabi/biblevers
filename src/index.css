@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Bubblegum+Sans&display=swap');
 
 @tailwind base;
@@ -151,19 +152,20 @@
       line-height: 1 !important;
     }
   
-  /* Hide decorations when printing */
-  .kids-theme-bg::before,
-  .kids-theme-bg::after {
-    display: none !important;
-  }
-  
-  .dashed-line {
-    display: none !important;
-  }
-  
-  @page {
-    size: A4;
-    margin: 0;
+    /* Hide decorations when printing */
+    .kids-theme-bg::before,
+    .kids-theme-bg::after {
+      display: none !important;
+    }
+    
+    .dashed-line {
+      display: none !important;
+    }
+    
+    @page {
+      size: A4;
+      margin: 0;
+    }
   }
 }
 
