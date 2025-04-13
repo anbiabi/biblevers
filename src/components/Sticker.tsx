@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BibleVerse } from '../data/bibleVerses';
 
@@ -23,8 +24,8 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
       case 'bilingual':
         return (
           <>
-            <p className="text-center font-comic text-xs sm:text-sm mb-1 line-clamp-2">{verse.text.english}</p>
-            <p className="text-center font-comic text-xs sm:text-sm line-clamp-2">{verse.text.korean || ''}</p>
+            <p className="text-center font-comic text-xs sm:text-sm mb-0.5 line-clamp-3">{verse.text.english}</p>
+            <p className="text-center font-comic text-xs sm:text-sm line-clamp-3">{verse.text.korean || ''}</p>
           </>
         );
       default:
@@ -452,9 +453,9 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
     if (language === 'bilingual') {
       return (
         <>
-          <div className="font-comic text-xs sm:text-sm mb-0.5 text-center print:text-xl print:font-bold print:leading-tight">{verse.text.english}</div>
-          <div className="font-comic text-xs sm:text-sm text-center print:text-xl print:font-bold print:leading-tight">{verse.text.korean || ''}</div>
-          <div className="font-comic font-bold text-sm mt-1 text-center print:text-xs print:font-normal print:opacity-50 print:text-[6pt]">{formatReference()}</div>
+          <div className="font-comic text-xs sm:text-sm mb-0.5 text-center print:text-xl print:font-bold print:leading-tight min-h-0 flex-grow flex items-center">{verse.text.english}</div>
+          <div className="font-comic text-xs sm:text-sm text-center print:text-xl print:font-bold print:leading-tight min-h-0 flex-grow flex items-center">{verse.text.korean || ''}</div>
+          <div className="font-comic font-bold text-xs mt-0.5 text-center print:text-xs print:font-normal print:opacity-50 print:text-[6pt]">{formatReference()}</div>
         </>
       );
     } else {
@@ -463,8 +464,8 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
       
       return (
         <>
-          <div className={`font-comic ${textSizeClass} text-center mb-1 print:text-2xl print:font-bold print:leading-tight`}>{textContent}</div>
-          <div className="font-comic font-bold text-sm text-center print:text-xs print:font-normal print:opacity-50 print:text-[6pt]">{formatReference()}</div>
+          <div className={`font-comic ${textSizeClass} text-center min-h-0 flex-grow flex items-center print:text-2xl print:font-bold print:leading-tight`}>{textContent}</div>
+          <div className="font-comic font-bold text-xs text-center mt-0.5 print:text-xs print:font-normal print:opacity-50 print:text-[6pt]">{formatReference()}</div>
         </>
       );
     }
@@ -475,7 +476,9 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
       className="sticker w-full h-full rounded-lg flex flex-col items-center justify-center p-0"
       style={{ background: gradient }}
     >
-      {renderVerseContent()}
+      <div className="flex flex-col h-full w-full justify-between py-1 px-1.5">
+        {renderVerseContent()}
+      </div>
     </div>
   );
 };
