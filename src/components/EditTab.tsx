@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shuffle } from "lucide-react";
 import TopicSelector from '@/components/TopicSelector';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -22,7 +23,10 @@ interface EditTabProps {
   previewVerse: BibleVerse | null;
   refreshPreviewVerse: () => void;
   handleGenerate: () => void;
+  handleGenerateCards: () => void; // New handler for faith cards
   isGenerating: boolean;
+  generationType: 'stickers' | 'cards';
+  setGenerationType: (type: 'stickers' | 'cards') => void;
 }
 
 const EditTab: React.FC<EditTabProps> = ({
@@ -37,7 +41,10 @@ const EditTab: React.FC<EditTabProps> = ({
   previewVerse,
   refreshPreviewVerse,
   handleGenerate,
-  isGenerating
+  handleGenerateCards,
+  isGenerating,
+  generationType,
+  setGenerationType
 }) => {
   return (
     <div className="space-y-8 animate-slide-up">
@@ -92,6 +99,30 @@ const EditTab: React.FC<EditTabProps> = ({
               </div>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardContent className="pt-6 space-y-4">
+              <h3 className="text-lg font-medium">Generation Type</h3>
+              <Tabs defaultValue={generationType} onValueChange={(value) => setGenerationType(value as 'stickers' | 'cards')}>
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="stickers" className="data-[state=active]:bg-blue-100">Sticker Sheets</TabsTrigger>
+                  <TabsTrigger value="cards" className="data-[state=active]:bg-green-100">Faith Cards</TabsTrigger>
+                </TabsList>
+                <TabsContent value="stickers" className="mt-4">
+                  <p className="text-sm text-gray-600">
+                    Create {numberOfSheets} sheet{numberOfSheets > 1 ? 's' : ''} with 16 Bible verse stickers each,
+                    perfect for children's activities.
+                  </p>
+                </TabsContent>
+                <TabsContent value="cards" className="mt-4">
+                  <p className="text-sm text-gray-600">
+                    Generate {numberOfSheets} sheet{numberOfSheets > 1 ? 's' : ''} with 4 faith declaration cards per sheet,
+                    ideal for encouragement and reflection.
+                  </p>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="space-y-4">
@@ -111,17 +142,30 @@ const EditTab: React.FC<EditTabProps> = ({
             </CardContent>
           </Card>
 
-          <Button 
-            className="w-full h-12 text-lg shadow-lg transition transform hover:scale-105 bg-gradient-to-r from-blue-600 to-indigo-600"
-            onClick={handleGenerate}
-            disabled={isGenerating}
-          >
-            {isGenerating ? "Generating..." : "Generate Sticker Sheets"}
-          </Button>
+          {generationType === 'stickers' ? (
+            <Button 
+              className="w-full h-12 text-lg shadow-lg transition transform hover:scale-105 bg-gradient-to-r from-blue-600 to-indigo-600"
+              onClick={handleGenerate}
+              disabled={isGenerating}
+            >
+              {isGenerating ? "Generating..." : "Generate Sticker Sheets"}
+            </Button>
+          ) : (
+            <Button 
+              className="w-full h-12 text-lg shadow-lg transition transform hover:scale-105 bg-gradient-to-r from-green-600 to-teal-600"
+              onClick={handleGenerateCards}
+              disabled={isGenerating}
+            >
+              {isGenerating ? "Generating..." : "Generate Faith Cards"}
+            </Button>
+          )}
 
           <p className="text-xs text-gray-500 text-center px-2">
-            Generates {numberOfSheets} sheet{numberOfSheets > 1 ? 's' : ''} with 16 stickers each,
-            sized for A4 paper.
+            {generationType === 'stickers' ? (
+              <>Generates {numberOfSheets} sheet{numberOfSheets > 1 ? 's' : ''} with 16 stickers each, sized for A4 paper.</>
+            ) : (
+              <>Creates {numberOfSheets} sheet{numberOfSheets > 1 ? 's' : ''} with 4 faith declaration cards each, sized for A4 paper.</>
+            )}
           </p>
         </div>
       </div>

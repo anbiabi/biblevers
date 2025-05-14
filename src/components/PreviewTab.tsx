@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Download, FileText, Leaf } from "lucide-react";
 import StickerSheet from '@/components/StickerSheet';
+import FaithCardSheet from '@/components/FaithCardSheet';
 import { BibleVerse } from '@/data/bibleVerses';
 import { 
   DropdownMenu,
@@ -20,7 +21,8 @@ interface PreviewTabProps {
   handlePdfDownload: () => void;
   setActiveTab: (tab: string) => void;
   sheetRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
-  selectedTopics: string[]; // Added this prop
+  selectedTopics: string[];
+  generationType: 'stickers' | 'cards';
 }
 
 const PreviewTab: React.FC<PreviewTabProps> = ({
@@ -31,12 +33,13 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
   handlePdfDownload,
   setActiveTab,
   sheetRefs,
-  selectedTopics
+  selectedTopics,
+  generationType
 }) => {
   if (generatedSheets.length === 0) {
     return (
       <div className="text-center py-12 animate-fade-in">
-        <p className="text-green-600 mb-4 font-comic">No sticker sheets generated yet</p>
+        <p className="text-green-600 mb-4 font-comic">No {generationType} generated yet</p>
         <Button onClick={() => setActiveTab('edit')} className="bg-green-600 hover:bg-green-700 font-comic">
           <Leaf className="w-4 h-4 mr-2" />
           Go to Editor
@@ -51,9 +54,15 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-green-800 font-comic">Your Sticker Sheets</h2>
+              <h2 className="text-xl font-bold text-green-800 font-comic">
+                {generationType === 'stickers' ? 'Your Sticker Sheets' : 'Your Faith Cards'}
+              </h2>
               <p className="text-sm text-green-600 font-comic">
-                {generatedSheets.length} sheet{generatedSheets.length > 1 ? 's' : ''} with {generatedSheets.length * 16} stickers total
+                {generatedSheets.length} sheet{generatedSheets.length > 1 ? 's' : ''} with {
+                  generationType === 'stickers' 
+                    ? `${generatedSheets.length * 16} stickers` 
+                    : `${generatedSheets.length * 4} faith cards`
+                } total
               </p>
             </div>
             
@@ -95,12 +104,20 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
               ref={(el) => sheetRefs.current[index] = el}
               className="overflow-auto max-w-full shadow-md"
             >
-              <StickerSheet
-                verses={verses}
-                language={language}
-                randomGradients={randomGradients}
-                selectedTopics={selectedTopics}
-              />
+              {generationType === 'stickers' ? (
+                <StickerSheet
+                  verses={verses}
+                  language={language}
+                  randomGradients={randomGradients}
+                  selectedTopics={selectedTopics}
+                />
+              ) : (
+                <FaithCardSheet
+                  verses={verses}
+                  language={language}
+                  selectedTopics={selectedTopics}
+                />
+              )}
             </div>
           </div>
         ))}

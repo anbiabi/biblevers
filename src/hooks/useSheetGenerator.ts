@@ -8,6 +8,7 @@ export const useSheetGenerator = () => {
   const [previewVerse, setPreviewVerse] = useState<BibleVerse | null>(null);
   const [generatedSheets, setGeneratedSheets] = useState<BibleVerse[][]>([]);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [generationType, setGenerationType] = useState<'stickers' | 'cards'>('stickers');
 
   const updatePreviewVerse = (selectedTopics: string[]) => {
     if (selectedTopics.length > 0) {
@@ -32,16 +33,18 @@ export const useSheetGenerator = () => {
       const sheets: BibleVerse[][] = [];
       
       for (let i = 0; i < numberOfSheets; i++) {
-        const versesForSheet = getRandomVerses(16, selectedTopics);
+        // For stickers, we need 16 verses per sheet
+        const versesPerSheet = generationType === 'stickers' ? 16 : 4;
+        const versesForSheet = getRandomVerses(versesPerSheet, selectedTopics);
         sheets.push(versesForSheet);
       }
       
       setGeneratedSheets(sheets);
       callback(); // Call the callback (usually to navigate to preview)
-      toast.success(`${numberOfSheets} sticker sheet${numberOfSheets > 1 ? 's' : ''} generated! Scroll down to see.`);
+      toast.success(`${numberOfSheets} ${generationType} sheet${numberOfSheets > 1 ? 's' : ''} generated! Scroll down to see.`);
     } catch (error) {
-      console.error("Error generating sheets:", error);
-      toast.error("There was an error generating your sticker sheets.");
+      console.error(`Error generating ${generationType}:`, error);
+      toast.error(`There was an error generating your ${generationType}.`);
     } finally {
       setIsGenerating(false);
     }
@@ -49,7 +52,7 @@ export const useSheetGenerator = () => {
 
   const downloadSheets = async (sheetRefs: React.MutableRefObject<(HTMLDivElement | null)[]>) => {
     if (generatedSheets.length === 0) {
-      toast.error("No sticker sheets to download. Generate some first!");
+      toast.error(`No ${generationType} to download. Generate some first!`);
       return;
     }
     
@@ -59,7 +62,10 @@ export const useSheetGenerator = () => {
       // If we have multiple sheets, create separate images
       for (let i = 0; i < generatedSheets.length; i++) {
         if (sheetRefs.current[i]) {
-          await generateImage(sheetRefs.current[i], `bible-stickers-sheet-${i+1}.png`);
+          const filename = generationType === 'stickers' 
+            ? `bible-stickers-sheet-${i+1}.png`
+            : `faith-cards-sheet-${i+1}.png`;
+          await generateImage(sheetRefs.current[i], filename);
         }
       }
       
@@ -72,7 +78,7 @@ export const useSheetGenerator = () => {
 
   const downloadPDF = async (sheetRefs: React.MutableRefObject<(HTMLDivElement | null)[]>) => {
     if (generatedSheets.length === 0) {
-      toast.error("No sticker sheets to download. Generate some first!");
+      toast.error(`No ${generationType} to download. Generate some first!`);
       return;
     }
     
@@ -83,7 +89,10 @@ export const useSheetGenerator = () => {
       const elements = sheetRefs.current.filter(ref => ref !== null) as HTMLDivElement[];
       
       if (elements.length > 0) {
-        await generatePDF(elements, "bible-stickers.pdf");
+        const filename = generationType === 'stickers' 
+          ? "bible-stickers.pdf"
+          : "faith-cards.pdf";
+        await generatePDF(elements, filename);
         toast.success("PDF download ready!");
       } else {
         toast.error("Could not find sheet elements to convert to PDF.");
@@ -98,6 +107,8 @@ export const useSheetGenerator = () => {
     previewVerse,
     generatedSheets,
     isGenerating,
+    generationType,
+    setGenerationType,
     updatePreviewVerse,
     refreshPreviewVerse,
     generateSheets,

@@ -22,6 +22,8 @@ const Index = () => {
     previewVerse,
     generatedSheets,
     isGenerating,
+    generationType,
+    setGenerationType,
     updatePreviewVerse,
     refreshPreviewVerse,
     generateSheets,
@@ -35,6 +37,14 @@ const Index = () => {
   }, [selectedTopics, language]);
 
   const handleGenerate = () => {
+    // Pass 'stickers' type to the hook
+    setGenerationType('stickers');
+    generateSheets(numberOfSheets, selectedTopics, () => setActiveTab('preview'));
+  };
+
+  const handleGenerateCards = () => {
+    // Pass 'cards' type to the hook
+    setGenerationType('cards');
     generateSheets(numberOfSheets, selectedTopics, () => setActiveTab('preview'));
   };
 
@@ -48,6 +58,18 @@ const Index = () => {
 
   const handlePdfDownload = () => {
     downloadPDF(sheetRefs);
+  };
+
+  const getPageTitle = () => {
+    return generationType === 'stickers' 
+      ? 'Bible Sticker Sheet Generator'
+      : 'Bible Faith Card Generator';
+  };
+
+  const getPageDescription = () => {
+    return generationType === 'stickers'
+      ? 'Create beautiful, printable Bible verse stickers for children. Select your topics, language, and customize your sheets.'
+      : 'Create inspiring faith declaration cards with Bible verses. Great for encouragement, comfort, and spiritual reflection.';
   };
 
   return (
@@ -67,11 +89,10 @@ const Index = () => {
       <header className="py-8 md:py-16 px-4 md:px-6 text-center animate-fade-in relative z-10">
         <Leaf className="inline-block text-green-500 w-8 h-8 mr-2 animate-bounce" />
         <h1 className="text-3xl md:text-5xl font-bold text-green-800 mb-2 font-comic">
-          Bible Sticker Sheet Generator
+          {getPageTitle()}
         </h1>
         <p className="text-green-700 max-w-2xl mx-auto font-comic">
-          Create beautiful, printable Bible verse stickers for children. Select your topics,
-          language, and customize your sheets.
+          {getPageDescription()}
         </p>
       </header>
 
@@ -80,7 +101,7 @@ const Index = () => {
           <TabsList className="grid w-full grid-cols-2 mb-8 bg-green-100 border-2 border-green-200">
             <TabsTrigger value="edit" className="text-sm md:text-base font-comic data-[state=active]:bg-green-200 data-[state=active]:text-green-800">
               <FileText className="w-4 h-4 mr-2" />
-              Edit Stickers
+              Edit Content
             </TabsTrigger>
             <TabsTrigger value="preview" className="text-sm md:text-base font-comic data-[state=active]:bg-green-200 data-[state=active]:text-green-800">
               <Eye className="w-4 h-4 mr-2" />
@@ -101,7 +122,10 @@ const Index = () => {
               previewVerse={previewVerse}
               refreshPreviewVerse={handleRefreshPreview}
               handleGenerate={handleGenerate}
+              handleGenerateCards={handleGenerateCards}
               isGenerating={isGenerating}
+              generationType={generationType}
+              setGenerationType={setGenerationType}
             />
           </TabsContent>
 
@@ -115,14 +139,15 @@ const Index = () => {
               setActiveTab={setActiveTab}
               sheetRefs={sheetRefs}
               selectedTopics={selectedTopics}
+              generationType={generationType}
             />
           </TabsContent>
         </Tabs>
       </main>
 
       <footer className="bg-green-100 border-t-2 border-green-200 py-6 text-center text-sm text-green-700 font-comic relative z-10">
-        <p>Bible Sticker Sheet Generator</p>
-        <p className="text-xs mt-1">Create beautiful customizable Bible verse stickers for children</p>
+        <p>Bible {generationType === 'stickers' ? 'Sticker Sheet' : 'Faith Card'} Generator</p>
+        <p className="text-xs mt-1">Create beautiful customizable Bible verse {generationType === 'stickers' ? 'stickers for children' : 'declaration cards'}</p>
         <div className="absolute bottom-0 right-0">
           <Leaf className="text-green-400 w-12 h-12 transform -rotate-45" />
         </div>
