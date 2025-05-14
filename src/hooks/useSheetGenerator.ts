@@ -33,7 +33,7 @@ export const useSheetGenerator = () => {
       const sheets: BibleVerse[][] = [];
       
       for (let i = 0; i < numberOfSheets; i++) {
-        // For stickers, we need 16 verses per sheet
+        // For stickers, we need 16 verses per sheet, for cards we need 4
         const versesPerSheet = generationType === 'stickers' ? 16 : 4;
         const versesForSheet = getRandomVerses(versesPerSheet, selectedTopics);
         sheets.push(versesForSheet);

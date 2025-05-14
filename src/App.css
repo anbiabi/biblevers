@@ -10,6 +10,22 @@
   margin: 0 auto;
 }
 
+.faith-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.faith-card-container {
+  height: 100%;
+  page-break-inside: avoid !important;
+  overflow: hidden;
+}
+
 @media print {
   .faith-card-container {
     page-break-inside: avoid !important;
