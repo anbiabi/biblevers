@@ -16,8 +16,16 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
 }) => {
   const sheetRef = useRef<HTMLDivElement>(null);
   
-  // Generate titles based on selected topics or verse topics
+  // Generate titles based on selected topics
   const generateCardTitles = () => {
+    // If we have exactly 4 selected topics, use them directly
+    if (selectedTopics.length === 4) {
+      // Capitalize first letter of each topic
+      return selectedTopics.map(topic => 
+        topic.charAt(0).toUpperCase() + topic.slice(1)
+      );
+    }
+    
     // Create an array to hold our specific title categories
     const faithDeclarations = ["Faith Declaration", "Standing on Truth", "I Believe"];
     const comfortMessages = ["Words of Comfort", "Divine Comfort", "Peace in Trials"];
@@ -96,7 +104,44 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
     return defaultTitles;
   };
   
+  // Match verses to topics when possible
+  const matchVersesToTopics = () => {
+    if (selectedTopics.length !== 4 || verses.length < 4) {
+      return verses.slice(0, 4);
+    }
+    
+    const result: BibleVerse[] = [];
+    const unusedVerses = [...verses];
+    
+    // For each topic, find a matching verse
+    selectedTopics.forEach(topic => {
+      // Find a verse that has this topic
+      const matchIndex = unusedVerses.findIndex(verse => 
+        verse.topics.some(t => t.toLowerCase() === topic.toLowerCase())
+      );
+      
+      if (matchIndex >= 0) {
+        // Add this verse to the result and remove from unused
+        result.push(unusedVerses[matchIndex]);
+        unusedVerses.splice(matchIndex, 1);
+      } else if (unusedVerses.length > 0) {
+        // If no match found, just take the next verse
+        result.push(unusedVerses[0]);
+        unusedVerses.splice(0, 1);
+      }
+    });
+    
+    // If we don't have 4 verses yet, add any remaining
+    while (result.length < 4 && unusedVerses.length > 0) {
+      result.push(unusedVerses[0]);
+      unusedVerses.splice(0, 1);
+    }
+    
+    return result;
+  };
+  
   const cardTitles = generateCardTitles();
+  const orderedVerses = matchVersesToTopics();
 
   return (
     <div 
@@ -107,12 +152,12 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
         boxSizing: 'border-box'
       }}
     >
-      {verses.slice(0, 4).map((verse, index) => (
+      {orderedVerses.slice(0, 4).map((verse, index) => (
         <div key={`${verse.reference}-${index}`} className="faith-card-container">
           <FaithCard 
             verse={verse} 
             language={language} 
-            title={cardTitles[index % cardTitles.length]} 
+            title={cardTitles[index]} 
           />
         </div>
       ))}

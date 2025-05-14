@@ -36,6 +36,16 @@ const Index = () => {
     updatePreviewVerse(selectedTopics);
   }, [selectedTopics, language]);
 
+  // When generation type changes, ensure we have exactly 4 topics for cards
+  useEffect(() => {
+    if (generationType === 'cards' && selectedTopics.length !== 4) {
+      // If we have more than 4, trim to 4
+      if (selectedTopics.length > 4) {
+        setSelectedTopics(selectedTopics.slice(0, 4));
+      }
+    }
+  }, [generationType]);
+
   const handleGenerate = () => {
     // Pass 'stickers' type to the hook
     setGenerationType('stickers');

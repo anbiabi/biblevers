@@ -2,6 +2,7 @@
 import React from 'react';
 import { BibleVerse } from '@/data/bibleVerses';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { getRandomVibrantGradient } from "@/lib/utils";
 
 interface FaithCardProps {
   verse: BibleVerse;
@@ -17,23 +18,7 @@ const FaithCard: React.FC<FaithCardProps> = ({
   title
 }) => {
   // Generate a vibrant, joyful gradient background
-  const getVibrantGradient = () => {
-    const joyfulGradients = [
-      "linear-gradient(to bottom right, #ffcf87, #ff8ba7)",
-      "linear-gradient(to bottom right, #fbd07c, #f7f779, #b0f4e6)",
-      "linear-gradient(to bottom right, #adffd6, #84ffc9, #c4e0ff)",
-      "linear-gradient(to bottom right, #ffccc9, #ffb0cd, #d8bbff)",
-      "linear-gradient(to bottom right, #a8ff78, #78ffd6)",
-      "linear-gradient(to bottom right, #f0ffe9, #c9f5d9, #fcffbf)",
-      "linear-gradient(to bottom right, #fee17c, #ffcbb6, #ffd6de)",
-      "linear-gradient(to bottom right, #eaefb1, #e0f9b5, #abede8)",
-      "linear-gradient(to bottom right, #fdfcfb, #e2d1c3)",
-      "linear-gradient(to bottom right, #fdcbf1, #e6dee9)",
-    ];
-    return joyfulGradients[Math.floor(Math.random() * joyfulGradients.length)];
-  };
-  
-  const gradient = getVibrantGradient();
+  const gradient = getRandomVibrantGradient();
   
   const renderVerseText = () => {
     switch (language) {
@@ -75,66 +60,100 @@ const FaithCard: React.FC<FaithCardProps> = ({
   // Generate a contextual message based on verse content and card title/theme
   const getApplicationMessage = () => {
     const primaryTopic = verse.topics[0]?.toLowerCase() || '';
+    const verseText = verse.text.english.toLowerCase();
+    const cardTitle = title?.toLowerCase() || '';
     
     // Faith declarations
-    if (title?.toLowerCase().includes('faith') || theme?.toLowerCase().includes('faith') || primaryTopic === 'faith') {
+    if (cardTitle.includes('faith') || cardTitle.includes('declaration') || cardTitle.includes('believe') || primaryTopic === 'faith') {
       if (verse.reference.includes('Hebrews')) {
         return "I declare today that my faith is the substance of things hoped for and the evidence of things not seen. My faith moves mountains and pleases God.";
-      } else if (verse.text.english.toLowerCase().includes('believe')) {
+      } else if (verseText.includes('believe') || verseText.includes('faith')) {
         return "I stand firmly on this promise, declaring my unwavering faith in God's Word. Though circumstances may change, His faithfulness remains constant.";
+      } else if (verseText.includes('trust')) {
+        return "I choose to trust in the Lord with all my heart, not leaning on my own understanding. My faith is anchored in His perfect wisdom and unfailing love.";
       } else {
         return "I choose to walk by faith, not by sight. My faith is anchored in God's unchanging character, not in changing circumstances. His Word is my foundation.";
       }
     }
     
     // Words of comfort/grief
-    else if (title?.toLowerCase().includes('comfort') || primaryTopic === 'comfort' || verse.topics.includes('comfort')) {
-      if (verse.text.english.toLowerCase().includes('peace')) {
+    else if (cardTitle.includes('comfort') || cardTitle.includes('peace') || cardTitle.includes('trials') || primaryTopic === 'comfort' || verse.topics.includes('comfort')) {
+      if (verseText.includes('peace')) {
         return "In times of grief and loss, I receive God's peace that surpasses understanding. His comfort wraps around me like a blanket, bringing healing to my wounded heart.";
-      } else if (verse.text.english.toLowerCase().includes('trouble') || verse.text.english.toLowerCase().includes('suffer')) {
+      } else if (verseText.includes('troubled') || verseText.includes('trouble') || verseText.includes('suffer')) {
         return "Even in my darkest moments, I am never alone. God's presence brings comfort and strength when I feel overwhelmed. His compassion never fails.";
+      } else if (verseText.includes('fear')) {
+        return "When fear surrounds me, I remember that God has not given me a spirit of fear, but of power, love and a sound mind. His perfect love casts out all fear.";
       } else {
         return "The God of all comfort draws near to the brokenhearted. He collects every tear and turns mourning into dancing. His loving presence sustains me through every trial.";
       }
     }
     
     // Identity declarations
-    else if (title?.toLowerCase().includes('identity') || primaryTopic === 'identity') {
-      if (verse.text.english.toLowerCase().includes('chosen') || verse.text.english.toLowerCase().includes('elect')) {
+    else if (cardTitle.includes('identity') || cardTitle.includes('who i am') || cardTitle.includes('child of god') || primaryTopic === 'identity') {
+      if (verseText.includes('chosen') || verseText.includes('elect')) {
         return "I am chosen by God, set apart for His purposes. My identity is secure as His beloved child. I am fearfully and wonderfully made, fully known and deeply loved.";
-      } else if (verse.text.english.toLowerCase().includes('love')) {
+      } else if (verseText.includes('love')) {
         return "I am completely loved and fully accepted in Christ. Nothing can separate me from His love. I am His treasured possession, the apple of His eye.";
+      } else if (verseText.includes('created') || verseText.includes('made')) {
+        return "I am God's masterpiece, created in Christ Jesus for good works that He prepared in advance. My worth comes from Him, not from what I do or accomplish.";
       } else {
         return "I am not defined by my past, my performance, or others' opinions. I am who God says I am—His masterpiece, created for good works that He prepared in advance.";
       }
     }
     
-    // Thanksgiving responses
-    else if (title?.toLowerCase().includes('thanksgiving') || title?.toLowerCase().includes('gratitude')) {
-      return "Thank you, Lord, for Your faithfulness in every season. Your goodness and mercy follow me all the days of my life. My heart overflows with gratitude for Your countless blessings.";
-    }
-    
-    // Encouragement
-    else if (title?.toLowerCase().includes('encouragement') || title?.toLowerCase().includes('hope') || primaryTopic === 'hope') {
-      if (verse.text.english.toLowerCase().includes('strength') || verse.text.english.toLowerCase().includes('strong')) {
+    // Hope & Encouragement
+    else if (cardTitle.includes('hope') || cardTitle.includes('encourage') || cardTitle.includes('strong') || cardTitle.includes('promise') || primaryTopic === 'hope') {
+      if (verseText.includes('strength') || verseText.includes('strong')) {
         return "Take courage! The same power that raised Christ from the dead lives in you. You have divine strength for every challenge and grace for each new day.";
-      } else if (verse.text.english.toLowerCase().includes('fear')) {
+      } else if (verseText.includes('fear')) {
         return "Fear has no hold over you. Stand tall in confidence, knowing that God's perfect love casts out all fear. You are empowered to walk in boldness.";
+      } else if (verseText.includes('hope')) {
+        return "Your hope in God will never put you to shame. Hold fast to this confident expectation, for the One who promised is faithful. Your future is secure in His hands.";
       } else {
         return "Hold fast to hope, for God is faithful to fulfill every promise. Your perseverance is developing character that will shine brightly in this dark world.";
       }
     }
     
-    // Default inspirational message based on common verse themes
-    else {
-      if (verse.text.english.toLowerCase().includes('love')) {
-        return "God's love is not based on your performance but on His character. Rest in this unchanging truth: you are perfectly loved, completely forgiven, and eternally accepted.";
-      } else if (verse.text.english.toLowerCase().includes('peace')) {
-        return "God's peace guards your heart and mind in Christ Jesus. Exchange your anxiety for His tranquility as you fix your thoughts on what is true, noble, and praiseworthy.";
-      } else if (verse.text.english.toLowerCase().includes('joy') || verse.text.english.toLowerCase().includes('rejoice')) {
-        return "The joy of the Lord is your strength! This joy doesn't depend on circumstances but flows from the unshakable hope you have in Christ Jesus.";
+    // Thanksgiving responses
+    else if (cardTitle.includes('thanksgiving') || cardTitle.includes('gratitude') || cardTitle.includes('praise')) {
+      if (verseText.includes('thank')) {
+        return "Thank you, Lord, for Your faithfulness in every season. Your goodness and mercy follow me all the days of my life. My heart overflows with gratitude for Your countless blessings.";
+      } else if (verseText.includes('praise')) {
+        return "I lift my voice in praise to You, my God and King! You are worthy of all glory, honor and praise. My soul magnifies You for Your wondrous deeds and steadfast love.";
+      } else if (verseText.includes('joy') || verseText.includes('rejoice')) {
+        return "The joy of the Lord is my strength! I choose to rejoice in You always, knowing that in Your presence is fullness of joy. Thank You for being my song in the night.";
       } else {
-        return "Let this truth take root deep in your heart and transform your perspective. As you meditate on God's Word, you are being renewed and strengthened for His purposes.";
+        return "I give thanks with a grateful heart for all You are and all You've done. Your loving kindness is better than life itself. My heart is filled with praise for Your faithfulness.";
+      }
+    }
+    
+    // Love themes
+    else if (cardTitle.includes('love') || primaryTopic === 'love' || verseText.includes('love')) {
+      return "God's love is not based on my performance but on His character. I rest in this unchanging truth: I am perfectly loved, completely forgiven, and eternally accepted.";
+    }
+    
+    // Peace themes
+    else if (cardTitle.includes('peace') || primaryTopic === 'peace' || verseText.includes('peace')) {
+      return "God's peace guards my heart and mind in Christ Jesus. I exchange my anxiety for His tranquility as I fix my thoughts on what is true, noble, and praiseworthy.";
+    } 
+    
+    // Joy themes
+    else if (cardTitle.includes('joy') || primaryTopic === 'joy' || verseText.includes('joy') || verseText.includes('rejoice')) {
+      return "The joy of the Lord is my strength! This joy doesn't depend on circumstances but flows from the unshakable hope I have in Christ Jesus. I choose joy today!";
+    }
+    
+    // Default for any other verses
+    else {
+      // Generate based on verse keywords
+      if (verseText.includes('pray') || verseText.includes('prayer')) {
+        return "As I approach God's throne with confidence, I know He hears my prayers. I can cast all my cares on Him because He cares for me. My prayers are powerful and effective.";
+      } else if (verseText.includes('word') || verseText.includes('scripture')) {
+        return "God's Word is living and active in my life. As I meditate on Scripture day and night, I am transformed by the renewing of my mind. His truth guides my every step.";
+      } else if (verseText.includes('heart')) {
+        return "I guard my heart above all else, for it determines the course of my life. God is creating in me a clean heart and renewing a right spirit within me.";
+      } else {
+        return "Let this truth take root deep in my heart and transform my perspective. As I meditate on God's Word, I am being renewed and strengthened for His purposes.";
       }
     }
   };
