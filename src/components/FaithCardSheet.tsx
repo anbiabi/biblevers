@@ -18,15 +18,12 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
   
   // Generate titles based on selected topics or verse topics
   const generateCardTitles = () => {
-    const titleOptions = [
-      "Faith Declaration", 
-      "Words of Comfort", 
-      "Hope & Encouragement", 
-      "Promise Keeper", 
-      "Identity in Christ",
-      "Standing on Truth",
-      "God's Faithfulness"
-    ];
+    // Create an array to hold our specific title categories
+    const faithDeclarations = ["Faith Declaration", "Standing on Truth", "I Believe"];
+    const comfortMessages = ["Words of Comfort", "Divine Comfort", "Peace in Trials"];
+    const identityStatements = ["Identity in Christ", "Who I Am", "Child of God"];
+    const encouragementWords = ["Hope & Encouragement", "Promise Keeper", "Be Strong"];
+    const thanksgivingResponses = ["Gratitude", "Thanksgiving", "Praise Response"];
     
     // If we have selected topics, use them to influence titles
     if (selectedTopics.length > 0) {
@@ -39,30 +36,64 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
             topicBasedTitles.push("God's Love", "Beloved Child");
             break;
           case 'faith':
-            topicBasedTitles.push("Faith Declaration", "Faithful Promise");
+            topicBasedTitles.push(...faithDeclarations);
             break;
           case 'hope':
-            topicBasedTitles.push("Hope Renewed", "Future Hope");
+            topicBasedTitles.push("Hope Renewed", "Future Hope", ...encouragementWords);
             break;
           case 'comfort':
-            topicBasedTitles.push("Divine Comfort", "Peace in Trials");
+            topicBasedTitles.push(...comfortMessages);
             break;
           case 'strength':
-            topicBasedTitles.push("God's Strength", "Standing Strong");
+            topicBasedTitles.push("God's Strength", "Standing Strong", ...encouragementWords);
+            break;
+          case 'identity':
+            topicBasedTitles.push(...identityStatements);
+            break;
+          case 'thanksgiving':
+            topicBasedTitles.push(...thanksgivingResponses);
             break;
           default:
+            // Capitalize first letter of the topic
             topicBasedTitles.push(topic.charAt(0).toUpperCase() + topic.slice(1));
         }
       });
       
-      // If we generated topic-based titles, use them, otherwise fall back to defaults
-      if (topicBasedTitles.length > 0) {
-        return topicBasedTitles.slice(0, 4);
+      // If we have four titles that match our four cards, return them
+      if (topicBasedTitles.length >= 4) {
+        // Shuffle the array to get random selections from our topic-based titles
+        return [...topicBasedTitles].sort(() => 0.5 - Math.random()).slice(0, 4);
       }
+      
+      // If we don't have enough, add some default ones to fill out the array
+      while (topicBasedTitles.length < 4) {
+        // Add general titles that work with any verse
+        const generalTitles = [
+          "Faith Declaration", 
+          "God's Promise",
+          "Words of Life",
+          "Divine Truth"
+        ];
+        
+        // Add a random general title that's not already in our list
+        const randomTitle = generalTitles[Math.floor(Math.random() * generalTitles.length)];
+        if (!topicBasedTitles.includes(randomTitle)) {
+          topicBasedTitles.push(randomTitle);
+        }
+      }
+      
+      return topicBasedTitles.slice(0, 4);
     }
     
-    // Use default titles if no specific topics or not enough topic-based titles
-    return titleOptions.slice(0, 4);
+    // Default titles if no specific topics selected
+    const defaultTitles = [
+      "Faith Declaration", 
+      "Words of Comfort", 
+      "Identity in Christ",
+      "God's Promise"
+    ];
+    
+    return defaultTitles;
   };
   
   const cardTitles = generateCardTitles();
