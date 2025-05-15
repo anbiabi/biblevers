@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BibleVerse } from '@/data/bibleVerses';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -11,14 +10,29 @@ interface FaithCardProps {
   title?: string;
 }
 
+// Array of moody, blurry backgrounds
+const moodyBackgrounds = [
+  "linear-gradient(to right, rgba(66, 66, 74, 0.8), rgba(25, 22, 84, 0.7)), url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"%3E%3Cfilter id=\"noise\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.65\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3CfeColorMatrix type=\"saturate\" values=\"0\"/%3E%3C/filter%3E%3Crect width=\"100\" height=\"100\" filter=\"url(%23noise)\" opacity=\"0.4\"/%3E%3C/svg%3E')",
+  "linear-gradient(to bottom, rgba(76, 76, 109, 0.8), rgba(28, 28, 45, 0.7)), url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"%3E%3Cfilter id=\"noise\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.7\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3CfeColorMatrix type=\"saturate\" values=\"0\"/%3E%3C/filter%3E%3Crect width=\"100\" height=\"100\" filter=\"url(%23noise)\" opacity=\"0.3\"/%3E%3C/svg%3E')",
+  "linear-gradient(to right, rgba(87, 83, 124, 0.8), rgba(42, 39, 80, 0.7)), url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"%3E%3Cfilter id=\"noise\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.75\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3CfeColorMatrix type=\"saturate\" values=\"0\"/%3E%3C/filter%3E%3Crect width=\"100\" height=\"100\" filter=\"url(%23noise)\" opacity=\"0.35\"/%3E%3C/svg%3E')",
+  "linear-gradient(135deg, rgba(44, 44, 84, 0.85), rgba(19, 19, 47, 0.75)), url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"%3E%3Cfilter id=\"noise\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.8\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3CfeColorMatrix type=\"saturate\" values=\"0\"/%3E%3C/filter%3E%3Crect width=\"100\" height=\"100\" filter=\"url(%23noise)\" opacity=\"0.25\"/%3E%3C/svg%3E')",
+  "linear-gradient(to right, rgba(55, 65, 81, 0.85), rgba(17, 24, 39, 0.75)), url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"%3E%3Cfilter id=\"noise\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.7\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3CfeColorMatrix type=\"saturate\" values=\"0\"/%3E%3C/filter%3E%3Crect width=\"100\" height=\"100\" filter=\"url(%23noise)\" opacity=\"0.3\"/%3E%3C/svg%3E')"
+];
+
+// Function to get a random moody background
+const getRandomMoodyBackground = () => {
+  return moodyBackgrounds[Math.floor(Math.random() * moodyBackgrounds.length)];
+};
+
 const FaithCard: React.FC<FaithCardProps> = ({ 
   verse, 
   language,
   theme = "Faith",
   title
 }) => {
-  // Generate a vibrant, joyful gradient background
+  // Generate a moody background (for cards) or vibrant gradient (for stickers)
   const gradient = getRandomVibrantGradient();
+  const moodyBackground = getRandomMoodyBackground();
   
   const renderVerseText = () => {
     switch (language) {
@@ -165,33 +179,34 @@ const FaithCard: React.FC<FaithCardProps> = ({
     <div className="faith-card w-full h-full flex flex-col overflow-hidden">
       <AspectRatio ratio={3/4} className="w-full h-full">
         <div 
-          className="w-full h-full flex flex-col p-5 border border-green-200 rounded-lg overflow-hidden"
+          className="w-full h-full flex flex-col p-5 border border-gray-200 rounded-lg overflow-hidden"
           style={{
-            background: gradient,
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+            background: moodyBackground,
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
+            backdropFilter: "blur(4px)"
           }}
         >
           {/* Top section with title */}
-          <div className="uppercase font-bold tracking-wider text-center py-2 mb-3 bg-white bg-opacity-40 backdrop-blur-sm rounded-md">
+          <div className="uppercase font-bold tracking-wider text-center py-2 mb-3 bg-white bg-opacity-70 backdrop-blur-sm rounded-md text-gray-800">
             {cardTitle}
           </div>
           
           {/* Verse section in vertical split mode */}
           <div className="flex flex-col flex-grow">
             <div className="flex-1 flex flex-col justify-center items-center mb-4">
-              {/* Verse text in italics (less emphasized) */}
-              <div className="text-center font-comic italic text-gray-700 mb-2">
+              {/* Verse text in italics with improved readability background */}
+              <div className="text-center font-comic italic text-white mb-2 bg-black bg-opacity-30 p-3 rounded-lg backdrop-blur-sm">
                 "{renderVerseText()}"
               </div>
               
               {/* Reference below verse */}
-              <div className="text-center text-sm mt-1 mb-4">
+              <div className="text-center text-sm mt-1 mb-4 text-white font-medium">
                 {formatReference()}
               </div>
             </div>
             
-            {/* Application in bold (emphasized) */}
-            <div className="mt-auto text-center font-comic font-bold text-gray-800 bg-white bg-opacity-60 backdrop-blur-sm p-4 rounded-md">
+            {/* Application in bold with improved readability background */}
+            <div className="mt-auto text-center font-comic font-bold text-gray-800 bg-white bg-opacity-70 backdrop-blur-sm p-4 rounded-md">
               {getApplicationMessage()}
             </div>
           </div>
