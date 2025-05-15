@@ -45,9 +45,34 @@ const EditTab: React.FC<EditTabProps> = ({
 }) => {
   return (
     <div className="space-y-8 animate-slide-up">
-      <Card className="border-2 border-green-200 shadow-md">
+      {/* Topics and Language Selection (top) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="md:col-span-3 space-y-8">
+          <Card className="border-2 border-amber-200 shadow-md bg-gradient-to-r from-amber-50 to-yellow-50">
+            <CardContent className="pt-6">
+              <TopicSelector 
+                selectedTopics={selectedTopics} 
+                onChange={setSelectedTopics}
+                generationType={generationType} 
+              />
+            </CardContent>
+          </Card>
+
+          <Card className="border-2 border-amber-200 shadow-md bg-gradient-to-r from-amber-50 to-yellow-50">
+            <CardContent className="pt-6">
+              <LanguageSelector 
+                language={language} 
+                onChange={setLanguage} 
+              />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Generation Type Container (middle) */}
+      <Card className="border-2 border-orange-300 shadow-md bg-gradient-to-r from-orange-50 to-amber-50">
         <CardContent className="pt-6 pb-6">
-          <h3 className="text-xl font-medium mb-6 text-center">Choose Generation Type</h3>
+          <h3 className="text-xl font-medium mb-6 text-center font-comic text-amber-800">Choose Generation Type</h3>
           <div className="flex flex-col space-y-6">
             <RadioGroup
               defaultValue={generationType}
@@ -77,84 +102,63 @@ const EditTab: React.FC<EditTabProps> = ({
               </div>
             </RadioGroup>
             
-            {generationType === 'stickers' ? (
-              <Button 
-                className="w-full h-12 text-lg shadow-lg transition transform hover:scale-105 bg-gradient-to-r from-blue-600 to-indigo-600"
-                onClick={handleGenerate}
-                disabled={isGenerating}
-              >
-                {isGenerating ? "Generating..." : "Generate Sticker Sheets"}
-              </Button>
-            ) : (
-              <Button 
-                className="w-full h-12 text-lg shadow-lg transition transform hover:scale-105 bg-gradient-to-r from-green-600 to-teal-600"
-                onClick={handleGenerateCards}
-                disabled={isGenerating || selectedTopics.length !== 4}
-              >
-                {isGenerating ? "Generating..." : "Generate Faith Cards"}
-              </Button>
-            )}
+            <div className="grid grid-cols-1 gap-y-4">
+              {generationType === 'stickers' ? (
+                <Button 
+                  className="w-full h-12 text-lg shadow-lg transition transform hover:scale-105 bg-gradient-to-r from-blue-600 to-indigo-600"
+                  onClick={handleGenerate}
+                  disabled={isGenerating}
+                >
+                  {isGenerating ? "Generating..." : "Generate Sticker Sheets"}
+                </Button>
+              ) : (
+                <Button 
+                  className="w-full h-12 text-lg shadow-lg transition transform hover:scale-105 bg-gradient-to-r from-green-600 to-teal-600"
+                  onClick={handleGenerateCards}
+                  disabled={isGenerating || selectedTopics.length !== 4}
+                >
+                  {isGenerating ? "Generating..." : "Generate Faith Cards"}
+                </Button>
+              )}
+
+              {/* Preview moved right under the generate button */}
+              <Card className="border-2 border-amber-200 shadow-md bg-gradient-to-r from-amber-50 to-yellow-50">
+                <CardContent className="pt-6">
+                  <h3 className="text-lg font-medium mb-4">Preview</h3>
+                  <StickerPreview verse={previewVerse} language={language} />
+                  
+                  <Button 
+                    variant="outline" 
+                    className="w-full mt-4"
+                    onClick={refreshPreviewVerse}
+                  >
+                    <Shuffle className="w-4 h-4 mr-2" />
+                    New Random Verse
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-2 space-y-8">
-          <Card>
-            <CardContent className="pt-6">
-              <TopicSelector 
-                selectedTopics={selectedTopics} 
-                onChange={setSelectedTopics}
-                generationType={generationType} 
+      {/* Random Gradients Option */}
+      <Card className="border-2 border-amber-200 shadow-md bg-gradient-to-r from-amber-50 to-yellow-50">
+        <CardContent className="pt-6 space-y-4">
+          <div className="pt-2">
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="randomize-gradients"
+                checked={randomizeGradients}
+                onChange={(e) => setRandomizeGradients(e.target.checked)}
+                className="rounded border-gray-300 text-orange-600 shadow-sm focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
               />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <LanguageSelector 
-                language={language} 
-                onChange={setLanguage} 
-              />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6 space-y-4">
-              <div className="pt-2">
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="randomize-gradients"
-                    checked={randomizeGradients}
-                    onChange={(e) => setRandomizeGradients(e.target.checked)}
-                    className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                  />
-                  <Label htmlFor="randomize-gradients">Randomize background colors</Label>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="space-y-4">
-          <Card>
-            <CardContent className="pt-6">
-              <h3 className="text-lg font-medium mb-4">Preview</h3>
-              <StickerPreview verse={previewVerse} language={language} />
-              
-              <Button 
-                variant="outline" 
-                className="w-full mt-4"
-                onClick={refreshPreviewVerse}
-              >
-                <Shuffle className="w-4 h-4 mr-2" />
-                New Random Verse
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+              <Label htmlFor="randomize-gradients">Randomize background colors</Label>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

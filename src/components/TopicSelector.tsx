@@ -67,7 +67,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ selectedTopics, onChange,
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium">
+        <h3 className="text-lg font-medium text-amber-800 font-comic">
           {generationType === 'cards' ? "Select 4 Topics (One per Card)" : "Select Topics"}
         </h3>
         <div className="flex space-x-2">
@@ -75,7 +75,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ selectedTopics, onChange,
             variant="outline" 
             size="sm" 
             onClick={handleRandomize}
-            className="text-xs"
+            className="text-xs border-amber-400 text-amber-700 hover:bg-amber-100"
           >
             Randomize
           </Button>
@@ -83,7 +83,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ selectedTopics, onChange,
             variant="outline" 
             size="sm" 
             onClick={handleSelectAll}
-            className="text-xs"
+            className="text-xs border-amber-400 text-amber-700 hover:bg-amber-100"
           >
             {generationType === 'cards' ? "Select 4" : "All"}
           </Button>
@@ -91,7 +91,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ selectedTopics, onChange,
             variant="outline" 
             size="sm" 
             onClick={handleClearAll}
-            className="text-xs"
+            className="text-xs border-amber-400 text-amber-700 hover:bg-amber-100"
           >
             Clear
           </Button>
@@ -100,7 +100,7 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ selectedTopics, onChange,
 
       {generationType === 'cards' && showWarning && (
         <div className="rounded-md bg-yellow-50 p-3 border border-yellow-200">
-          <p className="text-sm text-yellow-700">
+          <p className="text-sm text-yellow-700 font-comic">
             Please select <strong>exactly 4 topics</strong> - one for each faith card.
             Currently selected: {selectedTopics.length}/4
           </p>
@@ -115,8 +115,9 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ selectedTopics, onChange,
               checked={selectedTopics.includes(topic)}
               onCheckedChange={() => handleTopicChange(topic)}
               disabled={generationType === 'cards' && selectedTopics.length >= 4 && !selectedTopics.includes(topic)}
+              className="text-amber-600 border-amber-400 focus:ring-amber-500"
             />
-            <Label htmlFor={`topic-${topic}`} className="cursor-pointer">
+            <Label htmlFor={`topic-${topic}`} className="cursor-pointer font-comic">
               {topic}
             </Label>
           </div>

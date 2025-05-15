@@ -11,18 +11,31 @@ interface PreviewProps {
   language: string;
 }
 
+// Custom safari gradients
+const getSafariGradient = () => {
+  const safariGradients = [
+    'linear-gradient(135deg, #F97316 0%, #FBBF24 100%)',
+    'linear-gradient(135deg, #D97706 0%, #F97316 100%)',
+    'linear-gradient(135deg, #EA580C 0%, #F59E0B 100%)',
+    'linear-gradient(135deg, #C2410C 0%, #D97706 100%)',
+    'linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)',
+  ];
+  
+  return safariGradients[Math.floor(Math.random() * safariGradients.length)];
+};
+
 const StickerPreview: React.FC<PreviewProps> = ({ verse, language }) => {
-  const [gradient, setGradient] = useState<string>(getRandomGradient());
+  const [gradient, setGradient] = useState<string>(getSafariGradient());
   
   useEffect(() => {
     // Change gradient when verse changes
-    setGradient(getRandomGradient());
+    setGradient(getSafariGradient());
   }, [verse]);
   
   if (!verse) {
     return (
-      <div className="w-full aspect-[2/1] rounded-lg border border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
-        <p className="text-gray-500">Select topics and language to see a preview</p>
+      <div className="w-full aspect-[2/1] rounded-lg border border-dashed border-amber-300 flex items-center justify-center bg-amber-50">
+        <p className="text-amber-500 font-comic">Select topics and language to see a preview</p>
       </div>
     );
   }
@@ -36,10 +49,10 @@ const StickerPreview: React.FC<PreviewProps> = ({ verse, language }) => {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="absolute top-2 right-2 bg-white bg-opacity-70 shadow-sm"
-        onClick={() => setGradient(getRandomGradient())}
+        className="absolute top-2 right-2 bg-white bg-opacity-70 shadow-sm hover:bg-amber-100"
+        onClick={() => setGradient(getSafariGradient())}
       >
-        <RefreshCw size={16} />
+        <RefreshCw size={16} className="text-amber-600" />
       </Button>
     </div>
   );
