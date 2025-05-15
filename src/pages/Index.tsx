@@ -108,44 +108,47 @@ const Index = () => {
       </header>
 
       <main className="container px-4 lg:px-8 pb-12 relative z-10">
-        {/* Content area */}
-        <TabsContent value="edit" className="animate-fade-in mb-8">
-          <EditTab 
-            selectedTopics={selectedTopics}
-            setSelectedTopics={setSelectedTopics}
-            language={language}
-            setLanguage={setLanguage}
-            numberOfSheets={numberOfSheets}
-            setNumberOfSheets={setNumberOfSheets}
-            randomizeGradients={randomizeGradients}
-            setRandomizeGradients={setRandomizeGradients}
-            previewVerse={previewVerse}
-            refreshPreviewVerse={handleRefreshPreview}
-            handleGenerate={handleGenerate}
-            handleGenerateCards={handleGenerateCards}
-            isGenerating={isGenerating}
-            generationType={generationType}
-            setGenerationType={setGenerationType}
-          />
-        </TabsContent>
+        {/* Content area - IMPORTANT: Wrapping all content in Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full animate-scale-in">
+          <div className="mb-8">
+            {/* TabsContent components are now properly nested within Tabs */}
+            <TabsContent value="edit" className="animate-fade-in mb-8">
+              <EditTab 
+                selectedTopics={selectedTopics}
+                setSelectedTopics={setSelectedTopics}
+                language={language}
+                setLanguage={setLanguage}
+                numberOfSheets={numberOfSheets}
+                setNumberOfSheets={setNumberOfSheets}
+                randomizeGradients={randomizeGradients}
+                setRandomizeGradients={setRandomizeGradients}
+                previewVerse={previewVerse}
+                refreshPreviewVerse={handleRefreshPreview}
+                handleGenerate={handleGenerate}
+                handleGenerateCards={handleGenerateCards}
+                isGenerating={isGenerating}
+                generationType={generationType}
+                setGenerationType={setGenerationType}
+              />
+            </TabsContent>
 
-        <TabsContent value="preview" className="animate-fade-in mb-8">
-          <PreviewTab 
-            generatedSheets={generatedSheets}
-            language={language}
-            randomGradients={randomizeGradients}
-            handleDownload={handleDownloadAll}
-            handlePdfDownload={handlePdfDownload}
-            setActiveTab={setActiveTab}
-            sheetRefs={sheetRefs}
-            selectedTopics={selectedTopics}
-            generationType={generationType}
-          />
-        </TabsContent>
-
-        {/* Tabs moved to the bottom */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full animate-scale-in mt-8">
-          <TabsList className="grid w-full grid-cols-2 bg-orange-100 border-2 border-orange-200">
+            <TabsContent value="preview" className="animate-fade-in mb-8">
+              <PreviewTab 
+                generatedSheets={generatedSheets}
+                language={language}
+                randomGradients={randomizeGradients}
+                handleDownload={handleDownloadAll}
+                handlePdfDownload={handlePdfDownload}
+                setActiveTab={setActiveTab}
+                sheetRefs={sheetRefs}
+                selectedTopics={selectedTopics}
+                generationType={generationType}
+              />
+            </TabsContent>
+          </div>
+          
+          {/* Tabs navigation moved to the bottom */}
+          <TabsList className="grid w-full grid-cols-2 bg-orange-100 border-2 border-orange-200 mt-8">
             <TabsTrigger value="edit" className="text-sm md:text-base font-comic data-[state=active]:bg-orange-200 data-[state=active]:text-orange-800">
               <FileText className="w-4 h-4 mr-2" />
               Edit Content
