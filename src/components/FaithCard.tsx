@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BibleVerse } from '@/data/bibleVerses';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { backgroundService } from '@/services/BackgroundService';
+import { aiVerseAnalyzer } from '@/services/AIVerseAnalyzer';
 
 interface FaithCardProps {
   verse: BibleVerse;
@@ -134,12 +135,10 @@ const FaithCard: React.FC<FaithCardProps> = ({
         'Revelation': '요한계시록'
       };
       
-      // Parse the reference to separate book from chapter and verse
       const parts = verse.reference.split(/\s+/);
       let bookName = "";
       let chapterVerse = "";
       
-      // Handle complex book names like "1 Corinthians"
       if (parts.length > 1 && (parts[0] === '1' || parts[0] === '2' || parts[0] === '3')) {
         bookName = `${parts[0]} ${parts[1]}`;
         chapterVerse = parts.slice(2).join(' ');
@@ -148,10 +147,7 @@ const FaithCard: React.FC<FaithCardProps> = ({
         chapterVerse = parts.slice(1).join(' ');
       }
       
-      // Translate the book name to Korean if available
       const koreanBookName = referenceMap[bookName] || bookName;
-      
-      // Return the formatted Korean reference
       return `${koreanBookName} ${chapterVerse}`;
     } else if (language === 'spanish') {
       // Spanish reference formatting
@@ -232,7 +228,6 @@ const FaithCard: React.FC<FaithCardProps> = ({
         'Revelation': 'Apocalipsis'
       };
       
-      // Parse the reference
       const parts = verse.reference.split(/\s+/);
       let bookName = "";
       let chapterVerse = "";
@@ -440,77 +435,10 @@ const FaithCard: React.FC<FaithCardProps> = ({
     return verse.reference;
   };
   
-  // Generate a contextual message based on verse content and card title/theme
-  const getApplicationMessage = () => {
-    const primaryTopic = verse.topics[0]?.toLowerCase() || '';
-    const verseText = verse.text.english.toLowerCase();
-    const cardTitle = title?.toLowerCase() || '';
-    
-    // Faith declarations
-    if (cardTitle.includes('faith') || cardTitle.includes('declaration') || cardTitle.includes('believe') || primaryTopic === 'faith') {
-      if (verse.reference.includes('Hebrews')) {
-        return "I declare today that my faith is the substance of things hoped for and the evidence of things not seen. My faith moves mountains and pleases God.";
-      } else if (verseText.includes('believe') || verseText.includes('faith')) {
-        return "I stand firmly on this promise, declaring my unwavering faith in God's Word. Though circumstances may change, His faithfulness remains constant.";
-      } else if (verseText.includes('trust')) {
-        return "I choose to trust in the Lord with all my heart, not leaning on my own understanding. My faith is anchored in His perfect wisdom and unfailing love.";
-      } else {
-        return "I choose to walk by faith, not by sight. My faith is anchored in God's unchanging character, not in changing circumstances. His Word is my foundation.";
-      }
-    }
-    
-    // Words of comfort/grief
-    else if (cardTitle.includes('comfort') || cardTitle.includes('peace') || cardTitle.includes('trials') || primaryTopic === 'comfort' || verse.topics.includes('comfort')) {
-      if (verseText.includes('peace')) {
-        return "In times of grief and loss, I receive God's peace that surpasses understanding. His comfort wraps around me like a blanket, bringing healing to my wounded heart.";
-      } else if (verseText.includes('troubled') || verseText.includes('trouble') || verseText.includes('suffer')) {
-        return "Even in my darkest moments, I am never alone. God's presence brings comfort and strength when I feel overwhelmed. His compassion never fails.";
-      } else if (verseText.includes('fear')) {
-        return "When fear surrounds me, I remember that God has not given me a spirit of fear, but of power, love and a sound mind. His perfect love casts out all fear.";
-      } else {
-        return "The God of all comfort draws near to the brokenhearted. He collects every tear and turns mourning into dancing. His loving presence sustains me through every trial.";
-      }
-    }
-    
-    // Identity declarations
-    else if (cardTitle.includes('identity') || cardTitle.includes('who i am') || cardTitle.includes('child of god') || primaryTopic === 'identity') {
-      if (verseText.includes('chosen') || verseText.includes('elect')) {
-        return "I am chosen by God, set apart for His purposes. My identity is secure as His beloved child. I am fearfully and wonderfully made, fully known and deeply loved.";
-      } else if (verseText.includes('love')) {
-        return "I am completely loved and fully accepted in Christ. Nothing can separate me from His love. I am His treasured possession, the apple of His eye.";
-      } else if (verseText.includes('created') || verseText.includes('made')) {
-        return "I am God's masterpiece, created in Christ Jesus for good works that He prepared in advance. My worth comes from Him, not from what I do or accomplish.";
-      } else {
-        return "I am not defined by my past, my performance, or others' opinions. I am who God says I am—His masterpiece, created for good works that He prepared in advance.";
-      }
-    }
-    
-    // Hope & Encouragement
-    else if (cardTitle.includes('hope') || cardTitle.includes('encourage') || cardTitle.includes('strong') || cardTitle.includes('promise') || primaryTopic === 'hope') {
-      if (verseText.includes('strength') || verseText.includes('strong')) {
-        return "Take courage! The same power that raised Christ from the dead lives in you. You have divine strength for every challenge and grace for each new day.";
-      } else if (verseText.includes('fear')) {
-        return "Fear has no hold over you. Stand tall in confidence, knowing that God's perfect love casts out all fear. You are empowered to walk in boldness.";
-      } else if (verseText.includes('hope')) {
-        return "Your hope in God will never put you to shame. Hold fast to this confident expectation, for the One who promised is faithful. Your future is secure in His hands.";
-      } else {
-        return "Hold fast to hope, for God is faithful to fulfill every promise. Your perseverance is developing character that will shine brightly in this dark world.";
-      }
-    }
-    
-    // Default for any other verses
-    else {
-      // Generate based on verse keywords
-      if (verseText.includes('pray') || verseText.includes('prayer')) {
-        return "As I approach God's throne with confidence, I know He hears my prayers. I can cast all my cares on Him because He cares for me. My prayers are powerful and effective.";
-      } else if (verseText.includes('word') || verseText.includes('scripture')) {
-        return "God's Word is living and active in my life. As I meditate on Scripture day and night, I am transformed by the renewing of my mind. His truth guides my every step.";
-      } else if (verseText.includes('heart')) {
-        return "I guard my heart above all else, for it determines the course of my life. God is creating in me a clean heart and renewing a right spirit within me.";
-      } else {
-        return "Let this truth take root deep in my heart and transform my perspective. As I meditate on God's Word, I am being renewed and strengthened for His purposes.";
-      }
-    }
+  // Generate AI contextual phrase
+  const getContextualPhrase = () => {
+    const contextualPhrase = aiVerseAnalyzer.generateContextualPhrase(verse);
+    return contextualPhrase.phrase;
   };
   
   // Card title based on theme or topics
@@ -535,33 +463,33 @@ const FaithCard: React.FC<FaithCardProps> = ({
             </div>
           )}
           
-          {/* Dark overlay for text readability */}
+          {/* Light overlay for text readability */}
           <div className="absolute inset-0 bg-black bg-opacity-20"></div>
           
           {/* Content container */}
           <div className="relative z-10 h-full flex flex-col p-5">
             {/* Top section with title */}
-            <div className="uppercase font-bold tracking-wider text-center py-2 mb-3 bg-white bg-opacity-90 backdrop-blur-sm rounded-md text-gray-800 shadow-sm">
+            <div className="uppercase font-bold tracking-wider text-center py-2 mb-3 bg-white bg-opacity-95 backdrop-blur-sm rounded-md text-gray-800 shadow-sm">
               {cardTitle}
             </div>
             
             {/* Verse section */}
             <div className="flex flex-col flex-grow">
               <div className="flex-1 flex flex-col justify-center items-center mb-4">
-                {/* Verse text in italics with improved readability background */}
-                <div className="text-center font-comic italic text-white mb-2 bg-black bg-opacity-50 p-3 rounded-lg backdrop-blur-sm shadow-lg">
+                {/* Verse text with improved readability */}
+                <div className="text-center font-comic italic text-white mb-2 bg-black bg-opacity-60 p-3 rounded-lg backdrop-blur-sm shadow-lg">
                   "{renderVerseText()}"
                 </div>
                 
                 {/* Reference below verse */}
-                <div className="text-center text-sm mt-1 mb-4 text-white font-medium bg-black bg-opacity-30 px-2 py-1 rounded">
+                <div className="text-center text-sm mt-1 mb-4 text-white font-medium bg-black bg-opacity-40 px-2 py-1 rounded">
                   {formatReference()}
                 </div>
               </div>
               
-              {/* Application in bold with improved readability background */}
-              <div className="mt-auto text-center font-comic font-bold text-gray-800 bg-white bg-opacity-90 backdrop-blur-sm p-4 rounded-md shadow-sm">
-                {getApplicationMessage()}
+              {/* AI-generated contextual phrase - no gradient, seamless blend */}
+              <div className="mt-auto text-center font-comic font-bold text-gray-800 bg-white bg-opacity-95 backdrop-blur-sm p-4 rounded-md shadow-sm">
+                {getContextualPhrase()}
               </div>
             </div>
           </div>

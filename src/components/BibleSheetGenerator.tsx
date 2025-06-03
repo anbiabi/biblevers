@@ -1,18 +1,14 @@
 
 import React from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Sparkles, Palette, FileText, CreditCard } from "lucide-react";
-import StickerPreview from "./StickerPreview";
-import FaithCardPreview from "./FaithCardPreview";
-import TopicSelector from "./TopicSelector";
-import LanguageSelector from "./LanguageSelector";
-import { BibleVerse } from "@/data/bibleVerses";
+import { BibleVerse } from '@/data/bibleVerses';
+import TopicSelector from './TopicSelector';
+import LanguageSelector from './LanguageSelector';
+import FaithCardPreview from './FaithCardPreview';
+import StickerPreview from './StickerPreview';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RefreshCw, Sparkles } from 'lucide-react';
 
 interface BibleSheetGeneratorProps {
   previewVerse: BibleVerse | null;
@@ -20,8 +16,8 @@ interface BibleSheetGeneratorProps {
   numberOfSheets: number;
   selectedTopics: string[];
   language: string;
-  generationType: 'stickers' | 'cards';
-  setGenerationType: (type: 'stickers' | 'cards') => void;
+  generationType: 'cards' | 'stickers';
+  setGenerationType: (type: 'cards' | 'stickers') => void;
   handleTopicChange: (topic: string) => void;
   handleLanguageChange: (language: string) => void;
   handleNumberOfSheetsChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -44,133 +40,113 @@ const BibleSheetGenerator: React.FC<BibleSheetGeneratorProps> = ({
   handleRefreshPreview
 }) => {
   return (
-    <div className="space-y-8">
-      {/* Generation Type Toggle */}
-      <Card className="w-full border-amber-200 bg-amber-50">
-        <CardHeader>
-          <CardTitle className="text-amber-800 font-comic flex items-center">
-            <Sparkles className="w-5 h-5 mr-2" />
-            Choose Your Creation Type
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-4">
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="stickers-mode"
-                checked={generationType === 'stickers'}
-                onCheckedChange={(checked) => setGenerationType(checked ? 'stickers' : 'cards')}
-              />
-              <Label htmlFor="stickers-mode" className="flex items-center cursor-pointer font-comic">
-                <Palette className="w-4 h-4 mr-2" />
-                Bible Stickers
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="cards-mode"
-                checked={generationType === 'cards'}
-                onCheckedChange={(checked) => setGenerationType(checked ? 'cards' : 'stickers')}
-              />
-              <Label htmlFor="cards-mode" className="flex items-center cursor-pointer font-comic">
-                <CreditCard className="w-4 h-4 mr-2" />
-                Faith Cards
-              </Label>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Settings Card */}
-      <Card className="w-full border-orange-200 bg-orange-50">
-        <CardHeader>
-          <CardTitle className="text-orange-800 font-comic flex items-center">
-            <FileText className="w-5 h-5 mr-2" />
-            Customize Your {generationType === 'stickers' ? 'Stickers' : 'Faith Cards'}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Topic Selection */}
-          <div>
-            <h3 className="text-lg font-medium text-orange-700 mb-3 font-comic">Select Topics</h3>
-            <TopicSelector
-              selectedTopics={selectedTopics}
-              onTopicSelect={handleTopicChange}
-            />
-            {selectedTopics.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {selectedTopics.map((topic) => (
-                  <Badge key={topic} variant="secondary" className="bg-orange-200 text-orange-800">
-                    {topic}
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <Separator />
-
-          {/* Language Selection */}
-          <div>
-            <h3 className="text-lg font-medium text-orange-700 mb-3 font-comic">Language</h3>
-            <LanguageSelector
-              language={language}
-              onLanguageChange={handleLanguageChange}
-            />
-          </div>
-
-          <Separator />
-
-          {/* Number of Sheets */}
-          <div>
-            <Label htmlFor="numberOfSheets" className="text-lg font-medium text-orange-700 font-comic">
-              Number of Sheets
-            </Label>
-            <Input
-              id="numberOfSheets"
-              type="number"
-              min="1"
-              max="10"
-              value={numberOfSheets}
-              onChange={handleNumberOfSheetsChange}
-              className="mt-2 w-32"
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Preview Section */}
-      <Card className="w-full border-green-200 bg-green-50">
-        <CardHeader>
-          <CardTitle className="text-green-800 font-comic">Preview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {generationType === 'stickers' ? (
-            <StickerPreview verse={previewVerse} language={language} />
-          ) : (
-            <FaithCardPreview verse={previewVerse} language={language} />
-          )}
-          <div className="mt-4 flex gap-2">
-            <Button 
-              variant="outline" 
-              onClick={handleRefreshPreview}
-              className="font-comic"
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Left Column - Controls */}
+      <div className="space-y-6">
+        {/* Generation Type Toggle */}
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">Generation Type</Label>
+          <div className="flex rounded-lg border p-1">
+            <button
+              onClick={() => setGenerationType('cards')}
+              className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                generationType === 'cards'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'hover:bg-muted'
+              }`}
             >
-              Refresh Preview
-            </Button>
+              Faith Cards
+            </button>
+            <button
+              onClick={() => setGenerationType('stickers')}
+              className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                generationType === 'stickers'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'hover:bg-muted'
+              }`}
+            >
+              Stickers
+            </button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Generate Button */}
-      <div className="text-center">
-        <Button
+        {/* Topic Selection */}
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">Select Topics</Label>
+          <TopicSelector 
+            selectedTopics={selectedTopics} 
+            onTopicChange={handleTopicChange}
+          />
+        </div>
+
+        {/* Language Selection */}
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">Language</Label>
+          <LanguageSelector 
+            language={language} 
+            onChange={handleLanguageChange}
+          />
+        </div>
+
+        {/* Number of Sheets */}
+        <div className="space-y-2">
+          <Label htmlFor="sheets" className="text-sm font-medium">
+            Number of Sheets
+          </Label>
+          <Input
+            id="sheets"
+            type="number"
+            min="1"
+            max="10"
+            value={numberOfSheets}
+            onChange={handleNumberOfSheetsChange}
+            className="w-full"
+          />
+        </div>
+
+        {/* Generate Button */}
+        <Button 
           onClick={handleGenerate}
-          disabled={isGenerating}
-          className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 text-lg font-comic"
+          disabled={isGenerating || selectedTopics.length === 0}
+          className="w-full"
+          size="lg"
         >
-          {isGenerating ? 'Generating...' : `Generate ${generationType === 'stickers' ? 'Sticker Sheets' : 'Faith Cards'}`}
+          {isGenerating ? (
+            <>
+              <Sparkles className="mr-2 h-4 w-4 animate-spin" />
+              Generating...
+            </>
+          ) : (
+            <>
+              <Sparkles className="mr-2 h-4 w-4" />
+              Generate {generationType === 'stickers' ? 'Stickers' : 'Faith Cards'}
+            </>
+          )}
         </Button>
+      </div>
+
+      {/* Right Column - Preview */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <Label className="text-sm font-medium">Preview</Label>
+          {previewVerse && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefreshPreview}
+              className="h-8"
+            >
+              <RefreshCw className="h-3 w-3 mr-1" />
+              Refresh
+            </Button>
+          )}
+        </div>
+        
+        {generationType === 'stickers' ? (
+          <StickerPreview verse={previewVerse} language={language} />
+        ) : (
+          <FaithCardPreview verse={previewVerse} language={language} />
+        )}
       </div>
     </div>
   );
