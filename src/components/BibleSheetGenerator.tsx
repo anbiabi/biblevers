@@ -75,7 +75,8 @@ const BibleSheetGenerator: React.FC<BibleSheetGeneratorProps> = ({
           <Label className="text-sm font-medium">Select Topics</Label>
           <TopicSelector 
             selectedTopics={selectedTopics} 
-            onTopicChange={handleTopicChange}
+            onChange={handleTopicChange}
+            generationType={generationType}
           />
         </div>
 
