@@ -1,24 +1,17 @@
-
-import React, { useState, useRef, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, Eye, Leaf, Cloud, Sun, Zap } from "lucide-react";
-import { useSheetGenerator } from '@/hooks/useSheetGenerator';
-import EditTab from '@/components/EditTab';
-import PreviewTab from '@/components/PreviewTab';
+import React, { useState } from 'react';
+import AISettingsPanel from '@/components/AISettingsPanel';
+import BibleSheetGenerator from "@/components/BibleSheetGenerator";
+import FaithCardSheet from "@/components/FaithCardSheet";
+import StickerSheet from "@/components/StickerSheet";
+import { useSheetGenerator } from "@/hooks/useSheetGenerator";
+import { ModeToggle } from "@/components/mode-toggle";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Index = () => {
-  // State for the generator settings
-  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
-  const [language, setLanguage] = useState<string>('english');
-  const [numberOfSheets, setNumberOfSheets] = useState<number>(1);
-  const [randomizeGradients, setRandomizeGradients] = useState<boolean>(true);
-  const [activeTab, setActiveTab] = useState<string>('edit');
-  
-  // References
-  const sheetRefs = useRef<(HTMLDivElement | null)[]>([]);
-  
-  // Use our custom hook for sheet generation logic
-  const {
+  const [showAISettings, setShowAISettings] = useState(false);
+  const { 
     previewVerse,
     generatedSheets,
     isGenerating,
@@ -30,147 +23,126 @@ const Index = () => {
     downloadSheets,
     downloadPDF
   } = useSheetGenerator();
+  const [numberOfSheets, setNumberOfSheets] = useState<number>(1);
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [language, setLanguage] = useState<string>("english");
+  const [showPreview, setShowPreview] = useState<boolean>(false);
+  const sheetRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
-  // Update preview verse when topics or language change
-  useEffect(() => {
-    updatePreviewVerse(selectedTopics);
-  }, [selectedTopics, language]);
-
-  // When generation type changes, ensure we have exactly 4 topics for cards
-  useEffect(() => {
-    if (generationType === 'cards' && selectedTopics.length !== 4) {
-      // If we have more than 4, trim to 4
-      if (selectedTopics.length > 4) {
-        setSelectedTopics(selectedTopics.slice(0, 4));
+  const handleTopicChange = (topic: string) => {
+    setSelectedTopics((prevTopics) => {
+      const isTopicSelected = prevTopics.includes(topic);
+      let updatedTopics;
+      if (isTopicSelected) {
+        updatedTopics = prevTopics.filter((selectedTopic) => selectedTopic !== topic);
+      } else {
+        updatedTopics = [...prevTopics, topic];
       }
-    }
-  }, [generationType]);
-
-  const handleGenerate = () => {
-    // Pass 'stickers' type to the hook
-    setGenerationType('stickers');
-    generateSheets(numberOfSheets, selectedTopics, () => setActiveTab('preview'));
+      updatePreviewVerse(updatedTopics);
+      return updatedTopics;
+    });
   };
 
-  const handleGenerateCards = () => {
-    // Pass 'cards' type to the hook
-    setGenerationType('cards');
-    generateSheets(numberOfSheets, selectedTopics, () => setActiveTab('preview'));
+  const handleLanguageChange = (newLanguage: string) => {
+    setLanguage(newLanguage);
+  };
+
+  const handleNumberOfSheetsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(event.target.value, 10);
+    setNumberOfSheets(isNaN(value) ? 1 : Math.max(1, value));
+  };
+
+  const handleGenerate = () => {
+    generateSheets(numberOfSheets, selectedTopics, () => {
+      setShowPreview(true);
+    });
   };
 
   const handleRefreshPreview = () => {
     refreshPreviewVerse(selectedTopics);
   };
 
-  const handleDownloadAll = () => {
+  const handleDownload = () => {
     downloadSheets(sheetRefs);
   };
 
-  const handlePdfDownload = () => {
+  const handleDownloadPDF = () => {
     downloadPDF(sheetRefs);
   };
 
-  const getPageTitle = () => {
-    return generationType === 'stickers' 
-      ? 'Bible Sticker Sheet Generator'
-      : 'Bible Faith Card Generator';
-  };
+  const renderSheets = () => {
+    if (!showPreview) return null;
 
-  const getPageDescription = () => {
-    return generationType === 'stickers'
-      ? 'Create beautiful, printable Bible verse stickers for children. Select your topics, language, and customize your sheets.'
-      : 'Create inspiring faith declaration cards with Bible verses. Great for encouragement, comfort, and spiritual reflection.';
+    return generatedSheets.map((verses, index) => (
+      <div key={index} ref={(el) => (sheetRefs.current[index] = el)}>
+        {generationType === 'stickers' ? (
+          <StickerSheet 
+            verses={verses} 
+            language={language} 
+            selectedTopics={selectedTopics}
+          />
+        ) : (
+          <FaithCardSheet 
+            verses={verses} 
+            language={language}
+            selectedTopics={selectedTopics}
+          />
+        )}
+      </div>
+    ));
   };
 
   return (
-    <div className="min-h-screen safari-theme-bg">
-      {/* Top decorative elements */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="h-20 w-full">
-          <path 
-            d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" 
-            className="fill-amber-300"
-          ></path>
-        </svg>
-      </div>
-      <Cloud className="absolute top-16 left-1/4 text-white opacity-70 w-16 h-16" />
-      <Cloud className="absolute top-24 right-1/4 text-white opacity-50 w-12 h-12" />
-      <Sun className="absolute top-12 right-10 text-yellow-400 w-20 h-20" />
+    <div className="min-h-screen relative">
+      {/* AI Settings Panel */}
+      <AISettingsPanel 
+        isVisible={showAISettings} 
+        onToggle={() => setShowAISettings(!showAISettings)} 
+      />
       
-      <header className="py-8 md:py-16 px-4 md:px-6 text-center animate-fade-in relative z-10">
-        <Leaf className="inline-block text-orange-500 w-8 h-8 mr-2 animate-bounce" />
-        <h1 className="text-3xl md:text-5xl font-bold text-amber-800 mb-2 font-comic">
-          {getPageTitle()}
+      <div className="absolute top-4 left-4 z-50">
+        <ModeToggle />
+      </div>
+
+      <div className="container py-12">
+        <h1 className="text-3xl font-bold text-center mb-8">
+          {generationType === 'stickers' ? 'Bible Sticker' : 'Faith Card'} Generator
         </h1>
-        <p className="text-amber-700 max-w-2xl mx-auto font-comic">
-          {getPageDescription()}
-        </p>
-      </header>
 
-      <main className="container px-4 lg:px-8 pb-12 relative z-10">
-        {/* Content area - IMPORTANT: Wrapping all content in Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full animate-scale-in">
-          <div className="mb-8">
-            {/* TabsContent components are now properly nested within Tabs */}
-            <TabsContent value="edit" className="animate-fade-in mb-8">
-              <EditTab 
-                selectedTopics={selectedTopics}
-                setSelectedTopics={setSelectedTopics}
-                language={language}
-                setLanguage={setLanguage}
-                numberOfSheets={numberOfSheets}
-                setNumberOfSheets={setNumberOfSheets}
-                randomizeGradients={randomizeGradients}
-                setRandomizeGradients={setRandomizeGradients}
-                previewVerse={previewVerse}
-                refreshPreviewVerse={handleRefreshPreview}
-                handleGenerate={handleGenerate}
-                handleGenerateCards={handleGenerateCards}
-                isGenerating={isGenerating}
-                generationType={generationType}
-                setGenerationType={setGenerationType}
-              />
-            </TabsContent>
-
-            <TabsContent value="preview" className="animate-fade-in mb-8">
-              <PreviewTab 
-                generatedSheets={generatedSheets}
-                language={language}
-                randomGradients={randomizeGradients}
-                handleDownload={handleDownloadAll}
-                handlePdfDownload={handlePdfDownload}
-                setActiveTab={setActiveTab}
-                sheetRefs={sheetRefs}
-                selectedTopics={selectedTopics}
-                generationType={generationType}
-              />
-            </TabsContent>
+        {!showPreview ? (
+          <BibleSheetGenerator
+            previewVerse={previewVerse}
+            isGenerating={isGenerating}
+            numberOfSheets={numberOfSheets}
+            selectedTopics={selectedTopics}
+            language={language}
+            generationType={generationType}
+            setGenerationType={setGenerationType}
+            handleTopicChange={handleTopicChange}
+            handleLanguageChange={handleLanguageChange}
+            handleNumberOfSheetsChange={handleNumberOfSheetsChange}
+            handleGenerate={handleGenerate}
+            handleRefreshPreview={handleRefreshPreview}
+          />
+        ) : (
+          <div className="flex flex-col items-center">
+            <div className="mb-4">
+              <Link to="/" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/5 px-4 py-2 bg-muted hover:bg-muted/80">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back to Generator
+              </Link>
+            </div>
+            <div className="flex justify-center mb-8">
+              <Button onClick={handleDownload} disabled={isGenerating} className="mr-4">
+                Download as PNG
+              </Button>
+              <Button onClick={handleDownloadPDF} disabled={isGenerating}>
+                Download as PDF
+              </Button>
+            </div>
+            {renderSheets()}
           </div>
-          
-          {/* Tabs navigation moved to the bottom */}
-          <TabsList className="grid w-full grid-cols-2 bg-orange-100 border-2 border-orange-200 mt-8">
-            <TabsTrigger value="edit" className="text-sm md:text-base font-comic data-[state=active]:bg-orange-200 data-[state=active]:text-orange-800">
-              <FileText className="w-4 h-4 mr-2" />
-              Edit Content
-            </TabsTrigger>
-            <TabsTrigger value="preview" className="text-sm md:text-base font-comic data-[state=active]:bg-orange-200 data-[state=active]:text-orange-800">
-              <Eye className="w-4 h-4 mr-2" />
-              Preview & Download
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </main>
-
-      <footer className="bg-amber-100 border-t-2 border-amber-200 py-6 text-center text-sm text-amber-700 font-comic relative z-10">
-        <p>Bible {generationType === 'stickers' ? 'Sticker Sheet' : 'Faith Card'} Generator</p>
-        <p className="text-xs mt-1">Create beautiful customizable Bible verse {generationType === 'stickers' ? 'stickers for children' : 'declaration cards'}</p>
-        <div className="absolute bottom-0 right-0">
-          <Leaf className="text-amber-400 w-12 h-12 transform -rotate-45" />
-        </div>
-        <div className="absolute bottom-6 left-6">
-          <Zap className="text-orange-400 w-8 h-8" />
-        </div>
-      </footer>
+        )}
+      </div>
     </div>
   );
 };

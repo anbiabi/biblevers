@@ -1,7 +1,8 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { BibleVerse } from '@/data/bibleVerses';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { getRandomVibrantGradient } from "@/lib/utils";
+import { BackgroundService, BackgroundResult } from '@/services/BackgroundService';
 
 interface FaithCardProps {
   verse: BibleVerse;
@@ -10,30 +11,27 @@ interface FaithCardProps {
   title?: string;
 }
 
-// Array of moody, blurry backgrounds
-const moodyBackgrounds = [
-  "linear-gradient(to right, rgba(66, 66, 74, 0.8), rgba(25, 22, 84, 0.7)), url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"%3E%3Cfilter id=\"noise\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.65\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3CfeColorMatrix type=\"saturate\" values=\"0\"/%3E%3C/filter%3E%3Crect width=\"100\" height=\"100\" filter=\"url(%23noise)\" opacity=\"0.4\"/%3E%3C/svg%3E')",
-  "linear-gradient(to bottom, rgba(76, 76, 109, 0.8), rgba(28, 28, 45, 0.7)), url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"%3E%3Cfilter id=\"noise\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.7\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3CfeColorMatrix type=\"saturate\" values=\"0\"/%3E%3C/filter%3E%3Crect width=\"100\" height=\"100\" filter=\"url(%23noise)\" opacity=\"0.3\"/%3E%3C/svg%3E')",
-  "linear-gradient(to right, rgba(87, 83, 124, 0.8), rgba(42, 39, 80, 0.7)), url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"%3E%3Cfilter id=\"noise\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.75\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3CfeColorMatrix type=\"saturate\" values=\"0\"/%3E%3C/filter%3E%3Crect width=\"100\" height=\"100\" filter=\"url(%23noise)\" opacity=\"0.35\"/%3E%3C/svg%3E')",
-  "linear-gradient(135deg, rgba(44, 44, 84, 0.85), rgba(19, 19, 47, 0.75)), url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"%3E%3Cfilter id=\"noise\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.8\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3CfeColorMatrix type=\"saturate\" values=\"0\"/%3E%3C/filter%3E%3Crect width=\"100\" height=\"100\" filter=\"url(%23noise)\" opacity=\"0.25\"/%3E%3C/svg%3E')",
-  "linear-gradient(to right, rgba(55, 65, 81, 0.85), rgba(17, 24, 39, 0.75)), url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"%3E%3Cfilter id=\"noise\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.7\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3CfeColorMatrix type=\"saturate\" values=\"0\"/%3E%3C/filter%3E%3Crect width=\"100\" height=\"100\" filter=\"url(%23noise)\" opacity=\"0.3\"/%3E%3C/svg%3E')"
-];
-
-// Function to get a random moody background
-const getRandomMoodyBackground = () => {
-  return moodyBackgrounds[Math.floor(Math.random() * moodyBackgrounds.length)];
-};
-
 const FaithCard: React.FC<FaithCardProps> = ({ 
   verse, 
   language,
   theme = "Faith",
   title
 }) => {
-  // Generate a moody background (for cards) or vibrant gradient (for stickers)
-  const gradient = getRandomVibrantGradient();
-  const moodyBackground = getRandomMoodyBackground();
-  
+  const [background, setBackground] = useState<BackgroundResult | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const generateBackground = async () => {
+      setIsLoading(true);
+      const backgroundService = BackgroundService.getInstance();
+      const result = await backgroundService.generateCardBackground(verse);
+      setBackground(result);
+      setIsLoading(false);
+    };
+
+    generateBackground();
+  }, [verse]);
+
   const renderVerseText = () => {
     switch (language) {
       case 'english':
@@ -51,23 +49,7 @@ const FaithCard: React.FC<FaithCardProps> = ({
     }
   };
 
-  // Format reference for the current language
   const formatReference = () => {
-    // Using existing reference formatting logic from Sticker.tsx
-    if (language === 'korean') {
-      // Korean style reference formatting logic
-      return verse.reference; // Simplified for brevity
-    } else if (language === 'spanish') {
-      // Spanish style reference formatting logic
-      return verse.reference; // Simplified for brevity
-    } else if (language === 'french') {
-      // French style reference formatting logic
-      return verse.reference; // Simplified for brevity
-    } else if (language === 'german') {
-      // German style reference formatting logic
-      return verse.reference; // Simplified for brevity
-    }
-    
     return verse.reference;
   };
   
@@ -172,43 +154,69 @@ const FaithCard: React.FC<FaithCardProps> = ({
     }
   };
   
-  // Card title based on theme or topics
   const cardTitle = title || theme || verse.topics[0] || "Faith Declaration";
   
   return (
     <div className="faith-card w-full h-full flex flex-col overflow-hidden">
       <AspectRatio ratio={3/4} className="w-full h-full">
         <div 
-          className="w-full h-full flex flex-col p-5 border border-gray-200 rounded-lg overflow-hidden"
+          className="w-full h-full flex flex-col p-6 border border-gray-200 rounded-xl overflow-hidden relative"
           style={{
-            background: moodyBackground,
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
-            backdropFilter: "blur(4px)"
+            backgroundImage: background?.backgroundImage || 'none',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
           }}
         >
-          {/* Top section with title */}
-          <div className="uppercase font-bold tracking-wider text-center py-2 mb-3 bg-white bg-opacity-70 backdrop-blur-sm rounded-md text-gray-800">
-            {cardTitle}
-          </div>
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 rounded-xl"></div>
           
-          {/* Verse section in vertical split mode */}
-          <div className="flex flex-col flex-grow">
-            <div className="flex-1 flex flex-col justify-center items-center mb-4">
-              {/* Verse text in italics with improved readability background */}
-              <div className="text-center font-comic italic text-white mb-2 bg-black bg-opacity-30 p-3 rounded-lg backdrop-blur-sm">
-                "{renderVerseText()}"
-              </div>
-              
-              {/* Reference below verse */}
-              <div className="text-center text-sm mt-1 mb-4 text-white font-medium">
-                {formatReference()}
+          {/* Loading state */}
+          {isLoading && (
+            <div className="absolute inset-0 bg-gray-100 rounded-xl flex items-center justify-center">
+              <div className="text-gray-500">Generating background...</div>
+            </div>
+          )}
+          
+          {/* Content container */}
+          <div className="relative z-10 h-full flex flex-col">
+            {/* Title section - following the reference card style */}
+            <div className="text-center py-3 mb-4">
+              <h2 className="text-xl font-bold tracking-wider text-white drop-shadow-lg uppercase">
+                {cardTitle}
+              </h2>
+            </div>
+            
+            {/* Main content area */}
+            <div className="flex-1 flex flex-col justify-center space-y-4">
+              {/* Verse text with enhanced readability */}
+              <div className="text-center mb-4">
+                <div className="bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-lg mx-2">
+                  <p className="text-gray-800 font-medium italic leading-relaxed text-lg">
+                    "{renderVerseText()}"
+                  </p>
+                  <p className="text-gray-600 text-sm mt-2 font-semibold">
+                    {formatReference()}
+                  </p>
+                </div>
               </div>
             </div>
             
-            {/* Application in bold with improved readability background */}
-            <div className="mt-auto text-center font-comic font-bold text-gray-800 bg-white bg-opacity-70 backdrop-blur-sm p-4 rounded-md">
-              {getApplicationMessage()}
+            {/* Application message - following the French card style */}
+            <div className="mt-auto">
+              <div className="bg-white/95 backdrop-blur-sm p-4 rounded-lg shadow-lg mx-2 mb-2">
+                <p className="text-gray-800 text-sm leading-relaxed font-medium">
+                  {getApplicationMessage()}
+                </p>
+              </div>
             </div>
+            
+            {/* AI generation indicator */}
+            {background?.isAIGenerated && (
+              <div className="absolute top-2 right-2 bg-blue-500/80 text-white text-xs px-2 py-1 rounded">
+                AI
+              </div>
+            )}
           </div>
         </div>
       </AspectRatio>
