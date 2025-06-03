@@ -18,7 +18,7 @@ interface BibleSheetGeneratorProps {
   language: string;
   generationType: 'cards' | 'stickers';
   setGenerationType: (type: 'cards' | 'stickers') => void;
-  handleTopicChange: (topic: string) => void;
+  handleTopicChange: (topics: string[]) => void;
   handleLanguageChange: (language: string) => void;
   handleNumberOfSheetsChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleGenerate: () => void;

@@ -1,10 +1,10 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, Eye, Leaf, Cloud, Sun, Zap } from "lucide-react";
 import { useSheetGenerator } from '@/hooks/useSheetGenerator';
 import EditTab from '@/components/EditTab';
 import PreviewTab from '@/components/PreviewTab';
-import AISettingsPanel from '@/components/AISettingsPanel';
 import { backgroundService } from '@/services/BackgroundService';
 
 const Index = () => {
@@ -14,7 +14,6 @@ const Index = () => {
   const [numberOfSheets, setNumberOfSheets] = useState<number>(1);
   const [randomizeGradients, setRandomizeGradients] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>('edit');
-  const [showAISettings, setShowAISettings] = useState<boolean>(false);
   
   // References
   const sheetRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -91,12 +90,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen safari-theme-bg">
-      {/* AI Settings Panel */}
-      <AISettingsPanel 
-        isVisible={showAISettings} 
-        onToggle={() => setShowAISettings(!showAISettings)} 
-      />
-
       {/* Top decorative elements */}
       <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="h-20 w-full">
