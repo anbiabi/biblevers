@@ -1,4 +1,3 @@
-
 import { BibleVerse } from '@/data/bibleVerses';
 import { analyzeVerse } from '@/utils/verseAnalyzer';
 
@@ -13,6 +12,12 @@ export interface GeneratedImageResult {
   imageUrl: string;
   prompt: string;
   timestamp: number;
+}
+
+export interface AIImageError {
+  code: number;
+  message: string;
+  type: 'auth' | 'billing' | 'rate_limit' | 'server' | 'unknown';
 }
 
 class AIImageService {
@@ -77,6 +82,43 @@ class AIImageService {
     return `${prompt}, beautiful digital art, high quality, soft focus background for text overlay, ethereal, spiritual, inspirational, 4k`;
   }
 
+  private parseApiError(status: number, responseText?: string): AIImageError {
+    switch (status) {
+      case 401:
+        return {
+          code: 401,
+          message: 'Invalid API key. Please check your Hugging Face API key.',
+          type: 'auth'
+        };
+      case 402:
+        return {
+          code: 402,
+          message: 'Billing issue. Your Hugging Face account may need credits or an upgraded plan.',
+          type: 'billing'
+        };
+      case 429:
+        return {
+          code: 429,
+          message: 'Rate limit exceeded. Please wait before making more requests.',
+          type: 'rate_limit'
+        };
+      case 500:
+      case 502:
+      case 503:
+        return {
+          code: status,
+          message: 'Hugging Face service temporarily unavailable. Please try again later.',
+          type: 'server'
+        };
+      default:
+        return {
+          code: status,
+          message: `API request failed with status ${status}. ${responseText || ''}`,
+          type: 'unknown'
+        };
+    }
+  }
+
   async generateImage(params: AIImageGenerationParams): Promise<GeneratedImageResult | null> {
     const apiKey = this.getApiKey();
     if (!apiKey) {
@@ -116,7 +158,18 @@ class AIImageService {
       });
 
       if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`);
+        const responseText = await response.text().catch(() => '');
+        const error = this.parseApiError(response.status, responseText);
+        
+        // Log detailed error for debugging
+        console.error('AI Image Generation Error:', {
+          status: response.status,
+          error: error,
+          verse: params.verse.reference
+        });
+        
+        // Throw a more descriptive error
+        throw new Error(`${error.message} (Status: ${error.code})`);
       }
 
       const blob = await response.blob();
@@ -133,7 +186,16 @@ class AIImageService {
       
       return result;
     } catch (error) {
-      console.error('Error generating AI image:', error);
+      // Enhanced error logging
+      if (error instanceof Error) {
+        console.error('Error generating AI image:', {
+          message: error.message,
+          verse: params.verse.reference,
+          style: params.style
+        });
+      } else {
+        console.error('Unknown error generating AI image:', error);
+      }
       return null;
     }
   }

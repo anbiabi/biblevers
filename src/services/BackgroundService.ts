@@ -1,4 +1,3 @@
-
 import { BibleVerse } from '@/data/bibleVerses';
 import { aiImageService } from './AIImageService';
 
@@ -32,16 +31,32 @@ class BackgroundService {
         });
         
         if (result?.imageUrl) {
+          console.log('Successfully generated AI background for:', verse.reference);
           return result.imageUrl;
         }
       } catch (error) {
-        console.warn('AI image generation failed, falling back to default images:', error);
+        // More specific error handling
+        if (error instanceof Error) {
+          if (error.message.includes('402')) {
+            console.warn('AI image generation failed due to billing issue. Using fallback background.');
+          } else if (error.message.includes('401')) {
+            console.warn('AI image generation failed due to invalid API key. Using fallback background.');
+          } else if (error.message.includes('429')) {
+            console.warn('AI image generation failed due to rate limiting. Using fallback background.');
+          } else {
+            console.warn('AI image generation failed:', error.message, 'Using fallback background.');
+          }
+        } else {
+          console.warn('AI image generation failed with unknown error. Using fallback background.');
+        }
       }
     }
     
     // Fallback to sample images
     const fallbackIndex = options.fallbackIndex ?? Math.floor(Math.random() * FALLBACK_BACKGROUNDS.length);
-    return FALLBACK_BACKGROUNDS[fallbackIndex % FALLBACK_BACKGROUNDS.length];
+    const selectedBackground = FALLBACK_BACKGROUNDS[fallbackIndex % FALLBACK_BACKGROUNDS.length];
+    console.log('Using fallback background:', selectedBackground, 'for verse:', verse.reference);
+    return selectedBackground;
   }
 
   getFallbackBackground(index?: number): string {

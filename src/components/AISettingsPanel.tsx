@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Settings, Eye, EyeOff, ExternalLink } from "lucide-react";
+import { Settings, Eye, EyeOff, ExternalLink, AlertCircle } from "lucide-react";
 import { aiImageService } from '@/services/AIImageService';
 import { toast } from "sonner";
 
@@ -132,8 +131,22 @@ const AISettingsPanel: React.FC<AISettingsPanelProps> = ({ isVisible, onToggle }
             )}
           </div>
 
-          <div className="text-xs text-muted-foreground pt-2 border-t">
+          <div className="text-xs text-muted-foreground pt-2 border-t space-y-2">
             <p><strong>Note:</strong> Without an API key, the app will use beautiful fallback backgrounds.</p>
+            
+            <div className="bg-amber-50 border border-amber-200 rounded-md p-3">
+              <div className="flex items-start space-x-2">
+                <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                <div className="text-amber-800">
+                  <p className="font-medium text-xs">Common Issues:</p>
+                  <ul className="text-xs mt-1 space-y-1">
+                    <li>• <strong>402 Error:</strong> Account needs credits or upgrade</li>
+                    <li>• <strong>401 Error:</strong> Invalid or expired API key</li>
+                    <li>• <strong>429 Error:</strong> Rate limit exceeded, try later</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
