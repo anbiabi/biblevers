@@ -21,10 +21,9 @@ class BackgroundService {
     options: BackgroundOptions = { useAI: true }
   ): Promise<string> {
     
-    // Always try AI generation first if API key is available
+    // Try AI generation first if enabled and API key available
     if (options.useAI && aiImageService.getApiKey()) {
       try {
-        console.log('Attempting AI image generation for verse:', verse.reference);
         const result = await aiImageService.generateImage({
           verse,
           style: 'serene',
@@ -33,7 +32,6 @@ class BackgroundService {
         });
         
         if (result?.imageUrl) {
-          console.log('AI image generated successfully');
           return result.imageUrl;
         }
       } catch (error) {
@@ -41,11 +39,9 @@ class BackgroundService {
       }
     }
     
-    // Always fallback to sample images
+    // Fallback to sample images
     const fallbackIndex = options.fallbackIndex ?? Math.floor(Math.random() * FALLBACK_BACKGROUNDS.length);
-    const selectedBackground = FALLBACK_BACKGROUNDS[fallbackIndex % FALLBACK_BACKGROUNDS.length];
-    console.log('Using fallback background:', selectedBackground);
-    return selectedBackground;
+    return FALLBACK_BACKGROUNDS[fallbackIndex % FALLBACK_BACKGROUNDS.length];
   }
 
   getFallbackBackground(index?: number): string {
@@ -57,7 +53,6 @@ class BackgroundService {
     FALLBACK_BACKGROUNDS.forEach(src => {
       const img = new Image();
       img.src = src;
-      console.log('Preloading fallback image:', src);
     });
   }
 }

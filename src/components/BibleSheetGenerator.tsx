@@ -18,7 +18,7 @@ interface BibleSheetGeneratorProps {
   language: string;
   generationType: 'cards' | 'stickers';
   setGenerationType: (type: 'cards' | 'stickers') => void;
-  handleTopicChange: (topics: string[]) => void;
+  handleTopicChange: (topic: string) => void;
   handleLanguageChange: (language: string) => void;
   handleNumberOfSheetsChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleGenerate: () => void;
@@ -75,8 +75,7 @@ const BibleSheetGenerator: React.FC<BibleSheetGeneratorProps> = ({
           <Label className="text-sm font-medium">Select Topics</Label>
           <TopicSelector 
             selectedTopics={selectedTopics} 
-            onChange={handleTopicChange}
-            generationType={generationType}
+            onTopicChange={handleTopicChange}
           />
         </div>
 
