@@ -161,13 +161,6 @@ class AIImageService {
         const responseText = await response.text().catch(() => '');
         const error = this.parseApiError(response.status, responseText);
         
-        // Log detailed error for debugging
-        console.error('AI Image Generation Error:', {
-          status: response.status,
-          error: error,
-          verse: params.verse.reference
-        });
-        
         // Throw a more descriptive error
         throw new Error(`${error.message} (Status: ${error.code})`);
       }
