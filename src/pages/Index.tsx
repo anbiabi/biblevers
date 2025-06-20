@@ -2,13 +2,20 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, Eye, Leaf, Cloud, Sun, Zap } from "lucide-react";
 import { useSheetGenerator } from '@/hooks/useSheetGenerator';
+import { useAuth } from '@/hooks/useAuth';
 import EditTab from '@/components/EditTab';
 import PreviewTab from '@/components/PreviewTab';
+import UserMenu from '@/components/UserMenu';
+import UsageLimitBanner from '@/components/UsageLimitBanner';
 import AISettingsPanel from '@/components/AISettingsPanel';
 import { backgroundService } from '@/services/BackgroundService';
 import { wallpaperBackgroundService } from '@/services/WallpaperBackgroundService';
+import { toast } from "sonner";
 
 export default function Index() {
+  // Auth state
+  const { user, incrementUsage, getRemainingUsage, canUseFeature } = useAuth();
+  
   // State for the generator settings
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [language, setLanguage] = useState<string>('english');
@@ -55,19 +62,39 @@ export default function Index() {
     }
   }, [generationType]);
 
+  const checkUsageLimit = (): boolean => {
+    if (!user || user.plan !== 'free') {
+      return true; // Premium users have no limits
+    }
+    
+    const remaining = getRemainingUsage();
+    if (remaining <= 0) {
+      toast.error('Daily limit reached! Upgrade to Premium for unlimited creations.');
+      return false;
+    }
+    
+    return incrementUsage();
+  };
+
   const handleGenerate = () => {
+    if (!checkUsageLimit()) return;
+    
     // Pass 'stickers' type to the hook
     setGenerationType('stickers');
     generateSheets(numberOfSheets, selectedTopics, () => setActiveTab('preview'));
   };
 
   const handleGenerateCards = () => {
+    if (!checkUsageLimit()) return;
+    
     // Pass 'cards' type to the hook
     setGenerationType('cards');
     generateSheets(numberOfSheets, selectedTopics, () => setActiveTab('preview'));
   };
 
   const handleGenerateWallpapers = () => {
+    if (!checkUsageLimit()) return;
+    
     // Pass 'wallpapers' type to the hook
     setGenerationType('wallpapers');
     generateSheets(numberOfSheets, selectedTopics, () => setActiveTab('preview'));
@@ -129,6 +156,11 @@ export default function Index() {
       <Sun className="absolute top-12 right-10 text-yellow-400 w-20 h-20" />
       
       <header className="py-8 md:py-16 px-4 md:px-6 text-center animate-fade-in relative z-10">
+        {/* User Menu */}
+        <div className="absolute top-4 right-4">
+          <UserMenu />
+        </div>
+        
         <Leaf className="inline-block text-orange-500 w-8 h-8 mr-2 animate-bounce" />
         <h1 className="text-3xl md:text-5xl font-bold text-amber-800 mb-2 font-comic">
           {getPageTitle()}
@@ -139,6 +171,9 @@ export default function Index() {
       </header>
 
       <main className="container px-4 lg:px-8 pb-12 relative z-10">
+        {/* Usage Limit Banner */}
+        <UsageLimitBanner />
+        
         {/* Content area - IMPORTANT: Wrapping all content in Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full animate-scale-in">
           <div className="mb-8">
@@ -187,7 +222,7 @@ export default function Index() {
             </TabsTrigger>
             <TabsTrigger value="preview" className="text-sm md:text-base font-comic data-[state=active]:bg-orange-200 data-[state=active]:text-orange-800">
               <Eye className="w-4 h-4 mr-2" />
-              Preview & Download
+              Preview & Print
             </TabsTrigger>
           </TabsList>
         </Tabs>
