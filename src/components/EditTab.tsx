@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Shuffle, Settings } from "lucide-react";
+import { Shuffle } from "lucide-react";
 import TopicSelector from '@/components/TopicSelector';
 import LanguageSelector from '@/components/LanguageSelector';
 import StickerPreview from '@/components/StickerPreview';
 import WallpaperPreview from '@/components/WallpaperPreview';
 import FaithCardPreview from '@/components/FaithCardPreview';
-import EditModal from '@/components/EditModal';
 import { BibleVerse } from '@/data/bibleVerses';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -36,8 +35,6 @@ const EditTab: React.FC<EditTabProps> = ({
   setSelectedTopics,
   language,
   setLanguage,
-  numberOfSheets,
-  setNumberOfSheets,
   randomizeGradients,
   setRandomizeGradients,
   previewVerse,
@@ -49,15 +46,6 @@ const EditTab: React.FC<EditTabProps> = ({
   generationType,
   setGenerationType
 }) => {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [wallpaperCategory, setWallpaperCategory] = useState('auto');
-  const [cardFont, setCardFont] = useState('serif');
-  const [cardBackground, setCardBackground] = useState('auto');
-
-  const handleEditClick = () => {
-    setIsEditModalOpen(true);
-  };
-
   const renderPreview = () => {
     switch (generationType) {
       case 'wallpapers':
@@ -98,18 +86,7 @@ const EditTab: React.FC<EditTabProps> = ({
       {/* Generation Type Container (middle) */}
       <Card className="border-2 border-orange-300 shadow-md bg-gradient-to-r from-orange-50 to-amber-50">
         <CardContent className="pt-6 pb-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-medium font-comic text-amber-800">Choose Generation Type</h3>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleEditClick}
-              className="border-amber-400 text-amber-700 hover:bg-amber-100"
-            >
-              <Settings className="w-4 h-4 mr-2" />
-              Edit Settings
-            </Button>
-          </div>
+          <h3 className="text-xl font-medium mb-6 text-center font-comic text-amber-800">Choose Generation Type</h3>
           
           <div className="flex flex-col space-y-6">
             <RadioGroup
@@ -199,22 +176,25 @@ const EditTab: React.FC<EditTabProps> = ({
         </CardContent>
       </Card>
 
-      {/* Edit Modal */}
-      <EditModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        generationType={generationType}
-        numberOfSheets={numberOfSheets}
-        setNumberOfSheets={setNumberOfSheets}
-        randomizeGradients={randomizeGradients}
-        setRandomizeGradients={setRandomizeGradients}
-        wallpaperCategory={wallpaperCategory}
-        setWallpaperCategory={setWallpaperCategory}
-        cardFont={cardFont}
-        setCardFont={setCardFont}
-        cardBackground={cardBackground}
-        setCardBackground={setCardBackground}
-      />
+      {/* Random Gradients Option - only for stickers */}
+      {generationType === 'stickers' && (
+        <Card className="border-2 border-amber-200 shadow-md bg-gradient-to-r from-amber-50 to-yellow-50">
+          <CardContent className="pt-6 space-y-4">
+            <div className="pt-2">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="randomize-gradients"
+                  checked={randomizeGradients}
+                  onChange={(e) => setRandomizeGradients(e.target.checked)}
+                  className="rounded border-gray-300 text-orange-600 shadow-sm focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                />
+                <Label htmlFor="randomize-gradients">Randomize background colors</Label>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

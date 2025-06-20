@@ -9,17 +9,13 @@ interface FaithCardProps {
   language: string;
   theme?: string;
   title?: string;
-  font?: string;
-  background?: string;
 }
 
 const FaithCard: React.FC<FaithCardProps> = ({ 
   verse, 
   language,
   theme = "Faith",
-  title,
-  font = 'serif',
-  background = 'auto'
+  title
 }) => {
   const [backgroundImage, setBackgroundImage] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
@@ -28,19 +24,8 @@ const FaithCard: React.FC<FaithCardProps> = ({
     const loadBackground = async () => {
       setIsLoading(true);
       try {
-        if (background === 'simple') {
-          setBackgroundImage('');
-        } else if (background === 'gradient') {
-          setBackgroundImage('linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)');
-        } else if (background === 'nature') {
-          setBackgroundImage('/lovable-uploads/4406f99e-d72a-4f6d-a175-aaaab81fef10.png');
-        } else if (background === 'cross') {
-          setBackgroundImage('/lovable-uploads/0f133377-3b6d-46eb-b884-1a1cf4a48e84.png');
-        } else {
-          // Auto - use AI or fallback
-          const bg = await backgroundService.getCardBackground(verse, { useAI: true });
-          setBackgroundImage(bg);
-        }
+        const bg = await backgroundService.getCardBackground(verse, { useAI: true });
+        setBackgroundImage(bg);
       } catch (error) {
         console.error('Failed to load background:', error);
         setBackgroundImage(backgroundService.getFallbackBackground());
@@ -50,7 +35,7 @@ const FaithCard: React.FC<FaithCardProps> = ({
     };
 
     loadBackground();
-  }, [verse, background]);
+  }, [verse]);
 
   const renderVerseText = () => {
     switch (language) {
@@ -71,7 +56,6 @@ const FaithCard: React.FC<FaithCardProps> = ({
 
   const formatReference = () => {
     if (language === 'korean') {
-      // Korean style reference names
       const referenceMap: {[key: string]: string} = {
         'Genesis': '창세기',
         'Exodus': '출애굽기',
@@ -164,7 +148,6 @@ const FaithCard: React.FC<FaithCardProps> = ({
       const koreanBookName = referenceMap[bookName] || bookName;
       return `${koreanBookName} ${chapterVerse}`;
     } else if (language === 'spanish') {
-      // Spanish reference formatting
       const referenceMap: {[key: string]: string} = {
         'Genesis': 'Génesis',
         'Exodus': 'Éxodo',
@@ -257,7 +240,6 @@ const FaithCard: React.FC<FaithCardProps> = ({
       const spanishBookName = referenceMap[bookName] || bookName;
       return `${spanishBookName} ${chapterVerse}`;
     } else if (language === 'french') {
-      // French reference formatting
       const referenceMap: {[key: string]: string} = {
         'Genesis': 'Genèse',
         'Exodus': 'Exode',
@@ -335,7 +317,6 @@ const FaithCard: React.FC<FaithCardProps> = ({
         'Revelation': 'Apocalypse'
       };
       
-      // Parse the reference
       const parts = verse.reference.split(/\s+/);
       let bookName = "";
       let chapterVerse = "";
@@ -351,7 +332,6 @@ const FaithCard: React.FC<FaithCardProps> = ({
       const frenchBookName = referenceMap[bookName] || bookName;
       return `${frenchBookName} ${chapterVerse}`;
     } else if (language === 'german') {
-      // German reference formatting
       const referenceMap: {[key: string]: string} = {
         'Genesis': '1. Mose',
         'Exodus': '2. Mose',
@@ -429,7 +409,6 @@ const FaithCard: React.FC<FaithCardProps> = ({
         'Revelation': 'Offenbarung'
       };
       
-      // Parse the reference
       const parts = verse.reference.split(/\s+/);
       let bookName = "";
       let chapterVerse = "";
@@ -449,25 +428,14 @@ const FaithCard: React.FC<FaithCardProps> = ({
     return verse.reference;
   };
   
-  // Generate AI contextual phrase
+  // Generate AI contextual phrase in the selected language
   const getContextualPhrase = () => {
-    const contextualPhrase = aiVerseAnalyzer.generateContextualPhrase(verse);
+    const contextualPhrase = aiVerseAnalyzer.generateContextualPhrase(verse, language);
     return contextualPhrase.phrase;
   };
   
   // Card title based on theme or topics
   const cardTitle = title || theme || verse.topics[0] || "Faith Declaration";
-  
-  // Font class mapping
-  const getFontClass = () => {
-    switch (font) {
-      case 'serif': return 'font-serif';
-      case 'sans': return 'font-sans';
-      case 'script': return 'font-script';
-      case 'display': return 'font-display';
-      default: return 'font-serif';
-    }
-  };
   
   return (
     <div className="faith-card w-full h-full flex flex-col overflow-hidden">
@@ -495,30 +463,30 @@ const FaithCard: React.FC<FaithCardProps> = ({
           
           {/* Content overlay for better text readability */}
           {backgroundImage && (
-            <div className="absolute inset-0 bg-white bg-opacity-80" />
+            <div className="absolute inset-0 bg-white bg-opacity-85" />
           )}
           
           {/* Content container */}
           <div className="relative z-10 h-full flex flex-col p-6">
             {/* Top section with title */}
-            <div className={`text-center font-bold text-lg text-gray-800 mb-6 pb-2 border-b-2 border-gray-200 ${getFontClass()}`}>
+            <div className="text-center font-bold text-lg text-gray-800 mb-6 pb-2 border-b-2 border-gray-200 font-serif">
               {cardTitle.toUpperCase()}
             </div>
             
             {/* Verse section - centered content */}
             <div className="flex flex-col flex-grow justify-center">
               {/* Verse text */}
-              <div className={`text-center text-gray-800 leading-relaxed mb-4 text-base ${getFontClass()}`}>
+              <div className="text-center font-serif text-gray-800 leading-relaxed mb-4 text-base">
                 "{renderVerseText()}"
               </div>
               
               {/* Reference */}
-              <div className={`text-center text-sm text-gray-600 font-medium mb-6 ${getFontClass()}`}>
+              <div className="text-center text-sm text-gray-600 font-medium mb-6 font-serif">
                 {formatReference()}
               </div>
               
-              {/* AI-generated contextual phrase */}
-              <div className={`text-center italic text-gray-700 text-sm border-t-2 border-gray-200 pt-4 ${getFontClass()}`}>
+              {/* AI-generated contextual phrase in selected language */}
+              <div className="text-center font-serif italic text-gray-700 text-sm border-t-2 border-gray-200 pt-4">
                 {getContextualPhrase()}
               </div>
             </div>
