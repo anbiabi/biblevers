@@ -7,6 +7,7 @@ import TopicSelector from '@/components/TopicSelector';
 import LanguageSelector from '@/components/LanguageSelector';
 import StickerPreview from '@/components/StickerPreview';
 import WallpaperPreview from '@/components/WallpaperPreview';
+import FaithCardPreview from '@/components/FaithCardPreview';
 import EditModal from '@/components/EditModal';
 import { BibleVerse } from '@/data/bibleVerses';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -50,9 +51,22 @@ const EditTab: React.FC<EditTabProps> = ({
 }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [wallpaperCategory, setWallpaperCategory] = useState('auto');
+  const [cardFont, setCardFont] = useState('serif');
+  const [cardBackground, setCardBackground] = useState('auto');
 
   const handleEditClick = () => {
     setIsEditModalOpen(true);
+  };
+
+  const renderPreview = () => {
+    switch (generationType) {
+      case 'wallpapers':
+        return <WallpaperPreview verse={previewVerse} language={language} />;
+      case 'cards':
+        return <FaithCardPreview verse={previewVerse} language={language} />;
+      default:
+        return <StickerPreview verse={previewVerse} language={language} />;
+    }
   };
 
   return (
@@ -168,11 +182,7 @@ const EditTab: React.FC<EditTabProps> = ({
               <Card className="border-2 border-amber-200 shadow-md bg-gradient-to-r from-amber-50 to-yellow-50">
                 <CardContent className="pt-6">
                   <h3 className="text-lg font-medium mb-4">Preview</h3>
-                  {generationType === 'wallpapers' ? (
-                    <WallpaperPreview verse={previewVerse} language={language} />
-                  ) : (
-                    <StickerPreview verse={previewVerse} language={language} />
-                  )}
+                  {renderPreview()}
                   
                   <Button 
                     variant="outline" 
@@ -200,6 +210,10 @@ const EditTab: React.FC<EditTabProps> = ({
         setRandomizeGradients={setRandomizeGradients}
         wallpaperCategory={wallpaperCategory}
         setWallpaperCategory={setWallpaperCategory}
+        cardFont={cardFont}
+        setCardFont={setCardFont}
+        cardBackground={cardBackground}
+        setCardBackground={setCardBackground}
       />
     </div>
   );

@@ -7,9 +7,10 @@ interface WallpaperProps {
   verse: BibleVerse;
   language: string;
   category?: string;
+  key?: number; // Add key prop to force re-render
 }
 
-const Wallpaper: React.FC<WallpaperProps> = ({ verse, language, category = 'auto' }) => {
+const Wallpaper: React.FC<WallpaperProps> = ({ verse, language, category = 'auto', key }) => {
   const [backgroundImage, setBackgroundImage] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -31,7 +32,7 @@ const Wallpaper: React.FC<WallpaperProps> = ({ verse, language, category = 'auto
     };
 
     loadBackground();
-  }, [verse, category]);
+  }, [verse, category, key]); // Add key to dependencies
 
   const renderVerseText = () => {
     switch (language) {
@@ -435,13 +436,15 @@ const Wallpaper: React.FC<WallpaperProps> = ({ verse, language, category = 'auto
             </div>
           )}
           
-          {/* Background image */}
-          {backgroundImage && (
-            <div 
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat rounded-2xl"
-              style={{ backgroundImage: `url(${backgroundImage})` }}
-            />
-          )}
+          {/* Background image - ensure it's always visible */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat rounded-2xl"
+            style={{ 
+              backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              minHeight: '100%',
+              minWidth: '100%'
+            }}
+          />
           
           {/* Overlay for text readability */}
           <div className="absolute inset-0 bg-black bg-opacity-30 rounded-2xl" />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Download, FileText, Leaf } from "lucide-react";
+import { Printer, FileText, Leaf } from "lucide-react";
 import StickerSheet from '@/components/StickerSheet';
 import FaithCardSheet from '@/components/FaithCardSheet';
 import WallpaperSheet from '@/components/WallpaperSheet';
@@ -93,13 +93,13 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button className="bg-amber-600 hover:bg-amber-700 font-comic">
-                    <Download className="w-4 h-4 mr-2" />
-                    Download
+                    <Printer className="w-4 h-4 mr-2" />
+                    Print
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem onClick={handleDownload}>
-                    <Download className="w-4 h-4 mr-2" />
+                    <Printer className="w-4 h-4 mr-2" />
                     High-Res PNG
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handlePdfDownload}>

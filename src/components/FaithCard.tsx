@@ -9,13 +9,17 @@ interface FaithCardProps {
   language: string;
   theme?: string;
   title?: string;
+  font?: string;
+  background?: string;
 }
 
 const FaithCard: React.FC<FaithCardProps> = ({ 
   verse, 
   language,
   theme = "Faith",
-  title
+  title,
+  font = 'serif',
+  background = 'auto'
 }) => {
   const [backgroundImage, setBackgroundImage] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
@@ -24,8 +28,19 @@ const FaithCard: React.FC<FaithCardProps> = ({
     const loadBackground = async () => {
       setIsLoading(true);
       try {
-        const bg = await backgroundService.getCardBackground(verse, { useAI: true });
-        setBackgroundImage(bg);
+        if (background === 'simple') {
+          setBackgroundImage('');
+        } else if (background === 'gradient') {
+          setBackgroundImage('linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)');
+        } else if (background === 'nature') {
+          setBackgroundImage('/lovable-uploads/4406f99e-d72a-4f6d-a175-aaaab81fef10.png');
+        } else if (background === 'cross') {
+          setBackgroundImage('/lovable-uploads/0f133377-3b6d-46eb-b884-1a1cf4a48e84.png');
+        } else {
+          // Auto - use AI or fallback
+          const bg = await backgroundService.getCardBackground(verse, { useAI: true });
+          setBackgroundImage(bg);
+        }
       } catch (error) {
         console.error('Failed to load background:', error);
         setBackgroundImage(backgroundService.getFallbackBackground());
@@ -35,7 +50,7 @@ const FaithCard: React.FC<FaithCardProps> = ({
     };
 
     loadBackground();
-  }, [verse]);
+  }, [verse, background]);
 
   const renderVerseText = () => {
     switch (language) {
@@ -54,7 +69,6 @@ const FaithCard: React.FC<FaithCardProps> = ({
     }
   };
 
-  // Format reference for the current language
   const formatReference = () => {
     if (language === 'korean') {
       // Korean style reference names
@@ -444,10 +458,21 @@ const FaithCard: React.FC<FaithCardProps> = ({
   // Card title based on theme or topics
   const cardTitle = title || theme || verse.topics[0] || "Faith Declaration";
   
+  // Font class mapping
+  const getFontClass = () => {
+    switch (font) {
+      case 'serif': return 'font-serif';
+      case 'sans': return 'font-sans';
+      case 'script': return 'font-script';
+      case 'display': return 'font-display';
+      default: return 'font-serif';
+    }
+  };
+  
   return (
     <div className="faith-card w-full h-full flex flex-col overflow-hidden">
       <AspectRatio ratio={3/4} className="w-full h-full">
-        <div className="w-full h-full flex flex-col border border-gray-200 rounded-lg overflow-hidden relative bg-white">
+        <div className="w-full h-full flex flex-col border border-gray-200 rounded-lg overflow-hidden relative">
           {/* Loading overlay */}
           {isLoading && (
             <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
@@ -455,42 +480,45 @@ const FaithCard: React.FC<FaithCardProps> = ({
             </div>
           )}
           
-          {/* Simple white background with subtle decorative elements */}
-          <div className="absolute inset-0 bg-white">
-            {/* Subtle decorative pattern in corners */}
-            <div className="absolute top-4 left-4 w-16 h-16 opacity-10">
-              <svg viewBox="0 0 64 64" className="w-full h-full text-green-400">
-                <path d="M8 8 L24 8 L24 24 L8 24 Z M40 8 L56 8 L56 24 L40 24 Z M8 40 L24 40 L24 56 L8 56 Z M40 40 L56 40 L56 56 L40 56 Z" fill="currentColor"/>
-              </svg>
-            </div>
-            <div className="absolute bottom-4 right-4 w-16 h-16 opacity-10 transform rotate-45">
-              <svg viewBox="0 0 64 64" className="w-full h-full text-green-400">
-                <path d="M8 8 L24 8 L24 24 L8 24 Z M40 8 L56 8 L56 24 L40 24 Z M8 40 L24 40 L24 56 L8 56 Z M40 40 L56 40 L56 56 L40 56 Z" fill="currentColor"/>
-              </svg>
-            </div>
-          </div>
+          {/* Background */}
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: backgroundImage.startsWith('http') || backgroundImage.startsWith('/') 
+                ? `url(${backgroundImage})` 
+                : backgroundImage || 'white',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          />
+          
+          {/* Content overlay for better text readability */}
+          {backgroundImage && (
+            <div className="absolute inset-0 bg-white bg-opacity-80" />
+          )}
           
           {/* Content container */}
           <div className="relative z-10 h-full flex flex-col p-6">
             {/* Top section with title */}
-            <div className="text-center font-bold text-lg text-gray-800 mb-6 pb-2 border-b-2 border-gray-200">
+            <div className={`text-center font-bold text-lg text-gray-800 mb-6 pb-2 border-b-2 border-gray-200 ${getFontClass()}`}>
               {cardTitle.toUpperCase()}
             </div>
             
             {/* Verse section - centered content */}
             <div className="flex flex-col flex-grow justify-center">
               {/* Verse text */}
-              <div className="text-center font-serif text-gray-800 leading-relaxed mb-4 text-base">
+              <div className={`text-center text-gray-800 leading-relaxed mb-4 text-base ${getFontClass()}`}>
                 "{renderVerseText()}"
               </div>
               
               {/* Reference */}
-              <div className="text-center text-sm text-gray-600 font-medium mb-6">
+              <div className={`text-center text-sm text-gray-600 font-medium mb-6 ${getFontClass()}`}>
                 {formatReference()}
               </div>
               
               {/* AI-generated contextual phrase */}
-              <div className="text-center font-serif italic text-gray-700 text-sm border-t-2 border-gray-200 pt-4">
+              <div className={`text-center italic text-gray-700 text-sm border-t-2 border-gray-200 pt-4 ${getFontClass()}`}>
                 {getContextualPhrase()}
               </div>
             </div>

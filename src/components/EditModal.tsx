@@ -17,6 +17,10 @@ interface EditModalProps {
   setRandomizeGradients: (value: boolean) => void;
   wallpaperCategory?: string;
   setWallpaperCategory?: (category: string) => void;
+  cardFont?: string;
+  setCardFont?: (font: string) => void;
+  cardBackground?: string;
+  setCardBackground?: (background: string) => void;
 }
 
 const EditModal: React.FC<EditModalProps> = ({
@@ -28,17 +32,29 @@ const EditModal: React.FC<EditModalProps> = ({
   randomizeGradients,
   setRandomizeGradients,
   wallpaperCategory = 'auto',
-  setWallpaperCategory
+  setWallpaperCategory,
+  cardFont = 'serif',
+  setCardFont,
+  cardBackground = 'auto',
+  setCardBackground
 }) => {
   const [localNumberOfSheets, setLocalNumberOfSheets] = useState(numberOfSheets);
   const [localRandomizeGradients, setLocalRandomizeGradients] = useState(randomizeGradients);
   const [localWallpaperCategory, setLocalWallpaperCategory] = useState(wallpaperCategory);
+  const [localCardFont, setLocalCardFont] = useState(cardFont);
+  const [localCardBackground, setLocalCardBackground] = useState(cardBackground);
 
   const handleSave = () => {
     setNumberOfSheets(localNumberOfSheets);
     setRandomizeGradients(localRandomizeGradients);
     if (setWallpaperCategory) {
       setWallpaperCategory(localWallpaperCategory);
+    }
+    if (setCardFont) {
+      setCardFont(localCardFont);
+    }
+    if (setCardBackground) {
+      setCardBackground(localCardBackground);
     }
     onClose();
   };
@@ -107,6 +123,48 @@ const EditModal: React.FC<EditModalProps> = ({
                 Use different gradient colors for each sticker
               </p>
             </div>
+          )}
+
+          {/* Faith Card specific settings */}
+          {generationType === 'cards' && (
+            <>
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Font Style</Label>
+                <Select value={localCardFont} onValueChange={setLocalCardFont}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select font style" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="serif">Serif (Traditional)</SelectItem>
+                    <SelectItem value="sans">Sans-serif (Modern)</SelectItem>
+                    <SelectItem value="script">Script (Elegant)</SelectItem>
+                    <SelectItem value="display">Display (Bold)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-gray-500">
+                  Choose the font style for your faith cards
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Background Style</Label>
+                <Select value={localCardBackground} onValueChange={setLocalCardBackground}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select background style" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="auto">Auto (AI Generated)</SelectItem>
+                    <SelectItem value="simple">Simple White</SelectItem>
+                    <SelectItem value="gradient">Soft Gradient</SelectItem>
+                    <SelectItem value="nature">Nature Theme</SelectItem>
+                    <SelectItem value="cross">Cross Theme</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-gray-500">
+                  Choose the background style for your faith cards
+                </p>
+              </div>
+            </>
           )}
 
           {/* Wallpaper category - only for wallpapers */}
