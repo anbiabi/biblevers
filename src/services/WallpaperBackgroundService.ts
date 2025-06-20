@@ -26,6 +26,66 @@ const CHRISTIAN_BACKGROUNDS = {
   ]
 };
 
+// Picsum Photos for wallpapers with phone dimensions and themes
+const PICSUM_WALLPAPER_CATEGORIES = {
+  nature: [
+    'https://picsum.photos/1080/1920?random=100&blur=1',
+    'https://picsum.photos/1080/1920?random=101&blur=1',
+    'https://picsum.photos/1080/1920?random=102&blur=1',
+    'https://picsum.photos/1080/1920?random=103&blur=1',
+    'https://picsum.photos/1080/1920?random=104&blur=1'
+  ],
+  peaceful: [
+    'https://picsum.photos/1080/1920?random=110&blur=2',
+    'https://picsum.photos/1080/1920?random=111&blur=2',
+    'https://picsum.photos/1080/1920?random=112&blur=2',
+    'https://picsum.photos/1080/1920?random=113&blur=2',
+    'https://picsum.photos/1080/1920?random=114&blur=2'
+  ],
+  serene: [
+    'https://picsum.photos/1080/1920?random=120&blur=1',
+    'https://picsum.photos/1080/1920?random=121&blur=1',
+    'https://picsum.photos/1080/1920?random=122&blur=1',
+    'https://picsum.photos/1080/1920?random=123&blur=1',
+    'https://picsum.photos/1080/1920?random=124&blur=1'
+  ],
+  warm: [
+    'https://picsum.photos/1080/1920?random=130&blur=1',
+    'https://picsum.photos/1080/1920?random=131&blur=1',
+    'https://picsum.photos/1080/1920?random=132&blur=1',
+    'https://picsum.photos/1080/1920?random=133&blur=1',
+    'https://picsum.photos/1080/1920?random=134&blur=1'
+  ],
+  spring: [
+    'https://picsum.photos/1080/1920?random=140&blur=1',
+    'https://picsum.photos/1080/1920?random=141&blur=1',
+    'https://picsum.photos/1080/1920?random=142&blur=1',
+    'https://picsum.photos/1080/1920?random=143&blur=1',
+    'https://picsum.photos/1080/1920?random=144&blur=1'
+  ],
+  summer: [
+    'https://picsum.photos/1080/1920?random=150&blur=1',
+    'https://picsum.photos/1080/1920?random=151&blur=1',
+    'https://picsum.photos/1080/1920?random=152&blur=1',
+    'https://picsum.photos/1080/1920?random=153&blur=1',
+    'https://picsum.photos/1080/1920?random=154&blur=1'
+  ],
+  autumn: [
+    'https://picsum.photos/1080/1920?random=160&blur=1',
+    'https://picsum.photos/1080/1920?random=161&blur=1',
+    'https://picsum.photos/1080/1920?random=162&blur=1',
+    'https://picsum.photos/1080/1920?random=163&blur=1',
+    'https://picsum.photos/1080/1920?random=164&blur=1'
+  ],
+  winter: [
+    'https://picsum.photos/1080/1920?random=170&blur=1',
+    'https://picsum.photos/1080/1920?random=171&blur=1',
+    'https://picsum.photos/1080/1920?random=172&blur=1',
+    'https://picsum.photos/1080/1920?random=173&blur=1',
+    'https://picsum.photos/1080/1920?random=174&blur=1'
+  ]
+};
+
 const SEASONAL_BACKGROUNDS = {
   spring: [
     'https://images.pexels.com/photos/56866/garden-rose-red-pink-56866.jpeg',
@@ -60,6 +120,7 @@ export interface WallpaperBackgroundOptions {
   useAI: boolean;
   category?: 'christmas' | 'easter' | 'cross' | 'nature' | 'spring' | 'summer' | 'autumn' | 'winter' | 'auto';
   fallbackIndex?: number;
+  usePicsum?: boolean;
 }
 
 class WallpaperBackgroundService {
@@ -79,6 +140,25 @@ class WallpaperBackgroundService {
   private isEasterTime(): boolean {
     const month = new Date().getMonth() + 1;
     return month >= 3 && month <= 5; // March to May (approximate Easter season)
+  }
+
+  private getThemeFromVerse(verse: BibleVerse): keyof typeof PICSUM_WALLPAPER_CATEGORIES {
+    const text = verse.text.english.toLowerCase();
+    const topics = verse.topics.map(t => t.toLowerCase());
+
+    // Determine theme based on verse content
+    if (text.includes('peace') || text.includes('rest') || text.includes('calm') || 
+        topics.includes('peace') || topics.includes('comfort')) {
+      return 'peaceful';
+    } else if (text.includes('love') || text.includes('warm') || text.includes('heart') ||
+               topics.includes('love') || topics.includes('joy')) {
+      return 'warm';
+    } else if (text.includes('quiet') || text.includes('still') || text.includes('gentle') ||
+               topics.includes('patience') || topics.includes('wisdom')) {
+      return 'serene';
+    } else {
+      return 'nature'; // Default to nature
+    }
   }
 
   private selectCategoryBasedOnVerse(verse: BibleVerse): string {
@@ -136,9 +216,33 @@ class WallpaperBackgroundService {
     }
   }
 
+  private getPicsumWallpaperBackground(verse: BibleVerse, category?: string): string {
+    let theme: keyof typeof PICSUM_WALLPAPER_CATEGORIES;
+    
+    if (category && PICSUM_WALLPAPER_CATEGORIES[category as keyof typeof PICSUM_WALLPAPER_CATEGORIES]) {
+      theme = category as keyof typeof PICSUM_WALLPAPER_CATEGORIES;
+    } else {
+      // Auto-select based on verse content or season
+      if (category === 'auto' || !category) {
+        const selectedCategory = this.selectCategoryBasedOnVerse(verse);
+        if (PICSUM_WALLPAPER_CATEGORIES[selectedCategory as keyof typeof PICSUM_WALLPAPER_CATEGORIES]) {
+          theme = selectedCategory as keyof typeof PICSUM_WALLPAPER_CATEGORIES;
+        } else {
+          theme = this.getThemeFromVerse(verse);
+        }
+      } else {
+        theme = this.getThemeFromVerse(verse);
+      }
+    }
+    
+    const themeBackgrounds = PICSUM_WALLPAPER_CATEGORIES[theme];
+    const randomIndex = Math.floor(Math.random() * themeBackgrounds.length);
+    return themeBackgrounds[randomIndex];
+  }
+
   async getWallpaperBackground(
     verse: BibleVerse, 
-    options: WallpaperBackgroundOptions = { useAI: true, category: 'auto' }
+    options: WallpaperBackgroundOptions = { useAI: true, category: 'auto', usePicsum: true }
   ): Promise<string> {
     
     // Try AI generation first if enabled and API key available
@@ -158,21 +262,32 @@ class WallpaperBackgroundService {
       } catch (error) {
         if (error instanceof Error) {
           if (error.message.includes('402')) {
-            console.warn('AI wallpaper generation failed due to billing issue. Using categorized fallback background.');
+            console.warn('AI wallpaper generation failed due to billing issue. Using Picsum fallback background.');
           } else if (error.message.includes('401')) {
-            console.warn('AI wallpaper generation failed due to invalid API key. Using categorized fallback background.');
+            console.warn('AI wallpaper generation failed due to invalid API key. Using Picsum fallback background.');
           } else if (error.message.includes('429')) {
-            console.warn('AI wallpaper generation failed due to rate limiting. Using categorized fallback background.');
+            console.warn('AI wallpaper generation failed due to rate limiting. Using Picsum fallback background.');
           } else {
-            console.warn('AI wallpaper generation failed:', error.message, 'Using categorized fallback background.');
+            console.warn('AI wallpaper generation failed:', error.message, 'Using Picsum fallback background.');
           }
         } else {
-          console.warn('AI wallpaper generation failed with unknown error. Using categorized fallback background.');
+          console.warn('AI wallpaper generation failed with unknown error. Using Picsum fallback background.');
         }
       }
     }
     
-    // Determine category
+    // Try Picsum Photos if enabled
+    if (options.usePicsum !== false) {
+      try {
+        const picsumUrl = this.getPicsumWallpaperBackground(verse, options.category);
+        console.log(`Using Picsum wallpaper background:`, picsumUrl, 'for verse:', verse.reference);
+        return picsumUrl;
+      } catch (error) {
+        console.warn('Picsum Photos failed for wallpapers, falling back to categorized images:', error);
+      }
+    }
+    
+    // Determine category for fallback
     let category = options.category;
     if (category === 'auto' || !category) {
       category = this.selectCategoryBasedOnVerse(verse);

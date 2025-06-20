@@ -153,7 +153,7 @@ const EditModal: React.FC<EditModalProps> = ({
                     <SelectValue placeholder="Select background style" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="auto">Auto (AI Generated)</SelectItem>
+                    <SelectItem value="auto">Auto (AI + Picsum)</SelectItem>
                     <SelectItem value="simple">Simple White</SelectItem>
                     <SelectItem value="gradient">Soft Gradient</SelectItem>
                     <SelectItem value="nature">Nature Theme</SelectItem>
@@ -161,7 +161,7 @@ const EditModal: React.FC<EditModalProps> = ({
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-gray-500">
-                  Choose the background style for your faith cards
+                  Auto uses AI generation with Picsum Photos fallback for beautiful backgrounds
                 </p>
               </div>
             </>
@@ -176,19 +176,22 @@ const EditModal: React.FC<EditModalProps> = ({
                   <SelectValue placeholder="Select background category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="auto">Auto (Smart Selection)</SelectItem>
-                  <SelectItem value="nature">Nature</SelectItem>
+                  <SelectItem value="auto">Auto (AI + Smart Picsum)</SelectItem>
+                  <SelectItem value="nature">Nature (Picsum)</SelectItem>
+                  <SelectItem value="peaceful">Peaceful (Picsum)</SelectItem>
+                  <SelectItem value="serene">Serene (Picsum)</SelectItem>
+                  <SelectItem value="warm">Warm (Picsum)</SelectItem>
                   <SelectItem value="christmas">Christmas</SelectItem>
                   <SelectItem value="easter">Easter</SelectItem>
                   <SelectItem value="cross">Cross/Salvation</SelectItem>
-                  <SelectItem value="spring">Spring</SelectItem>
-                  <SelectItem value="summer">Summer</SelectItem>
-                  <SelectItem value="autumn">Autumn</SelectItem>
-                  <SelectItem value="winter">Winter</SelectItem>
+                  <SelectItem value="spring">Spring (Picsum)</SelectItem>
+                  <SelectItem value="summer">Summer (Picsum)</SelectItem>
+                  <SelectItem value="autumn">Autumn (Picsum)</SelectItem>
+                  <SelectItem value="winter">Winter (Picsum)</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs text-gray-500">
-                Auto selection chooses backgrounds based on verse content and season
+                Auto uses AI generation with smart Picsum Photos selection based on verse content and season
               </p>
             </div>
           )}
