@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Heart, Printer, Smartphone, Users, Star, CheckCircle, Play } from "lucide-react";
+import { ArrowRight, Heart, Printer, Smartphone, Users, Star, CheckCircle, Play, Gift, Coffee } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
 const Welcome = () => {
@@ -172,6 +172,59 @@ const Welcome = () => {
       )
     },
     {
+      title: "Support Our Ministry (Optional)",
+      content: (
+        <div className="text-center space-y-6">
+          <div className="w-24 h-24 mx-auto bg-gradient-to-br from-orange-500 to-pink-600 rounded-full flex items-center justify-center">
+            <Gift className="w-12 h-12 text-white" />
+          </div>
+          <h2 className="text-3xl font-bold text-gray-800">Help Us Keep This Free</h2>
+          <p className="text-lg text-gray-600 max-w-md mx-auto">
+            This tool is completely free to use! If it has blessed you and you'd like to support our ministry, 
+            any donation helps us keep the lights on and continue serving the community.
+          </p>
+          
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-md mx-auto">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <Coffee className="w-5 h-5 text-blue-600" />
+              <span className="font-medium text-blue-800">Buy us a coffee?</span>
+            </div>
+            <p className="text-sm text-blue-700 mb-4">
+              Your support helps us maintain servers, add new features, and keep this ministry running.
+            </p>
+            
+            {/* PayPal Donation Button */}
+            <div className="space-y-3">
+              <form action="https://www.paypal.com/donate" method="post" target="_blank">
+                <input type="hidden" name="business" value="anbiabi@yahoo.fr" />
+                <input type="hidden" name="currency_code" value="USD" />
+                <input type="hidden" name="amount" value="1" />
+                <input type="hidden" name="item_name" value="Bible Verse Creator Ministry Support" />
+                <Button 
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+                >
+                  <Heart className="w-4 h-4 mr-2" />
+                  Donate $1+ via PayPal
+                </Button>
+              </form>
+              
+              <p className="text-xs text-gray-500">
+                Secure donation through PayPal • No strings attached • 100% optional
+              </p>
+            </div>
+          </div>
+          
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 max-w-md mx-auto">
+            <p className="text-sm text-green-800">
+              <strong>🙏 Thank you!</strong> Whether you donate or not, you're always welcome here. 
+              Our goal is to help spread God's Word, and your use of this tool already blesses us!
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
       title: "Ready to Start Creating?",
       content: (
         <div className="text-center space-y-6">
@@ -208,6 +261,14 @@ const Welcome = () => {
 
   const skipToApp = () => {
     navigate('/app');
+  };
+
+  const skipDonation = () => {
+    if (currentStep === steps.length - 2) { // If on donation step
+      navigate('/app');
+    } else {
+      nextStep();
+    }
   };
 
   return (
@@ -274,13 +335,26 @@ const Welcome = () => {
             ))}
           </div>
 
-          <Button 
-            onClick={nextStep}
-            className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-          >
-            <span>{currentStep === steps.length - 1 ? 'Start Creating!' : 'Next'}</span>
-            <ArrowRight className="w-4 h-4" />
-          </Button>
+          <div className="flex items-center space-x-2">
+            {/* Show skip button on donation step */}
+            {currentStep === steps.length - 2 && (
+              <Button 
+                variant="ghost"
+                onClick={skipDonation}
+                className="text-gray-600"
+              >
+                Skip
+              </Button>
+            )}
+            
+            <Button 
+              onClick={nextStep}
+              className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+            >
+              <span>{currentStep === steps.length - 1 ? 'Start Creating!' : 'Next'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </main>
 
