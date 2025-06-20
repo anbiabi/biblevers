@@ -180,8 +180,8 @@ const Welcome = () => {
           </div>
           <h2 className="text-3xl font-bold text-gray-800">Help Us Keep This Free</h2>
           <p className="text-lg text-gray-600 max-w-md mx-auto">
-            This tool is completely free to use! If it has blessed you and you'd like to support our ministry, 
-            any contribution helps us keep the lights on and continue serving the community.
+            This tool is completely free to use! If it has blessed you and you'd like to help cover our 
+            server costs and maintenance, any contribution is greatly appreciated.
           </p>
           
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-md mx-auto">
@@ -190,7 +190,7 @@ const Welcome = () => {
               <span className="font-medium text-blue-800">Support Our Ministry?</span>
             </div>
             <p className="text-sm text-blue-700 mb-4">
-              Your support helps us maintain servers, add new features, and keep this ministry running.
+              Your support helps us maintain servers, add new features, and keep this ministry running for everyone.
             </p>
             
             {/* PayPal Maintenance Fee Button */}
@@ -199,7 +199,8 @@ const Welcome = () => {
                 <input type="hidden" name="business" value="anbiabi@yahoo.fr" />
                 <input type="hidden" name="currency_code" value="USD" />
                 <input type="hidden" name="amount" value="1" />
-                <input type="hidden" name="item_name" value="Bible Verse Creator Maintenance Fee" />
+                <input type="hidden" name="item_name" value="Bible Verse Creator - Maintenance Fee" />
+                <input type="hidden" name="item_number" value="MAINTENANCE_FEE" />
                 <Button 
                   type="submit"
                   className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
