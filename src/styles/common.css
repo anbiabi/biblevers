@@ -93,7 +93,10 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
+    font-family: 'Inter', 'Comic Neue', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
@@ -208,7 +211,7 @@
   }
 }
 
-/* Shared sticker styles */
+/* Shared sticker styles with improved typography */
 .sticker {
   position: relative;
   border-radius: 12px;
@@ -221,6 +224,119 @@
   align-items: center;
   padding: 8px;
   box-sizing: border-box;
+  font-family: 'Inter', 'Comic Neue', sans-serif;
+}
+
+/* Enhanced sticker text styling */
+.sticker .font-comic {
+  font-family: 'Inter', 'Comic Neue', sans-serif;
+  font-weight: 600; /* Make verse text bold */
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* Verse text container - main content */
+.sticker .font-comic:not(.font-bold):not([class*="text-xs"]) {
+  font-weight: 700; /* Extra bold for verse text */
+  font-size: 0.875rem; /* 14px equivalent */
+  color: #1f2937; /* Dark gray for better readability */
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8); /* Subtle white shadow for contrast */
+}
+
+/* Reference text styling - bottom right positioning */
+.sticker .font-comic.font-bold.text-xs {
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  font-style: italic;
+  font-weight: 500; /* Medium weight for reference */
+  font-size: 0.75rem; /* 12px equivalent */
+  color: #6b7280; /* Lighter gray for reference */
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 1px 3px;
+  border-radius: 3px;
+  line-height: 1.2;
+}
+
+/* Bilingual sticker adjustments */
+.sticker .font-comic.text-xs.sm\:text-sm.mb-0\.5 {
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-bottom: 2px;
+}
+
+/* Print-specific sticker styles */
+@media print {
+  body {
+    background: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .sticker-sheet {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    page-break-after: always !important;
+    width: 210mm !important;
+    height: 297mm !important;
+  }
+  
+  .sticker {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 100% !important;
+    page-break-inside: avoid !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    padding: 4px !important;
+    position: relative !important;
+  }
+  
+  /* Print verse text styling */
+  .sticker .font-comic:not(.font-bold):not([class*="text-xs"]) {
+    font-weight: 800 !important;
+    font-size: 16pt !important;
+    line-height: 1.2 !important;
+    color: #000 !important;
+    text-shadow: none !important;
+    text-align: center !important;
+  }
+  
+  /* Print reference text styling - bottom right */
+  .sticker .font-comic.font-bold.text-xs {
+    position: absolute !important;
+    bottom: 3px !important;
+    right: 4px !important;
+    font-style: italic !important;
+    font-weight: 500 !important;
+    font-size: 10pt !important;
+    color: #555 !important;
+    text-shadow: none !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    padding: 1px 2px !important;
+    border-radius: 2px !important;
+    line-height: 1.1 !important;
+  }
+
+  /* Hide decorations when printing */
+  .kids-theme-bg::before,
+  .kids-theme-bg::after {
+    display: none !important;
+  }
+  
+  .dashed-line {
+    display: none !important;
+  }
+  
+  @page {
+    size: A4;
+    margin: 0;
+  }
 }
 
 /* Wallpaper specific styles */
