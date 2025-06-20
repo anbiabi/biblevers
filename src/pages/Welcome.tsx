@@ -181,43 +181,43 @@ const Welcome = () => {
           <h2 className="text-3xl font-bold text-gray-800">Help Us Keep This Free</h2>
           <p className="text-lg text-gray-600 max-w-md mx-auto">
             This tool is completely free to use! If it has blessed you and you'd like to support our ministry, 
-            any donation helps us keep the lights on and continue serving the community.
+            any contribution helps us keep the lights on and continue serving the community.
           </p>
           
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-md mx-auto">
             <div className="flex items-center justify-center space-x-2 mb-4">
               <Coffee className="w-5 h-5 text-blue-600" />
-              <span className="font-medium text-blue-800">Buy us a coffee?</span>
+              <span className="font-medium text-blue-800">Support Our Ministry?</span>
             </div>
             <p className="text-sm text-blue-700 mb-4">
               Your support helps us maintain servers, add new features, and keep this ministry running.
             </p>
             
-            {/* PayPal Donation Button */}
+            {/* PayPal Maintenance Fee Button */}
             <div className="space-y-3">
               <form action="https://www.paypal.com/donate" method="post" target="_blank">
                 <input type="hidden" name="business" value="anbiabi@yahoo.fr" />
                 <input type="hidden" name="currency_code" value="USD" />
                 <input type="hidden" name="amount" value="1" />
-                <input type="hidden" name="item_name" value="Bible Verse Creator Ministry Support" />
+                <input type="hidden" name="item_name" value="Bible Verse Creator Maintenance Fee" />
                 <Button 
                   type="submit"
                   className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
                 >
                   <Heart className="w-4 h-4 mr-2" />
-                  Donate $1+ via PayPal
+                  Pay $1+ Maintenance Fee
                 </Button>
               </form>
               
               <p className="text-xs text-gray-500">
-                Secure donation through PayPal • No strings attached • 100% optional
+                Secure payment through PayPal • No strings attached • 100% optional
               </p>
             </div>
           </div>
           
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 max-w-md mx-auto">
             <p className="text-sm text-green-800">
-              <strong>🙏 Thank you!</strong> Whether you donate or not, you're always welcome here. 
+              <strong>🙏 Thank you!</strong> Whether you contribute or not, you're always welcome here. 
               Our goal is to help spread God's Word, and your use of this tool already blesses us!
             </p>
           </div>
