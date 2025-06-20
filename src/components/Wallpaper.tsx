@@ -6,9 +6,10 @@ import { wallpaperBackgroundService } from '@/services/WallpaperBackgroundServic
 interface WallpaperProps {
   verse: BibleVerse;
   language: string;
+  category?: string;
 }
 
-const Wallpaper: React.FC<WallpaperProps> = ({ verse, language }) => {
+const Wallpaper: React.FC<WallpaperProps> = ({ verse, language, category = 'auto' }) => {
   const [backgroundImage, setBackgroundImage] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -16,7 +17,10 @@ const Wallpaper: React.FC<WallpaperProps> = ({ verse, language }) => {
     const loadBackground = async () => {
       setIsLoading(true);
       try {
-        const bg = await wallpaperBackgroundService.getWallpaperBackground(verse, { useAI: true });
+        const bg = await wallpaperBackgroundService.getWallpaperBackground(verse, { 
+          useAI: true, 
+          category: category as any 
+        });
         setBackgroundImage(bg);
       } catch (error) {
         console.error('Failed to load wallpaper background:', error);
@@ -27,7 +31,7 @@ const Wallpaper: React.FC<WallpaperProps> = ({ verse, language }) => {
     };
 
     loadBackground();
-  }, [verse]);
+  }, [verse, category]);
 
   const renderVerseText = () => {
     switch (language) {

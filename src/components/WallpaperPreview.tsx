@@ -17,6 +17,10 @@ const WallpaperPreview: React.FC<WallpaperPreviewProps> = ({ verse, language }) 
     setKey(prev => prev + 1);
   }, [verse]);
   
+  const handleRefresh = () => {
+    setKey(prev => prev + 1);
+  };
+  
   if (!verse) {
     return (
       <div className="w-full aspect-[9/16] rounded-lg border border-dashed border-green-300 flex items-center justify-center bg-green-50 max-w-xs mx-auto">
@@ -35,7 +39,7 @@ const WallpaperPreview: React.FC<WallpaperPreviewProps> = ({ verse, language }) 
         variant="ghost" 
         size="icon" 
         className="absolute top-2 right-2 bg-white bg-opacity-70 shadow-sm hover:bg-green-100"
-        onClick={() => setKey(prev => prev + 1)}
+        onClick={handleRefresh}
       >
         <RefreshCw size={16} className="text-green-600" />
       </Button>

@@ -4,19 +4,19 @@ import { aiImageService } from './AIImageService';
 // Christian and seasonal background categories
 const CHRISTIAN_BACKGROUNDS = {
   christmas: [
-    '/lovable-uploads/christmas-1.jpg',
-    '/lovable-uploads/christmas-2.jpg',
-    '/lovable-uploads/christmas-3.jpg'
+    'https://images.pexels.com/photos/1303081/pexels-photo-1303081.jpeg',
+    'https://images.pexels.com/photos/1303098/pexels-photo-1303098.jpeg',
+    'https://images.pexels.com/photos/1303099/pexels-photo-1303099.jpeg'
   ],
   easter: [
-    '/lovable-uploads/easter-1.jpg',
-    '/lovable-uploads/easter-2.jpg',
-    '/lovable-uploads/easter-3.jpg'
+    'https://images.pexels.com/photos/1166209/pexels-photo-1166209.jpeg',
+    'https://images.pexels.com/photos/1166210/pexels-photo-1166210.jpeg',
+    'https://images.pexels.com/photos/1166211/pexels-photo-1166211.jpeg'
   ],
   cross: [
-    '/lovable-uploads/cross-1.jpg',
-    '/lovable-uploads/cross-2.jpg',
-    '/lovable-uploads/cross-3.jpg'
+    'https://images.pexels.com/photos/208315/pexels-photo-208315.jpeg',
+    'https://images.pexels.com/photos/208316/pexels-photo-208316.jpeg',
+    'https://images.pexels.com/photos/208317/pexels-photo-208317.jpeg'
   ],
   nature: [
     '/lovable-uploads/4406f99e-d72a-4f6d-a175-aaaab81fef10.png',
@@ -28,24 +28,24 @@ const CHRISTIAN_BACKGROUNDS = {
 
 const SEASONAL_BACKGROUNDS = {
   spring: [
-    '/lovable-uploads/spring-1.jpg',
-    '/lovable-uploads/spring-2.jpg',
-    '/lovable-uploads/spring-3.jpg'
+    'https://images.pexels.com/photos/56866/garden-rose-red-pink-56866.jpeg',
+    'https://images.pexels.com/photos/56867/garden-rose-red-pink-56867.jpeg',
+    'https://images.pexels.com/photos/56868/garden-rose-red-pink-56868.jpeg'
   ],
   summer: [
-    '/lovable-uploads/summer-1.jpg',
-    '/lovable-uploads/summer-2.jpg',
-    '/lovable-uploads/summer-3.jpg'
+    'https://images.pexels.com/photos/158251/forest-the-sun-morning-tucholskie-158251.jpeg',
+    'https://images.pexels.com/photos/158252/forest-the-sun-morning-tucholskie-158252.jpeg',
+    'https://images.pexels.com/photos/158253/forest-the-sun-morning-tucholskie-158253.jpeg'
   ],
   autumn: [
-    '/lovable-uploads/autumn-1.jpg',
-    '/lovable-uploads/autumn-2.jpg',
-    '/lovable-uploads/autumn-3.jpg'
+    'https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg',
+    'https://images.pexels.com/photos/33110/fall-autumn-red-season.jpg',
+    'https://images.pexels.com/photos/33111/fall-autumn-red-season.jpg'
   ],
   winter: [
-    '/lovable-uploads/winter-1.jpg',
-    '/lovable-uploads/winter-2.jpg',
-    '/lovable-uploads/winter-3.jpg'
+    'https://images.pexels.com/photos/235621/pexels-photo-235621.jpeg',
+    'https://images.pexels.com/photos/235622/pexels-photo-235622.jpeg',
+    'https://images.pexels.com/photos/235623/pexels-photo-235623.jpeg'
   ]
 };
 
