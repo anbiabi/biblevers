@@ -7,7 +7,7 @@ import PreviewTab from '@/components/PreviewTab';
 import AISettingsPanel from '@/components/AISettingsPanel';
 import { backgroundService } from '@/services/BackgroundService';
 
-const Index = () => {
+export default function Index() {
   // State for the generator settings
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [language, setLanguage] = useState<string>('english');
@@ -204,6 +204,4 @@ const Index = () => {
       </footer>
     </div>
   );
-};
-
-export default Index;
+}
