@@ -6,6 +6,7 @@ import EditTab from '@/components/EditTab';
 import PreviewTab from '@/components/PreviewTab';
 import AISettingsPanel from '@/components/AISettingsPanel';
 import { backgroundService } from '@/services/BackgroundService';
+import { wallpaperBackgroundService } from '@/services/WallpaperBackgroundService';
 
 export default function Index() {
   // State for the generator settings
@@ -36,6 +37,7 @@ export default function Index() {
   // Preload fallback images on mount
   useEffect(() => {
     backgroundService.preloadFallbackImages();
+    wallpaperBackgroundService.preloadWallpaperImages();
   }, []);
 
   // Update preview verse when topics or language change

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BibleVerse } from '@/data/bibleVerses';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { backgroundService } from '@/services/BackgroundService';
+import { wallpaperBackgroundService } from '@/services/WallpaperBackgroundService';
 
 interface WallpaperProps {
   verse: BibleVerse;
@@ -16,11 +16,11 @@ const Wallpaper: React.FC<WallpaperProps> = ({ verse, language }) => {
     const loadBackground = async () => {
       setIsLoading(true);
       try {
-        const bg = await backgroundService.getCardBackground(verse, { useAI: true });
+        const bg = await wallpaperBackgroundService.getWallpaperBackground(verse, { useAI: true });
         setBackgroundImage(bg);
       } catch (error) {
-        console.error('Failed to load background:', error);
-        setBackgroundImage(backgroundService.getFallbackBackground());
+        console.error('Failed to load wallpaper background:', error);
+        setBackgroundImage(wallpaperBackgroundService.getFallbackWallpaperBackground());
       } finally {
         setIsLoading(false);
       }
@@ -423,10 +423,10 @@ const Wallpaper: React.FC<WallpaperProps> = ({ verse, language }) => {
   return (
     <div className="wallpaper w-full h-full flex flex-col overflow-hidden">
       <AspectRatio ratio={9/16} className="w-full h-full">
-        <div className="w-full h-full flex flex-col relative bg-gray-100 overflow-hidden">
+        <div className="w-full h-full flex flex-col relative bg-gray-100 overflow-hidden rounded-2xl">
           {/* Loading overlay */}
           {isLoading && (
-            <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
+            <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center rounded-2xl">
               <span className="text-gray-500">Loading...</span>
             </div>
           )}
@@ -434,13 +434,13 @@ const Wallpaper: React.FC<WallpaperProps> = ({ verse, language }) => {
           {/* Background image */}
           {backgroundImage && (
             <div 
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat rounded-2xl"
               style={{ backgroundImage: `url(${backgroundImage})` }}
             />
           )}
           
           {/* Overlay for text readability */}
-          <div className="absolute inset-0 bg-black bg-opacity-30" />
+          <div className="absolute inset-0 bg-black bg-opacity-30 rounded-2xl" />
           
           {/* Content container */}
           <div className="relative z-10 h-full flex flex-col justify-center items-center p-8 text-center">
