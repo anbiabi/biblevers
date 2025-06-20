@@ -80,7 +80,7 @@ class BackgroundService {
   ): Promise<string> {
     
     // Try AI generation first if enabled and API key available
-    if (options.useAI && aiImageService.getApiKey()) {
+    if (options.useAI) {
       try {
         const result = await aiImageService.generateImage({
           verse,
@@ -90,7 +90,7 @@ class BackgroundService {
         });
         
         if (result?.imageUrl) {
-          console.log('Successfully generated AI background for:', verse.reference);
+          console.log(`Successfully generated ${result.provider} background for:`, verse.reference);
           return result.imageUrl;
         }
       } catch (error) {

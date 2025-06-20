@@ -1,5 +1,6 @@
 import { BibleVerse } from '@/data/bibleVerses';
 import { analyzeVerse } from '@/utils/verseAnalyzer';
+import { openAIService } from './OpenAIService';
 
 export interface AIImageGenerationParams {
   verse: BibleVerse;
@@ -12,6 +13,7 @@ export interface GeneratedImageResult {
   imageUrl: string;
   prompt: string;
   timestamp: number;
+  provider: 'huggingface' | 'openai';
 }
 
 export interface AIImageError {
@@ -120,12 +122,6 @@ class AIImageService {
   }
 
   async generateImage(params: AIImageGenerationParams): Promise<GeneratedImageResult | null> {
-    const apiKey = this.getApiKey();
-    if (!apiKey) {
-      console.warn('No Hugging Face API key provided');
-      return null;
-    }
-
     const cacheKey = this.generateCacheKey(params.verse, params.style);
     
     // Check cache first
@@ -137,13 +133,45 @@ class AIImageService {
       }
     }
 
+    // Try OpenAI first if available
+    const openAIKey = openAIService.getApiKey();
+    if (openAIKey) {
+      try {
+        console.log('Attempting OpenAI image generation for:', params.verse.reference);
+        const openAIResult = await openAIService.generateImage(params);
+        
+        if (openAIResult?.imageUrl) {
+          const result: GeneratedImageResult = {
+            imageUrl: openAIResult.imageUrl,
+            prompt: openAIResult.prompt,
+            timestamp: openAIResult.timestamp,
+            provider: 'openai'
+          };
+          
+          this.cache.set(cacheKey, result);
+          console.log('Successfully generated OpenAI image for:', params.verse.reference);
+          return result;
+        }
+      } catch (error) {
+        console.warn('OpenAI generation failed, falling back to Hugging Face:', error);
+      }
+    }
+
+    // Fallback to Hugging Face
+    const huggingFaceKey = this.getApiKey();
+    if (!huggingFaceKey) {
+      console.warn('No Hugging Face API key provided');
+      return null;
+    }
+
     try {
+      console.log('Attempting Hugging Face image generation for:', params.verse.reference);
       const prompt = this.createPrompt(params.verse, params.style);
       
       const response = await fetch('https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
+          'Authorization': `Bearer ${huggingFaceKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -161,7 +189,6 @@ class AIImageService {
         const responseText = await response.text().catch(() => '');
         const error = this.parseApiError(response.status, responseText);
         
-        // Throw a more descriptive error
         throw new Error(`${error.message} (Status: ${error.code})`);
       }
 
@@ -171,23 +198,22 @@ class AIImageService {
       const result: GeneratedImageResult = {
         imageUrl,
         prompt,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        provider: 'huggingface'
       };
 
-      // Cache the result
       this.cache.set(cacheKey, result);
-      
+      console.log('Successfully generated Hugging Face image for:', params.verse.reference);
       return result;
     } catch (error) {
-      // Enhanced error logging
       if (error instanceof Error) {
-        console.error('Error generating AI image:', {
+        console.error('Error generating Hugging Face image:', {
           message: error.message,
           verse: params.verse.reference,
           style: params.style
         });
       } else {
-        console.error('Unknown error generating AI image:', error);
+        console.error('Unknown error generating Hugging Face image:', error);
       }
       return null;
     }
