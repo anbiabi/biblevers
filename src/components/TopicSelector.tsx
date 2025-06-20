@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -9,7 +8,7 @@ import { toast } from "sonner";
 interface TopicSelectorProps {
   selectedTopics: string[];
   onChange: (topics: string[]) => void;
-  generationType: 'stickers' | 'cards';
+  generationType: 'stickers' | 'cards' | 'wallpapers';
 }
 
 const TopicSelector: React.FC<TopicSelectorProps> = ({ selectedTopics, onChange, generationType }) => {
@@ -64,11 +63,19 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ selectedTopics, onChange,
     }
   };
 
+  const getTitle = () => {
+    switch (generationType) {
+      case 'cards': return "Select 4 Topics (One per Card)";
+      case 'wallpapers': return "Select Topics for Wallpapers";
+      default: return "Select Topics";
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium text-amber-800 font-comic">
-          {generationType === 'cards' ? "Select 4 Topics (One per Card)" : "Select Topics"}
+          {getTitle()}
         </h3>
         <div className="flex space-x-2">
           <Button 

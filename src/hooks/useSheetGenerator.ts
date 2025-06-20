@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { toast } from "sonner";
 import { BibleVerse } from '@/data/bibleVerses';
@@ -8,7 +7,7 @@ export const useSheetGenerator = () => {
   const [previewVerse, setPreviewVerse] = useState<BibleVerse | null>(null);
   const [generatedSheets, setGeneratedSheets] = useState<BibleVerse[][]>([]);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [generationType, setGenerationType] = useState<'stickers' | 'cards'>('stickers');
+  const [generationType, setGenerationType] = useState<'stickers' | 'cards' | 'wallpapers'>('stickers');
 
   const updatePreviewVerse = (selectedTopics: string[]) => {
     if (selectedTopics.length > 0) {
@@ -33,8 +32,22 @@ export const useSheetGenerator = () => {
       const sheets: BibleVerse[][] = [];
       
       for (let i = 0; i < numberOfSheets; i++) {
-        // For stickers, we need 16 verses per sheet, for cards we need 4
-        const versesPerSheet = generationType === 'stickers' ? 16 : 4;
+        // For stickers, we need 16 verses per sheet, for cards we need 4, for wallpapers we need 1
+        let versesPerSheet: number;
+        switch (generationType) {
+          case 'stickers':
+            versesPerSheet = 16;
+            break;
+          case 'cards':
+            versesPerSheet = 4;
+            break;
+          case 'wallpapers':
+            versesPerSheet = 1;
+            break;
+          default:
+            versesPerSheet = 16;
+        }
+        
         const versesForSheet = getRandomVerses(versesPerSheet, selectedTopics);
         sheets.push(versesForSheet);
       }
@@ -62,9 +75,20 @@ export const useSheetGenerator = () => {
       // If we have multiple sheets, create separate images
       for (let i = 0; i < generatedSheets.length; i++) {
         if (sheetRefs.current[i]) {
-          const filename = generationType === 'stickers' 
-            ? `bible-stickers-sheet-${i+1}.png`
-            : `faith-cards-sheet-${i+1}.png`;
+          let filename: string;
+          switch (generationType) {
+            case 'stickers':
+              filename = `bible-stickers-sheet-${i+1}.png`;
+              break;
+            case 'cards':
+              filename = `faith-cards-sheet-${i+1}.png`;
+              break;
+            case 'wallpapers':
+              filename = `bible-wallpaper-${i+1}.png`;
+              break;
+            default:
+              filename = `bible-sheet-${i+1}.png`;
+          }
           await generateImage(sheetRefs.current[i], filename);
         }
       }
@@ -89,9 +113,20 @@ export const useSheetGenerator = () => {
       const elements = sheetRefs.current.filter(ref => ref !== null) as HTMLDivElement[];
       
       if (elements.length > 0) {
-        const filename = generationType === 'stickers' 
-          ? "bible-stickers.pdf"
-          : "faith-cards.pdf";
+        let filename: string;
+        switch (generationType) {
+          case 'stickers':
+            filename = "bible-stickers.pdf";
+            break;
+          case 'cards':
+            filename = "faith-cards.pdf";
+            break;
+          case 'wallpapers':
+            filename = "bible-wallpapers.pdf";
+            break;
+          default:
+            filename = "bible-sheets.pdf";
+        }
         await generatePDF(elements, filename);
         toast.success("PDF download ready!");
       } else {

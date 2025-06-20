@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,6 +6,7 @@ import { Shuffle } from "lucide-react";
 import TopicSelector from '@/components/TopicSelector';
 import LanguageSelector from '@/components/LanguageSelector';
 import StickerPreview from '@/components/StickerPreview';
+import WallpaperPreview from '@/components/WallpaperPreview';
 import { BibleVerse } from '@/data/bibleVerses';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -23,9 +23,10 @@ interface EditTabProps {
   refreshPreviewVerse: () => void;
   handleGenerate: () => void;
   handleGenerateCards: () => void;
+  handleGenerateWallpapers: () => void;
   isGenerating: boolean;
-  generationType: 'stickers' | 'cards';
-  setGenerationType: (type: 'stickers' | 'cards') => void;
+  generationType: 'stickers' | 'cards' | 'wallpapers';
+  setGenerationType: (type: 'stickers' | 'cards' | 'wallpapers') => void;
 }
 
 const EditTab: React.FC<EditTabProps> = ({
@@ -39,6 +40,7 @@ const EditTab: React.FC<EditTabProps> = ({
   refreshPreviewVerse,
   handleGenerate,
   handleGenerateCards,
+  handleGenerateWallpapers,
   isGenerating,
   generationType,
   setGenerationType
@@ -76,8 +78,8 @@ const EditTab: React.FC<EditTabProps> = ({
           <div className="flex flex-col space-y-6">
             <RadioGroup
               defaultValue={generationType}
-              onValueChange={(value) => setGenerationType(value as 'stickers' | 'cards')}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              onValueChange={(value) => setGenerationType(value as 'stickers' | 'cards' | 'wallpapers')}
+              className="grid grid-cols-1 md:grid-cols-3 gap-4"
             >
               <div className={`flex items-start space-x-2 rounded-lg border-2 p-4 ${generationType === 'stickers' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}>
                 <RadioGroupItem value="stickers" id="stickers" className="mt-1" />
@@ -100,6 +102,17 @@ const EditTab: React.FC<EditTabProps> = ({
                   </p>
                 </div>
               </div>
+
+              <div className={`flex items-start space-x-2 rounded-lg border-2 p-4 ${generationType === 'wallpapers' ? 'border-purple-500 bg-purple-50' : 'border-gray-200'}`}>
+                <RadioGroupItem value="wallpapers" id="wallpapers" className="mt-1" />
+                <div className="grid gap-1.5">
+                  <Label htmlFor="wallpapers" className="font-semibold text-lg">Phone Wallpapers</Label>
+                  <p className="text-sm text-gray-600">
+                    Create beautiful daily Bible verse wallpapers
+                    for mobile phones and devices.
+                  </p>
+                </div>
+              </div>
             </RadioGroup>
             
             <div className="grid grid-cols-1 gap-y-4">
@@ -111,7 +124,7 @@ const EditTab: React.FC<EditTabProps> = ({
                 >
                   {isGenerating ? "Generating..." : "Generate Sticker Sheets"}
                 </Button>
-              ) : (
+              ) : generationType === 'cards' ? (
                 <Button 
                   className="w-full h-12 text-lg shadow-lg transition transform hover:scale-105 bg-gradient-to-r from-green-600 to-teal-600"
                   onClick={handleGenerateCards}
@@ -119,13 +132,25 @@ const EditTab: React.FC<EditTabProps> = ({
                 >
                   {isGenerating ? "Generating..." : "Generate Faith Cards"}
                 </Button>
+              ) : (
+                <Button 
+                  className="w-full h-12 text-lg shadow-lg transition transform hover:scale-105 bg-gradient-to-r from-purple-600 to-pink-600"
+                  onClick={handleGenerateWallpapers}
+                  disabled={isGenerating}
+                >
+                  {isGenerating ? "Generating..." : "Generate Phone Wallpapers"}
+                </Button>
               )}
 
               {/* Preview moved right under the generate button */}
               <Card className="border-2 border-amber-200 shadow-md bg-gradient-to-r from-amber-50 to-yellow-50">
                 <CardContent className="pt-6">
                   <h3 className="text-lg font-medium mb-4">Preview</h3>
-                  <StickerPreview verse={previewVerse} language={language} />
+                  {generationType === 'wallpapers' ? (
+                    <WallpaperPreview verse={previewVerse} language={language} />
+                  ) : (
+                    <StickerPreview verse={previewVerse} language={language} />
+                  )}
                   
                   <Button 
                     variant="outline" 
@@ -142,23 +167,25 @@ const EditTab: React.FC<EditTabProps> = ({
         </CardContent>
       </Card>
 
-      {/* Random Gradients Option */}
-      <Card className="border-2 border-amber-200 shadow-md bg-gradient-to-r from-amber-50 to-yellow-50">
-        <CardContent className="pt-6 space-y-4">
-          <div className="pt-2">
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="randomize-gradients"
-                checked={randomizeGradients}
-                onChange={(e) => setRandomizeGradients(e.target.checked)}
-                className="rounded border-gray-300 text-orange-600 shadow-sm focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
-              />
-              <Label htmlFor="randomize-gradients">Randomize background colors</Label>
+      {/* Random Gradients Option - only show for stickers */}
+      {generationType === 'stickers' && (
+        <Card className="border-2 border-amber-200 shadow-md bg-gradient-to-r from-amber-50 to-yellow-50">
+          <CardContent className="pt-6 space-y-4">
+            <div className="pt-2">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="randomize-gradients"
+                  checked={randomizeGradients}
+                  onChange={(e) => setRandomizeGradients(e.target.checked)}
+                  className="rounded border-gray-300 text-orange-600 shadow-sm focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
+                />
+                <Label htmlFor="randomize-gradients">Randomize background colors</Label>
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

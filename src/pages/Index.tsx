@@ -65,6 +65,12 @@ const Index = () => {
     generateSheets(numberOfSheets, selectedTopics, () => setActiveTab('preview'));
   };
 
+  const handleGenerateWallpapers = () => {
+    // Pass 'wallpapers' type to the hook
+    setGenerationType('wallpapers');
+    generateSheets(numberOfSheets, selectedTopics, () => setActiveTab('preview'));
+  };
+
   const handleRefreshPreview = () => {
     refreshPreviewVerse(selectedTopics);
   };
@@ -78,15 +84,25 @@ const Index = () => {
   };
 
   const getPageTitle = () => {
-    return generationType === 'stickers' 
-      ? 'Bible Sticker Sheet Generator'
-      : 'Bible Faith Card Generator';
+    switch (generationType) {
+      case 'stickers': return 'Bible Sticker Sheet Generator';
+      case 'cards': return 'Bible Faith Card Generator';
+      case 'wallpapers': return 'Bible Verse Wallpaper Generator';
+      default: return 'Bible Sticker Sheet Generator';
+    }
   };
 
   const getPageDescription = () => {
-    return generationType === 'stickers'
-      ? 'Create beautiful, printable Bible verse stickers for children. Select your topics, language, and customize your sheets.'
-      : 'Create inspiring faith declaration cards with Bible verses. Great for encouragement, comfort, and spiritual reflection.';
+    switch (generationType) {
+      case 'stickers': 
+        return 'Create beautiful, printable Bible verse stickers for children. Select your topics, language, and customize your sheets.';
+      case 'cards':
+        return 'Create inspiring faith declaration cards with Bible verses. Great for encouragement, comfort, and spiritual reflection.';
+      case 'wallpapers':
+        return 'Create beautiful daily Bible verse wallpapers for your phone. Perfect for daily inspiration and spiritual reminders.';
+      default:
+        return 'Create beautiful, printable Bible verse stickers for children. Select your topics, language, and customize your sheets.';
+    }
   };
 
   return (
@@ -139,6 +155,7 @@ const Index = () => {
                 refreshPreviewVerse={handleRefreshPreview}
                 handleGenerate={handleGenerate}
                 handleGenerateCards={handleGenerateCards}
+                handleGenerateWallpapers={handleGenerateWallpapers}
                 isGenerating={isGenerating}
                 generationType={generationType}
                 setGenerationType={setGenerationType}
@@ -176,8 +193,8 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="bg-amber-100 border-t-2 border-amber-200 py-6 text-center text-sm text-amber-700 font-comic relative z-10">
-        <p>Bible {generationType === 'stickers' ? 'Sticker Sheet' : 'Faith Card'} Generator</p>
-        <p className="text-xs mt-1">Create beautiful customizable Bible verse {generationType === 'stickers' ? 'stickers for children' : 'declaration cards'}</p>
+        <p>Bible {generationType === 'stickers' ? 'Sticker Sheet' : generationType === 'cards' ? 'Faith Card' : 'Verse Wallpaper'} Generator</p>
+        <p className="text-xs mt-1">Create beautiful customizable Bible verse {generationType === 'stickers' ? 'stickers for children' : generationType === 'cards' ? 'declaration cards' : 'phone wallpapers'}</p>
         <div className="absolute bottom-0 right-0">
           <Leaf className="text-amber-400 w-12 h-12 transform -rotate-45" />
         </div>

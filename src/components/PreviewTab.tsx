@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Download, FileText, Leaf } from "lucide-react";
 import StickerSheet from '@/components/StickerSheet';
 import FaithCardSheet from '@/components/FaithCardSheet';
+import WallpaperSheet from '@/components/WallpaperSheet';
 import { BibleVerse } from '@/data/bibleVerses';
 import { 
   DropdownMenu,
@@ -22,7 +22,7 @@ interface PreviewTabProps {
   setActiveTab: (tab: string) => void;
   sheetRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
   selectedTopics: string[];
-  generationType: 'stickers' | 'cards';
+  generationType: 'stickers' | 'cards' | 'wallpapers';
 }
 
 const PreviewTab: React.FC<PreviewTabProps> = ({
@@ -48,6 +48,33 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
     );
   }
 
+  const getTypeDisplayName = () => {
+    switch (generationType) {
+      case 'stickers': return 'Sticker Sheets';
+      case 'cards': return 'Faith Cards';
+      case 'wallpapers': return 'Phone Wallpapers';
+      default: return 'Items';
+    }
+  };
+
+  const getItemCount = () => {
+    switch (generationType) {
+      case 'stickers': return generatedSheets.length * 16;
+      case 'cards': return generatedSheets.length * 4;
+      case 'wallpapers': return generatedSheets.length;
+      default: return generatedSheets.length;
+    }
+  };
+
+  const getItemUnit = () => {
+    switch (generationType) {
+      case 'stickers': return 'stickers';
+      case 'cards': return 'faith cards';
+      case 'wallpapers': return 'wallpapers';
+      default: return 'items';
+    }
+  };
+
   return (
     <div className="space-y-8 animate-fade-in">
       <Card className="w-full border-amber-200 bg-amber-50">
@@ -55,14 +82,10 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <h2 className="text-xl font-bold text-amber-800 font-comic">
-                {generationType === 'stickers' ? 'Your Sticker Sheets' : 'Your Faith Cards'}
+                Your {getTypeDisplayName()}
               </h2>
               <p className="text-sm text-amber-600 font-comic">
-                {generatedSheets.length} sheet{generatedSheets.length > 1 ? 's' : ''} with {
-                  generationType === 'stickers' 
-                    ? `${generatedSheets.length * 16} stickers` 
-                    : `${generatedSheets.length * 4} faith cards`
-                } total
+                {generatedSheets.length} sheet{generatedSheets.length > 1 ? 's' : ''} with {getItemCount()} {getItemUnit()} total
               </p>
             </div>
             
@@ -96,7 +119,7 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
             <div className="flex items-center space-x-2">
               <Leaf className="text-orange-500 w-5 h-5" />
               <h3 className="text-lg font-medium text-orange-700 font-comic">
-                Sheet {index + 1}
+                {generationType === 'wallpapers' ? `Wallpaper ${index + 1}` : `Sheet ${index + 1}`}
               </h3>
             </div>
             
@@ -111,8 +134,14 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
                   randomGradients={randomGradients}
                   selectedTopics={selectedTopics}
                 />
-              ) : (
+              ) : generationType === 'cards' ? (
                 <FaithCardSheet
+                  verses={verses}
+                  language={language}
+                  selectedTopics={selectedTopics}
+                />
+              ) : (
+                <WallpaperSheet
                   verses={verses}
                   language={language}
                   selectedTopics={selectedTopics}
