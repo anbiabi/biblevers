@@ -2,12 +2,17 @@ import { useState } from 'react';
 import { toast } from "sonner";
 import { BibleVerse } from '@/data/bibleVerses';
 import { getRandomVerses, generateImage, generatePDF } from '@/utils/imageGenerator';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 export const useSheetGenerator = () => {
   const [previewVerse, setPreviewVerse] = useState<BibleVerse | null>(null);
   const [generatedSheets, setGeneratedSheets] = useState<BibleVerse[][]>([]);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [generationType, setGenerationType] = useState<'stickers' | 'cards' | 'wallpapers'>('stickers');
+  
+  const { isAuthenticated, incrementDownloadCount, shouldShowContributionPrompt } = useAuth();
+  const navigate = useNavigate();
 
   const updatePreviewVerse = (selectedTopics: string[]) => {
     if (selectedTopics.length > 0) {
@@ -69,6 +74,25 @@ export const useSheetGenerator = () => {
       return;
     }
     
+    // Check if user is authenticated for stickers and cards
+    if ((generationType === 'stickers' || generationType === 'cards') && !isAuthenticated) {
+      toast.error("Login required to download this content", {
+        description: "Please sign in to download stickers and faith cards",
+        action: {
+          label: "Login",
+          onClick: () => navigate('/login')
+        }
+      });
+      return;
+    }
+    
+    // Check if we should show contribution prompt
+    if ((generationType === 'stickers' || generationType === 'cards') && 
+        shouldShowContributionPrompt(generationType)) {
+      // This is now handled in the PreviewTab component
+      return;
+    }
+    
     try {
       toast.info("Preparing your PNG images. This might take a moment...");
       
@@ -103,6 +127,25 @@ export const useSheetGenerator = () => {
   const downloadPDF = async (sheetRefs: React.MutableRefObject<(HTMLDivElement | null)[]>) => {
     if (generatedSheets.length === 0) {
       toast.error(`No ${generationType} to download. Generate some first!`);
+      return;
+    }
+    
+    // Check if user is authenticated for stickers and cards
+    if ((generationType === 'stickers' || generationType === 'cards') && !isAuthenticated) {
+      toast.error("Login required to download this content", {
+        description: "Please sign in to download stickers and faith cards",
+        action: {
+          label: "Login",
+          onClick: () => navigate('/login')
+        }
+      });
+      return;
+    }
+    
+    // Check if we should show contribution prompt
+    if ((generationType === 'stickers' || generationType === 'cards') && 
+        shouldShowContributionPrompt(generationType)) {
+      // This is now handled in the PreviewTab component
       return;
     }
     

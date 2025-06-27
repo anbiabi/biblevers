@@ -52,6 +52,20 @@ export const useAuth = () => {
     return limit === Infinity ? Infinity : Math.max(0, limit - currentUsage);
   };
 
+  // New methods for download tracking
+  const getDownloadCount = (category: string): number => {
+    return authService.getDownloadCount(category);
+  };
+
+  const incrementDownloadCount = (category: string): number => {
+    return authService.incrementDownloadCount(category);
+  };
+
+  const shouldShowContributionPrompt = (category: string): boolean => {
+    const count = getDownloadCount(category);
+    return count >= 3;
+  };
+
   return {
     ...authState,
     login,
@@ -60,6 +74,9 @@ export const useAuth = () => {
     canUseFeature,
     getDailyUsage,
     incrementUsage,
-    getRemainingUsage
+    getRemainingUsage,
+    getDownloadCount,
+    incrementDownloadCount,
+    shouldShowContributionPrompt
   };
 };

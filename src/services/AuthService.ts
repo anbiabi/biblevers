@@ -193,14 +193,32 @@ class AuthService {
     return true;
   }
 
+  // New methods for download tracking
+  getDownloadCount(category: string): number {
+    const userId = this.authState.user?.id || 'guest';
+    const key = `downloads_${userId}_${category}`;
+    const count = localStorage.getItem(key);
+    return count ? parseInt(count) : 0;
+  }
+
+  incrementDownloadCount(category: string): number {
+    const userId = this.authState.user?.id || 'guest';
+    const key = `downloads_${userId}_${category}`;
+    const currentCount = this.getDownloadCount(category);
+    const newCount = currentCount + 1;
+    
+    localStorage.setItem(key, newCount.toString());
+    return newCount;
+  }
+
   canUseFeature(feature: string): boolean {
     const user = this.getCurrentUser();
     const plan = user?.plan || 'free';
     
     const featureAccess = {
-      free: ['basic_creation', 'standard_backgrounds', 'english_only'],
-      premium: ['unlimited_creation', 'ai_backgrounds', 'all_languages', 'cloud_storage'],
-      ministry: ['bulk_creation', 'custom_branding', 'team_collaboration', 'analytics']
+      free: ['basic_creation', 'standard_backgrounds', 'english_only', 'wallpaper_download'],
+      premium: ['unlimited_creation', 'ai_backgrounds', 'all_languages', 'cloud_storage', 'all_downloads'],
+      ministry: ['bulk_creation', 'custom_branding', 'team_collaboration', 'analytics', 'all_downloads']
     };
     
     return featureAccess[plan].includes(feature) || 

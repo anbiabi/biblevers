@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Printer, FileText, Leaf } from "lucide-react";
@@ -12,6 +12,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import ContributionModal from '@/components/ContributionModal';
+import { toast } from "sonner";
 
 interface PreviewTabProps {
   generatedSheets: BibleVerse[][];
@@ -36,6 +40,10 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
   selectedTopics,
   generationType
 }) => {
+  const { isAuthenticated, shouldShowContributionPrompt, incrementDownloadCount } = useAuth();
+  const navigate = useNavigate();
+  const [showContributionModal, setShowContributionModal] = useState(false);
+
   if (generatedSheets.length === 0) {
     return (
       <div className="text-center py-12 animate-fade-in">
@@ -75,6 +83,73 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
     }
   };
 
+  const handleDownloadClick = () => {
+    // Allow wallpaper downloads for everyone
+    if (generationType === 'wallpapers') {
+      incrementDownloadCount('wallpapers');
+      handleDownload();
+      return;
+    }
+    
+    // Check if user is authenticated for other content types
+    if (!isAuthenticated) {
+      toast.error("Login required to download this content", {
+        description: "Please sign in to download stickers and faith cards",
+        action: {
+          label: "Login",
+          onClick: () => navigate('/login')
+        }
+      });
+      return;
+    }
+    
+    // Check if we should show contribution prompt
+    if (shouldShowContributionPrompt(generationType)) {
+      setShowContributionModal(true);
+    } else {
+      incrementDownloadCount(generationType);
+      handleDownload();
+    }
+  };
+
+  const handlePdfDownloadClick = () => {
+    // Allow wallpaper downloads for everyone
+    if (generationType === 'wallpapers') {
+      incrementDownloadCount('wallpapers');
+      handlePdfDownload();
+      return;
+    }
+    
+    // Check if user is authenticated for other content types
+    if (!isAuthenticated) {
+      toast.error("Login required to download this content", {
+        description: "Please sign in to download stickers and faith cards",
+        action: {
+          label: "Login",
+          onClick: () => navigate('/login')
+        }
+      });
+      return;
+    }
+    
+    // Check if we should show contribution prompt
+    if (shouldShowContributionPrompt(generationType)) {
+      setShowContributionModal(true);
+    } else {
+      incrementDownloadCount(generationType);
+      handlePdfDownload();
+    }
+  };
+
+  const handleContributionModalClose = (shouldProceed: boolean) => {
+    setShowContributionModal(false);
+    
+    if (shouldProceed) {
+      incrementDownloadCount(generationType);
+      handleDownload();
+    }
+  };
+
   return (
     <div className="space-y-8 animate-fade-in">
       <Card className="w-full border-amber-200 bg-amber-50">
@@ -92,17 +167,24 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
             <div className="flex gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="bg-amber-600 hover:bg-amber-700 font-comic">
+                  <Button 
+                    className={`${
+                      !isAuthenticated && generationType !== 'wallpapers' 
+                        ? 'bg-gray-400 hover:bg-gray-500' 
+                        : 'bg-amber-600 hover:bg-amber-700'
+                    } font-comic`}
+                    disabled={!isAuthenticated && generationType !== 'wallpapers'}
+                  >
                     <Printer className="w-4 h-4 mr-2" />
-                    Print
+                    {!isAuthenticated && generationType !== 'wallpapers' ? 'Login to Download' : 'Download'}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem onClick={handleDownload}>
+                  <DropdownMenuItem onClick={handleDownloadClick}>
                     <Printer className="w-4 h-4 mr-2" />
                     High-Res PNG
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handlePdfDownload}>
+                  <DropdownMenuItem onClick={handlePdfDownloadClick}>
                     <FileText className="w-4 h-4 mr-2" />
                     PDF Format
                   </DropdownMenuItem>
@@ -159,6 +241,14 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
       >
         Back to Editor
       </Button>
+
+      {/* Contribution Modal */}
+      {showContributionModal && (
+        <ContributionModal 
+          onClose={handleContributionModalClose}
+          contentType={generationType}
+        />
+      )}
     </div>
   );
 };

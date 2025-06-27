@@ -14,7 +14,7 @@ import { toast } from "sonner";
 
 export default function Index() {
   // Auth state
-  const { user, incrementUsage, getRemainingUsage, canUseFeature } = useAuth();
+  const { user, incrementUsage, getRemainingUsage, canUseFeature, isAuthenticated } = useAuth();
   
   // State for the generator settings
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
@@ -168,6 +168,15 @@ export default function Index() {
         <p className="text-amber-700 max-w-2xl mx-auto font-comic">
           {getPageDescription()}
         </p>
+        
+        {!isAuthenticated && generationType !== 'wallpapers' && (
+          <div className="mt-4 bg-amber-100 border border-amber-300 rounded-lg p-3 max-w-md mx-auto">
+            <p className="text-amber-800 text-sm">
+              <strong>Note:</strong> You're using the app as a guest. 
+              <span className="font-bold"> Login to download {generationType}.</span>
+            </p>
+          </div>
+        )}
       </header>
 
       <main className="container px-4 lg:px-8 pb-12 relative z-10">
