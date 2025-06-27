@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import Sticker from './Sticker';
 import { BibleVerse } from '../data/bibleVerses';
@@ -74,11 +73,11 @@ const StickerSheet: React.FC<StickerSheetProps> = ({
         
         return (
           <div key={`${verse.reference}-${index}`} className="relative h-[37.125mm] sticker-container overflow-hidden print:overflow-visible p-[1mm]">
-            {/* Dashed cutting lines */}
-            {index % 2 !== 1 && index < 14 && (
+            {/* Dashed cutting lines - ONLY in the middle of the sheet */}
+            {index % 2 === 1 && index < 14 && index % 4 === 1 && (
               <div className="dashed-line vertical absolute right-0 top-0 bottom-0 print:hidden"></div>
             )}
-            {index < 14 && (
+            {index < 14 && index >= 8 && index < 12 && (
               <div className="dashed-line horizontal absolute left-0 right-0 bottom-0 print:hidden"></div>
             )}
             

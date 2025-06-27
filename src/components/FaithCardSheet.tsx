@@ -6,12 +6,14 @@ interface FaithCardSheetProps {
   verses: BibleVerse[];
   language: string;
   selectedTopics?: string[];
+  useMagicalGarden?: boolean;
 }
 
 const FaithCardSheet: React.FC<FaithCardSheetProps> = ({ 
   verses, 
   language,
-  selectedTopics = []
+  selectedTopics = [],
+  useMagicalGarden = false
 }) => {
   const sheetRef = useRef<HTMLDivElement>(null);
   
@@ -153,38 +155,27 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
         position: 'relative'
       }}
     >
-      {/* Professional cutting guidelines */}
+      {/* Professional cutting guidelines - ONLY in the middle of the sheet */}
       <div className="absolute inset-0 pointer-events-none print:block hidden">
-        {/* Outer bleed area border */}
-        <div className="absolute inset-0 border border-gray-300" style={{ borderStyle: 'solid', borderWidth: '0.5pt' }} />
-        
         {/* Vertical center cutting line */}
         <div 
-          className="absolute top-0 bottom-0 border-l-2 border-dashed border-gray-400"
+          className="absolute top-0 bottom-0 border-l border-dashed border-gray-400"
           style={{ 
             left: '50%', 
             transform: 'translateX(-50%)',
-            borderStyle: 'dashed',
-            borderWidth: '0 0 0 1pt'
+            borderWidth: '0.5pt'
           }}
         />
         
         {/* Horizontal center cutting line */}
         <div 
-          className="absolute left-0 right-0 border-t-2 border-dashed border-gray-400"
+          className="absolute left-0 right-0 border-t border-dashed border-gray-400"
           style={{ 
             top: '50%', 
             transform: 'translateY(-50%)',
-            borderStyle: 'dashed',
-            borderWidth: '1pt 0 0 0'
+            borderWidth: '0.5pt'
           }}
         />
-        
-        {/* Corner registration marks */}
-        <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-black" style={{ margin: '1mm' }} />
-        <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-black" style={{ margin: '1mm' }} />
-        <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-black" style={{ margin: '1mm' }} />
-        <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-black" style={{ margin: '1mm' }} />
       </div>
       
       {/* Card grid with precise dimensions */}
@@ -221,6 +212,7 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
                 verse={verse} 
                 language={language} 
                 title={cardTitles[index]} 
+                useMagicalGarden={useMagicalGarden}
               />
             </div>
           </div>

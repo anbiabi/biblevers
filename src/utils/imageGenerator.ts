@@ -52,6 +52,40 @@ export const getRandomVerses = (
     .slice(0, count);
 };
 
+// Cache for Picsum images to avoid repeated network requests
+const picsumCache = new Map<string, string>();
+
+// Function to preload and cache Picsum images
+export const preloadPicsumImages = async (count: number = 100): Promise<void> => {
+  const baseUrls = [
+    'https://picsum.photos/512/768?random=',
+    'https://picsum.photos/1080/1920?random='
+  ];
+  
+  try {
+    for (let i = 0; i < count; i++) {
+      for (const baseUrl of baseUrls) {
+        const url = `${baseUrl}${i}`;
+        if (!picsumCache.has(url)) {
+          const img = new Image();
+          img.src = url;
+          img.onload = () => {
+            picsumCache.set(url, url);
+            console.log(`Cached Picsum image: ${url}`);
+          };
+          img.onerror = () => {
+            console.warn(`Failed to load Picsum image: ${url}`);
+          };
+        }
+      }
+      // Small delay to avoid overwhelming the browser
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  } catch (error) {
+    console.error('Error preloading Picsum images:', error);
+  }
+};
+
 export const generateImage = async (
   element: HTMLElement,
   filename: string = "bible-stickers.png"
@@ -82,7 +116,7 @@ export const generateImage = async (
     
     // Create a canvas from the DOM element
     const canvas = await html2canvas(tempContainer, {
-      scale: 3, // Higher scale for better quality
+      scale: 3, // Higher scale for better quality (300 DPI)
       useCORS: true,
       logging: false,
       backgroundColor: "white",
@@ -154,7 +188,7 @@ export const generatePDF = async (
       
       // Convert the element to canvas
       const canvas = await html2canvas(tempContainer, {
-        scale: 2, // Higher scale for better quality
+        scale: 2, // Higher scale for better quality (300 DPI)
         useCORS: true,
         logging: false,
         backgroundColor: "white",
@@ -177,3 +211,6 @@ export const generatePDF = async (
     throw error;
   }
 };
+
+// Initialize preloading of Picsum images
+preloadPicsumImages(100);

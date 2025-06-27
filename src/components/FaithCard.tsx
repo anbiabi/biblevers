@@ -9,7 +9,7 @@ interface FaithCardProps {
   language: string;
   theme?: string;
   title?: string;
-  useMagicalGarden?: boolean; // New prop for magical garden theme
+  useMagicalGarden?: boolean;
 }
 
 const FaithCard: React.FC<FaithCardProps> = ({ 
@@ -22,16 +22,12 @@ const FaithCard: React.FC<FaithCardProps> = ({
   const [backgroundImage, setBackgroundImage] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [textSizes, setTextSizes] = useState({
-    title: 'text-xl',
-    verse: 'text-base',
-    reference: 'text-sm',
-    commentary: 'text-sm'
+    verse: 'text-xl',
+    reference: 'text-lg',
+    commentary: 'text-lg'
   });
   
-  const titleRef = useRef<HTMLDivElement>(null);
   const verseRef = useRef<HTMLDivElement>(null);
-  const referenceRef = useRef<HTMLDivElement>(null);
-  const commentaryRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -59,68 +55,50 @@ const FaithCard: React.FC<FaithCardProps> = ({
     loadBackground();
   }, [verse, useMagicalGarden]);
 
-  // Dynamic text sizing based on content length and container size
+  // Dynamic text sizing based on content length
   useEffect(() => {
     const adjustTextSizes = () => {
-      if (!containerRef.current) return;
-
-      const containerHeight = containerRef.current.offsetHeight;
-      const containerWidth = containerRef.current.offsetWidth;
+      if (!containerRef.current || !verseRef.current) return;
       
       const verseText = renderVerseText();
-      const commentaryText = getContextualPhrase();
-      
-      // Calculate optimal sizes based on content length and container dimensions
-      const titleLength = (title || theme).length;
       const verseLength = verseText.length;
-      const commentaryLength = commentaryText.length;
       
-      // Base sizes for different screen sizes
-      const isSmallContainer = containerHeight < 400 || containerWidth < 300;
-      const isMediumContainer = containerHeight < 600 || containerWidth < 400;
+      let verseFontSize = 'text-xl';
+      let referenceFontSize = 'text-lg';
+      let commentaryFontSize = 'text-lg';
       
-      let newSizes = {
-        title: 'text-xl',
-        verse: 'text-base',
-        reference: 'text-sm',
-        commentary: 'text-sm'
-      };
-
-      if (isSmallContainer) {
-        // Small containers - compact sizing
-        newSizes = {
-          title: titleLength > 15 ? 'text-sm' : 'text-base',
-          verse: verseLength > 150 ? 'text-xs' : verseLength > 100 ? 'text-sm' : 'text-base',
-          reference: 'text-xs',
-          commentary: commentaryLength > 200 ? 'text-xs' : 'text-sm'
-        };
-      } else if (isMediumContainer) {
-        // Medium containers - balanced sizing
-        newSizes = {
-          title: titleLength > 15 ? 'text-base' : 'text-lg',
-          verse: verseLength > 150 ? 'text-sm' : verseLength > 100 ? 'text-base' : 'text-lg',
-          reference: 'text-sm',
-          commentary: commentaryLength > 200 ? 'text-sm' : 'text-base'
-        };
+      // Adjust verse text size based on length
+      if (verseLength > 300) {
+        verseFontSize = 'text-base';
+      } else if (verseLength > 200) {
+        verseFontSize = 'text-lg';
+      } else if (verseLength > 100) {
+        verseFontSize = 'text-xl';
       } else {
-        // Large containers - generous sizing
-        newSizes = {
-          title: titleLength > 15 ? 'text-lg' : 'text-2xl',
-          verse: verseLength > 150 ? 'text-base' : verseLength > 100 ? 'text-lg' : 'text-xl',
-          reference: 'text-base',
-          commentary: commentaryLength > 200 ? 'text-base' : 'text-lg'
-        };
+        verseFontSize = 'text-2xl';
       }
       
-      setTextSizes(newSizes);
+      // Adjust reference and commentary sizes proportionally
+      if (verseFontSize === 'text-base') {
+        referenceFontSize = 'text-sm';
+        commentaryFontSize = 'text-sm';
+      } else if (verseFontSize === 'text-lg') {
+        referenceFontSize = 'text-base';
+        commentaryFontSize = 'text-base';
+      }
+      
+      setTextSizes({
+        verse: verseFontSize,
+        reference: referenceFontSize,
+        commentary: commentaryFontSize
+      });
     };
 
-    // Adjust on mount and resize
     adjustTextSizes();
     window.addEventListener('resize', adjustTextSizes);
     
     return () => window.removeEventListener('resize', adjustTextSizes);
-  }, [verse, language, title, theme]);
+  }, [verse, language]);
 
   const renderVerseText = () => {
     switch (language) {
@@ -525,6 +503,17 @@ const FaithCard: React.FC<FaithCardProps> = ({
   // Determine if we should use magical styling based on background
   const isMagicalTheme = useMagicalGarden || backgroundImage.includes('bck4.png');
   
+  // Select a handwriting font for the verse text
+  const handwritingFonts = [
+    "'Caveat', cursive",
+    "'Satisfy', cursive",
+    "'Kalam', cursive",
+    "'Indie Flower', cursive",
+    "'Dancing Script', cursive"
+  ];
+  
+  const randomHandwritingFont = handwritingFonts[Math.floor(Math.random() * handwritingFonts.length)];
+  
   return (
     <div className="faith-card w-full h-full flex flex-col overflow-hidden">
       <AspectRatio ratio={3/4} className="w-full h-full">
@@ -549,86 +538,46 @@ const FaithCard: React.FC<FaithCardProps> = ({
             }}
           />
           
-          {/* Content overlay for better text readability - adjusted for magical theme */}
+          {/* Content overlay for better text readability */}
           {backgroundImage && (
-            <div className={`absolute inset-0 ${isMagicalTheme ? 'bg-white bg-opacity-60' : 'bg-white bg-opacity-75'}`} />
-          )}
-          
-          {/* Magical sparkle overlay for magical garden theme */}
-          {isMagicalTheme && (
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-4 left-4 w-2 h-2 bg-yellow-300 rounded-full opacity-70 animate-pulse"></div>
-              <div className="absolute top-8 right-6 w-1 h-1 bg-pink-300 rounded-full opacity-60 animate-pulse delay-300"></div>
-              <div className="absolute bottom-12 left-8 w-1.5 h-1.5 bg-blue-300 rounded-full opacity-50 animate-pulse delay-700"></div>
-              <div className="absolute bottom-6 right-4 w-1 h-1 bg-purple-300 rounded-full opacity-60 animate-pulse delay-1000"></div>
-            </div>
+            <div className="absolute inset-0 bg-white bg-opacity-75" />
           )}
           
           {/* Content container */}
           <div className="relative z-10 h-full flex flex-col p-4 sm:p-6">
-            {/* Top section with title - Enhanced for magical theme */}
+            {/* Verse text - Using handwriting font */}
             <div 
-              ref={titleRef}
-              className={`text-center font-black ${textSizes.title} mb-4 sm:mb-6 pb-2 sm:pb-3 border-b-2 tracking-wide uppercase ${
-                isMagicalTheme 
-                  ? 'text-purple-800 border-purple-300' 
-                  : 'text-gray-900 border-gray-300'
-              }`}
+              ref={verseRef}
+              className={`text-center font-bold ${textSizes.verse} leading-tight mb-4 sm:mb-6 flex-grow flex items-center justify-center`}
               style={{ 
-                fontFamily: 'Inter, "Comic Neue", sans-serif',
-                textShadow: isMagicalTheme ? '2px 2px 4px rgba(147, 51, 234, 0.3)' : '2px 2px 4px rgba(0,0,0,0.1)',
-                background: isMagicalTheme 
-                  ? 'linear-gradient(45deg, #7c3aed, #a855f7, #ec4899)' 
-                  : 'linear-gradient(45deg, #1f2937, #374151)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
+                fontFamily: randomHandwritingFont,
+                color: '#1f2937',
+                textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
               }}>
-              {cardTitle}
+              "{renderVerseText()}"
             </div>
             
-            {/* Verse section - centered content with enhanced magical styling */}
-            <div className="flex flex-col flex-grow justify-center">
-              {/* Verse text - Enhanced for magical theme */}
-              <div 
-                ref={verseRef}
-                className={`text-center font-black leading-relaxed mb-4 sm:mb-6 ${textSizes.verse} tracking-wide ${
-                  isMagicalTheme ? 'text-gray-800' : 'text-gray-900'
-                }`}
-                style={{ 
-                  fontFamily: 'Inter, "Comic Neue", sans-serif',
-                  textShadow: isMagicalTheme ? '1px 1px 3px rgba(147, 51, 234, 0.2)' : '1px 1px 2px rgba(0,0,0,0.1)',
-                  lineHeight: '1.4'
-                }}>
-                "{renderVerseText()}"
-              </div>
-              
-              {/* Reference - Enhanced for magical theme */}
-              <div 
-                ref={referenceRef}
-                className={`text-center ${textSizes.reference} font-bold mb-4 sm:mb-6`}
-                style={{ 
-                  fontFamily: 'Inter, "Comic Neue", sans-serif',
-                  color: isMagicalTheme ? '#7c3aed' : '#dc2626',
-                  textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
-                }}>
-                {formatReference()}
-              </div>
-              
-              {/* AI-generated contextual phrase - Enhanced for magical theme */}
-              <div 
-                ref={commentaryRef}
-                className={`text-center font-bold italic leading-relaxed ${textSizes.commentary} border-t-2 pt-4 sm:pt-6 ${
-                  isMagicalTheme 
-                    ? 'text-purple-700 border-purple-300' 
-                    : 'text-gray-800 border-gray-300'
-                }`}
-                style={{ 
-                  fontFamily: 'Inter, "Comic Neue", sans-serif',
-                  textShadow: isMagicalTheme ? '1px 1px 2px rgba(147, 51, 234, 0.2)' : '1px 1px 2px rgba(0,0,0,0.1)'
-                }}>
-                {getContextualPhrase()}
-              </div>
+            {/* Reference - Colored and centered */}
+            <div 
+              className={`text-center ${textSizes.reference} font-bold mb-4 sm:mb-6 text-purple-600`}
+              style={{ 
+                fontFamily: 'Inter, sans-serif',
+                textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+              }}>
+              {formatReference()}
+            </div>
+            
+            {/* Divider line */}
+            <div className="w-full h-px bg-gray-200 mb-4"></div>
+            
+            {/* AI-generated contextual phrase - Combined section */}
+            <div 
+              className={`text-center font-bold italic ${textSizes.commentary} text-purple-700`}
+              style={{ 
+                fontFamily: 'Inter, sans-serif',
+                textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+              }}>
+              {getContextualPhrase()}
             </div>
           </div>
         </div>
