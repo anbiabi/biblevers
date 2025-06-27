@@ -100,11 +100,53 @@
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
-  /* Shared utility classes */
+  /* Modern landing page animations */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Glassmorphism effects */
   .glass-panel {
     @apply bg-white bg-opacity-70 backdrop-blur-lg border border-white border-opacity-20 shadow-lg;
   }
 
+  .glass-card {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #2563eb, #7c3aed);
+  }
+
+  /* Shared utility classes */
   .sticker-sheet {
     width: 210mm;
     height: 297mm;
@@ -220,6 +262,25 @@
   }
 }
 
+/* Faith Card specific styles */
+.faith-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  font-family: 'Inter', 'Comic Neue', sans-serif;
+}
+
+.faith-card-container {
+  height: 100%;
+  page-break-inside: avoid !important;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
 /* Enhanced sticker styles with improved typography */
 .sticker {
   position: relative;
@@ -283,25 +344,6 @@
   font-size: 0.8rem;
   text-align: center;
   margin-bottom: 0;
-}
-
-/* Faith Card specific styles */
-.faith-card {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  box-sizing: border-box;
-  font-family: 'Inter', 'Comic Neue', sans-serif;
-}
-
-.faith-card-container {
-  height: 100%;
-  page-break-inside: avoid !important;
-  overflow: hidden;
-  box-sizing: border-box;
 }
 
 /* Print-specific sticker styles */

@@ -1,369 +1,400 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Heart, Printer, Smartphone, Users, Star, CheckCircle, Play, Gift, Coffee } from "lucide-react";
+import { ArrowRight, Heart, Printer, Smartphone, Users, Star, CheckCircle, Play, Gift, Coffee, Menu, X, Zap, Globe, Download, Palette } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
 const Welcome = () => {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
   const navigate = useNavigate();
 
-  const steps = [
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Intersection Observer for animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in-up');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+      observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const features = [
     {
-      title: "Welcome to Bible Verse Creator! 🙏",
-      content: (
-        <div className="text-center space-y-6">
-          <div className="w-24 h-24 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-            <Heart className="w-12 h-12 text-white" />
+      icon: <Users className="w-8 h-8" />,
+      title: "Bible Stickers",
+      description: "Create colorful sticker sheets with 16 Bible verses each. Perfect for Sunday school, rewards, and children's activities.",
+      gradient: "from-blue-500 to-cyan-400"
+    },
+    {
+      icon: <Heart className="w-8 h-8" />,
+      title: "Faith Cards",
+      description: "Design beautiful declaration cards for encouragement, prayer, and sharing God's promises with others.",
+      gradient: "from-pink-500 to-rose-400"
+    },
+    {
+      icon: <Smartphone className="w-8 h-8" />,
+      title: "Phone Wallpapers",
+      description: "Generate stunning mobile wallpapers with your favorite verses for daily inspiration on your device.",
+      gradient: "from-purple-500 to-indigo-400"
+    },
+    {
+      icon: <Globe className="w-8 h-8" />,
+      title: "Multi-Language Support",
+      description: "Create content in English, Korean, Spanish, French, and German to reach diverse communities.",
+      gradient: "from-green-500 to-emerald-400"
+    },
+    {
+      icon: <Palette className="w-8 h-8" />,
+      title: "AI-Powered Backgrounds",
+      description: "Intelligent background generation that matches your verse themes for professional results.",
+      gradient: "from-orange-500 to-amber-400"
+    },
+    {
+      icon: <Download className="w-8 h-8" />,
+      title: "Print-Ready Downloads",
+      description: "Export high-quality PDFs and PNGs with professional cutting guidelines for perfect results.",
+      gradient: "from-teal-500 to-cyan-400"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 overflow-x-hidden">
+      {/* Navigation */}
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        scrollY > 50 ? 'bg-white/80 backdrop-blur-lg shadow-lg' : 'bg-transparent'
+      }`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-2">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                <Heart className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                Bible Verse Creator
+              </span>
+            </div>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="text-gray-600 hover:text-gray-900 transition-colors">Features</a>
+              <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 transition-colors">How It Works</a>
+              <a href="#support" className="text-gray-600 hover:text-gray-900 transition-colors">Support</a>
+              <Button 
+                onClick={() => navigate('/app')}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                Get Started
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
-          <h2 className="text-3xl font-bold text-gray-800">Share God's Word Beautifully</h2>
-          <p className="text-lg text-gray-600 max-w-md mx-auto">
-            Create stunning Bible verse stickers, faith cards, and phone wallpapers in just a few clicks. 
-            No design skills needed!
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white/95 backdrop-blur-lg border-t">
+            <div className="px-4 py-4 space-y-4">
+              <a href="#features" className="block text-gray-600 hover:text-gray-900">Features</a>
+              <a href="#how-it-works" className="block text-gray-600 hover:text-gray-900">How It Works</a>
+              <a href="#support" className="block text-gray-600 hover:text-gray-900">Support</a>
+              <Button 
+                onClick={() => navigate('/app')}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+              >
+                Get Started
+              </Button>
+            </div>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-16">
+        {/* Animated Background Pattern */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-pink-400/20 to-orange-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+
+        <div className="relative max-w-6xl mx-auto text-center">
+          {/* Floating UI Elements */}
+          <div className="absolute -top-20 left-10 w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-2xl opacity-20 animate-bounce delay-300"></div>
+          <div className="absolute -top-10 right-20 w-12 h-12 bg-gradient-to-r from-pink-500 to-rose-400 rounded-xl opacity-20 animate-bounce delay-700"></div>
+          <div className="absolute top-40 -left-10 w-20 h-20 bg-gradient-to-r from-purple-500 to-indigo-400 rounded-3xl opacity-20 animate-bounce delay-1000"></div>
+
+          {/* Main Headline with Gradient Text */}
+          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Share God's Word
+            </span>
+            <br />
+            <span className="text-gray-900">Beautifully</span>
+          </h1>
+
+          {/* Compelling Subheadline */}
+          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+            Create stunning Bible verse stickers, faith cards, and phone wallpapers in seconds. 
+            No design skills needed – just select your verses and let our AI do the magic.
           </p>
-          <div className="flex justify-center space-x-4 text-sm text-gray-500">
-            <div className="flex items-center">
-              <Star className="w-4 h-4 text-yellow-500 mr-1" />
-              <span>Easy to use</span>
-            </div>
-            <div className="flex items-center">
-              <CheckCircle className="w-4 h-4 text-green-500 mr-1" />
-              <span>Print ready</span>
-            </div>
-            <div className="flex items-center">
-              <Heart className="w-4 h-4 text-red-500 mr-1" />
-              <span>Faith focused</span>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "What Can You Create?",
-      content: (
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-center text-gray-800">Three Amazing Options</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="border-2 border-blue-200 hover:border-blue-400 transition-colors">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
-                  <Users className="w-8 h-8 text-blue-600" />
-                </div>
-                <CardTitle className="text-lg">Bible Stickers</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 text-center">
-                  Perfect for kids! Create sheets of 16 colorful Bible verse stickers for Sunday school, 
-                  rewards, or decorating.
-                </p>
-              </CardContent>
-            </Card>
 
-            <Card className="border-2 border-green-200 hover:border-green-400 transition-colors">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-                  <Heart className="w-8 h-8 text-green-600" />
-                </div>
-                <CardTitle className="text-lg">Faith Cards</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 text-center">
-                  Beautiful declaration cards for encouragement, prayer, and sharing God's promises 
-                  with friends and family.
-                </p>
-              </CardContent>
-            </Card>
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <Button 
+              onClick={() => navigate('/app')}
+              size="lg"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 text-lg font-semibold"
+            >
+              Start Creating Free
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+            <Button 
+              variant="outline"
+              size="lg"
+              className="border-2 border-gray-300 hover:border-gray-400 px-8 py-4 rounded-2xl text-lg font-semibold hover:bg-gray-50 transition-all duration-300"
+            >
+              <Play className="w-5 h-5 mr-2" />
+              Watch Demo
+            </Button>
+          </div>
 
-            <Card className="border-2 border-purple-200 hover:border-purple-400 transition-colors">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 mx-auto bg-purple-100 rounded-full flex items-center justify-center">
-                  <Smartphone className="w-8 h-8 text-purple-600" />
+          {/* Trust Indicators */}
+          <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-gray-500">
+            <div className="flex items-center">
+              <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+              <span>100% Free to Start</span>
+            </div>
+            <div className="flex items-center">
+              <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+              <span>No Design Skills Required</span>
+            </div>
+            <div className="flex items-center">
+              <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+              <span>Print-Ready Quality</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16 animate-on-scroll">
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6">
+              Everything You Need to
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Create</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Powerful tools designed to help you share Scripture in beautiful, engaging ways
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <Card 
+                key={index}
+                className="group hover:shadow-2xl transition-all duration-500 border-0 bg-white/60 backdrop-blur-sm hover:bg-white/80 animate-on-scroll"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <CardHeader className="text-center pb-4">
+                  <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${feature.gradient} flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300`}>
+                    {feature.icon}
+                  </div>
+                  <CardTitle className="text-xl font-bold text-gray-900">{feature.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Ad Placement 1 */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl p-8 text-center">
+          <div className="w-full h-24 bg-gray-300 rounded-lg flex items-center justify-center text-gray-500">
+            Advertisement Space (728x90)
+          </div>
+        </div>
+      </div>
+
+      {/* How It Works Section */}
+      <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-50 to-purple-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16 animate-on-scroll">
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6">
+              Simple as
+              <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent"> 1-2-3</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Create professional Bible verse designs in just three easy steps
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {[
+              {
+                step: "1",
+                title: "Choose Your Topics",
+                description: "Select from 20+ biblical themes like Love, Hope, Peace, or Strength. Our smart system will find the perfect verses for your needs.",
+                icon: <Heart className="w-8 h-8" />,
+                gradient: "from-pink-500 to-rose-400"
+              },
+              {
+                step: "2",
+                title: "Customize & Preview",
+                description: "Pick your language, style, and format. Watch as AI generates beautiful backgrounds that perfectly match your verses.",
+                icon: <Palette className="w-8 h-8" />,
+                gradient: "from-purple-500 to-indigo-400"
+              },
+              {
+                step: "3",
+                title: "Download & Share",
+                description: "Get print-ready PDFs or high-resolution images instantly. Perfect for printing, sharing, or using as digital wallpapers.",
+                icon: <Download className="w-8 h-8" />,
+                gradient: "from-blue-500 to-cyan-400"
+              }
+            ].map((step, index) => (
+              <div key={index} className="text-center animate-on-scroll" style={{ animationDelay: `${index * 200}ms` }}>
+                <div className={`w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-r ${step.gradient} flex items-center justify-center text-white shadow-2xl`}>
+                  {step.icon}
                 </div>
-                <CardTitle className="text-lg">Phone Wallpapers</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 text-center">
-                  Daily inspiration on your phone! Create beautiful wallpapers with your favorite 
-                  Bible verses and stunning backgrounds.
-                </p>
-              </CardContent>
-            </Card>
+                <div className={`inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r ${step.gradient} text-white font-bold text-lg mb-4`}>
+                  {step.step}
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">{step.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{step.description}</p>
+              </div>
+            ))}
           </div>
         </div>
-      )
-    },
-    {
-      title: "How It Works (Super Simple!)",
-      content: (
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-center text-gray-800">Just 3 Easy Steps</h2>
-          <div className="space-y-4">
-            <div className="flex items-start space-x-4 p-4 bg-blue-50 rounded-lg">
-              <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold">1</div>
-              <div>
-                <h3 className="font-semibold text-gray-800">Choose Your Topics</h3>
-                <p className="text-gray-600">Pick themes like Love, Hope, Peace, or Strength. We have 20+ topics to choose from!</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-4 p-4 bg-green-50 rounded-lg">
-              <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">2</div>
-              <div>
-                <h3 className="font-semibold text-gray-800">Select Language & Type</h3>
-                <p className="text-gray-600">Choose from English, Korean, Spanish, French, or German. Pick stickers, cards, or wallpapers.</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-4 p-4 bg-purple-50 rounded-lg">
-              <div className="w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold">3</div>
-              <div>
-                <h3 className="font-semibold text-gray-800">Generate & Print</h3>
-                <p className="text-gray-600">Click generate and download your beautiful creations as PDF or high-quality images!</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "Perfect For Everyone",
-      content: (
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-center text-gray-800">Who Will Love This?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-6 h-6 text-green-500" />
-                <span className="font-medium">Parents & Families</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-6 h-6 text-green-500" />
-                <span className="font-medium">Sunday School Teachers</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-6 h-6 text-green-500" />
-                <span className="font-medium">Youth Group Leaders</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-6 h-6 text-green-500" />
-                <span className="font-medium">Church Volunteers</span>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-6 h-6 text-green-500" />
-                <span className="font-medium">Bible Study Groups</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-6 h-6 text-green-500" />
-                <span className="font-medium">Homeschool Families</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-6 h-6 text-green-500" />
-                <span className="font-medium">Anyone Who Loves God's Word</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-6 h-6 text-green-500" />
-                <span className="font-medium">Gift Makers</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "Support Our Ministry (Optional)",
-      content: (
-        <div className="text-center space-y-6">
-          <div className="w-24 h-24 mx-auto bg-gradient-to-br from-orange-500 to-pink-600 rounded-full flex items-center justify-center">
+      </section>
+
+      {/* Support Section */}
+      <section id="support" className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center animate-on-scroll">
+          <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-r from-orange-500 to-pink-600 rounded-full flex items-center justify-center">
             <Gift className="w-12 h-12 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-800">Help Us Keep This Free</h2>
-          <p className="text-lg text-gray-600 max-w-md mx-auto">
+          <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6">
+            Support Our
+            <span className="bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent"> Ministry</span>
+          </h2>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
             This tool is completely free to use! If it has blessed you and you'd like to help cover our 
             server costs and maintenance, any contribution is greatly appreciated.
           </p>
           
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-md mx-auto">
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-2xl p-8 max-w-md mx-auto mb-8">
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <Coffee className="w-5 h-5 text-blue-600" />
-              <span className="font-medium text-blue-800">Support Our Ministry?</span>
+              <Coffee className="w-6 h-6 text-blue-600" />
+              <span className="font-bold text-blue-800 text-lg">Bible Verse Maintenance Fee</span>
             </div>
-            <p className="text-sm text-blue-700 mb-4">
+            <p className="text-blue-700 mb-6 leading-relaxed">
               Your support helps us maintain servers, add new features, and keep this ministry running for everyone.
             </p>
             
-            {/* PayPal Maintenance Fee Button */}
-            <div className="space-y-3">
-              <form action="https://www.paypal.com/donate" method="post" target="_blank">
-                <input type="hidden" name="business" value="anbiabi@yahoo.fr" />
-                <input type="hidden" name="currency_code" value="USD" />
-                <input type="hidden" name="amount" value="1" />
-                <input type="hidden" name="item_name" value="Bible Verse Creator - Maintenance Fee" />
-                <input type="hidden" name="item_number" value="MAINTENANCE_FEE" />
-                <Button 
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
-                >
-                  <Heart className="w-4 h-4 mr-2" />
-                  Pay $1+ Maintenance Fee
-                </Button>
-              </form>
-              
-              <p className="text-xs text-gray-500">
-                Secure payment through PayPal • No strings attached • 100% optional
-              </p>
-            </div>
+            <form action="https://www.paypal.com/donate" method="post" target="_blank">
+              <input type="hidden" name="business" value="anbiabi@yahoo.fr" />
+              <input type="hidden" name="currency_code" value="USD" />
+              <input type="hidden" name="amount" value="1" />
+              <input type="hidden" name="item_name" value="Bible Verse Creator - Maintenance Fee" />
+              <input type="hidden" name="item_number" value="MAINTENANCE_FEE" />
+              <Button 
+                type="submit"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg font-semibold"
+              >
+                <Heart className="w-5 h-5 mr-2" />
+                Pay $1+ Maintenance Fee
+              </Button>
+            </form>
+            
+            <p className="text-xs text-gray-500 mt-4">
+              Secure payment through PayPal • No strings attached • 100% optional
+            </p>
           </div>
           
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 max-w-md mx-auto">
-            <p className="text-sm text-green-800">
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 rounded-2xl p-6 max-w-2xl mx-auto">
+            <p className="text-green-800 leading-relaxed">
               <strong>🙏 Thank you!</strong> Whether you contribute or not, you're always welcome here. 
               Our goal is to help spread God's Word, and your use of this tool already blesses us!
             </p>
           </div>
         </div>
-      )
-    },
-    {
-      title: "Ready to Start Creating?",
-      content: (
-        <div className="text-center space-y-6">
-          <div className="w-24 h-24 mx-auto bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center">
-            <Play className="w-12 h-12 text-white" />
+      </section>
+
+      {/* Ad Placement 2 */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl p-8 text-center">
+          <div className="w-80 h-64 bg-gray-300 rounded-lg flex items-center justify-center text-gray-500 mx-auto">
+            Advertisement Space (300x250)
           </div>
-          <h2 className="text-3xl font-bold text-gray-800">Let's Create Something Beautiful!</h2>
-          <p className="text-lg text-gray-600 max-w-md mx-auto">
-            You're all set! Click the button below to start creating your first Bible verse masterpiece.
-          </p>
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 max-w-md mx-auto">
-            <p className="text-sm text-yellow-800">
-              <strong>💡 Pro Tip:</strong> Start with the "Love" or "Hope" topics - they're perfect for beginners!
-            </p>
-          </div>
-        </div>
-      )
-    }
-  ];
-
-  const nextStep = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      navigate('/app');
-    }
-  };
-
-  const prevStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  const skipToApp = () => {
-    navigate('/app');
-  };
-
-  const skipDonation = () => {
-    if (currentStep === steps.length - 2) { // If on donation step
-      navigate('/app');
-    } else {
-      nextStep();
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Heart className="w-8 h-8 text-blue-600" />
-            <span className="text-xl font-bold text-gray-800">Bible Verse Creator</span>
-          </div>
-          <Button variant="ghost" onClick={skipToApp} className="text-gray-600">
-            Skip Tutorial
-          </Button>
-        </div>
-      </header>
-
-      {/* Progress Bar */}
-      <div className="max-w-4xl mx-auto px-4 py-4">
-        <div className="flex items-center space-x-2 mb-2">
-          <span className="text-sm text-gray-600">Step {currentStep + 1} of {steps.length}</span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
-            className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-          />
         </div>
       </div>
 
-      {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 py-8">
-        <Card className="border-0 shadow-lg">
-          <CardContent className="p-8 md:p-12">
-            <div className="min-h-[400px] flex flex-col justify-center">
-              {steps[currentStep].content}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Navigation */}
-        <div className="flex justify-between items-center mt-8">
+      {/* Final CTA Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="max-w-4xl mx-auto text-center text-white animate-on-scroll">
+          <h2 className="text-4xl md:text-5xl font-black mb-6">
+            Ready to Start Creating?
+          </h2>
+          <p className="text-xl mb-8 opacity-90 leading-relaxed">
+            Join thousands of believers who are sharing God's Word beautifully
+          </p>
           <Button 
-            variant="outline" 
-            onClick={prevStep}
-            disabled={currentStep === 0}
-            className="flex items-center space-x-2"
+            onClick={() => navigate('/app')}
+            size="lg"
+            className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 text-lg font-semibold"
           >
-            <span>Previous</span>
+            <Zap className="w-5 h-5 mr-2" />
+            Start Creating Now
           </Button>
-
-          <div className="flex space-x-2">
-            {steps.map((_, index) => (
-              <div
-                key={index}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentStep 
-                    ? 'bg-blue-500' 
-                    : index < currentStep 
-                      ? 'bg-green-500' 
-                      : 'bg-gray-300'
-                }`}
-              />
-            ))}
-          </div>
-
-          <div className="flex items-center space-x-2">
-            {/* Show skip button on donation step */}
-            {currentStep === steps.length - 2 && (
-              <Button 
-                variant="ghost"
-                onClick={skipDonation}
-                className="text-gray-600"
-              >
-                Skip
-              </Button>
-            )}
-            
-            <Button 
-              onClick={nextStep}
-              className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-            >
-              <span>{currentStep === steps.length - 1 ? 'Start Creating!' : 'Next'}</span>
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </div>
         </div>
-      </main>
+      </section>
 
       {/* Footer */}
-      <footer className="bg-gray-50 border-t mt-16">
-        <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-          <p className="text-gray-600">
+      <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="flex items-center justify-center space-x-2 mb-6">
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+              <Heart className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-xl font-bold">Bible Verse Creator</span>
+          </div>
+          <p className="text-gray-400 mb-4">
             Made with ❤️ for spreading God's Word • Free to use • No account required
+          </p>
+          <p className="text-gray-500 text-sm">
+            Questions? Contact us at{' '}
+            <a href="mailto:support@bibleversecreatoor.com" className="text-blue-400 hover:underline">
+              support@bibleversecreatoor.com
+            </a>
           </p>
         </div>
       </footer>
