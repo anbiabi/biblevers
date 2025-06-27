@@ -463,30 +463,52 @@ const FaithCard: React.FC<FaithCardProps> = ({
           
           {/* Content overlay for better text readability */}
           {backgroundImage && (
-            <div className="absolute inset-0 bg-white bg-opacity-85" />
+            <div className="absolute inset-0 bg-white bg-opacity-75" />
           )}
           
           {/* Content container */}
           <div className="relative z-10 h-full flex flex-col p-6">
-            {/* Top section with title */}
-            <div className="text-center font-bold text-lg text-gray-800 mb-6 pb-2 border-b-2 border-gray-200 font-serif">
-              {cardTitle.toUpperCase()}
+            {/* Top section with title - Bold and colorful like the image */}
+            <div className="text-center font-black text-2xl text-gray-900 mb-8 pb-3 border-b-2 border-gray-300 tracking-wide uppercase" 
+                 style={{ 
+                   fontFamily: 'Inter, "Comic Neue", sans-serif',
+                   textShadow: '2px 2px 4px rgba(0,0,0,0.1)',
+                   background: 'linear-gradient(45deg, #1f2937, #374151)',
+                   WebkitBackgroundClip: 'text',
+                   WebkitTextFillColor: 'transparent',
+                   backgroundClip: 'text'
+                 }}>
+              {cardTitle}
             </div>
             
-            {/* Verse section - centered content */}
+            {/* Verse section - centered content with larger, bolder text */}
             <div className="flex flex-col flex-grow justify-center">
-              {/* Verse text */}
-              <div className="text-center font-serif text-gray-800 leading-relaxed mb-4 text-base">
+              {/* Verse text - Much larger and bolder like the image */}
+              <div className="text-center font-black text-gray-900 leading-relaxed mb-6 text-xl tracking-wide"
+                   style={{ 
+                     fontFamily: 'Inter, "Comic Neue", sans-serif',
+                     textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
+                     lineHeight: '1.4'
+                   }}>
                 "{renderVerseText()}"
               </div>
               
-              {/* Reference */}
-              <div className="text-center text-sm text-gray-600 font-medium mb-6 font-serif">
+              {/* Reference - Styled like the image with color accent */}
+              <div className="text-center text-lg font-bold mb-6"
+                   style={{ 
+                     fontFamily: 'Inter, "Comic Neue", sans-serif',
+                     color: '#dc2626',
+                     textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+                   }}>
                 {formatReference()}
               </div>
               
-              {/* AI-generated contextual phrase in selected language */}
-              <div className="text-center font-serif italic text-gray-700 text-sm border-t-2 border-gray-200 pt-4">
+              {/* AI-generated contextual phrase - Larger and more prominent */}
+              <div className="text-center font-bold italic text-gray-800 text-lg border-t-2 border-gray-300 pt-6 leading-relaxed"
+                   style={{ 
+                     fontFamily: 'Inter, "Comic Neue", sans-serif',
+                     textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+                   }}>
                 {getContextualPhrase()}
               </div>
             </div>
