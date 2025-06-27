@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Shuffle } from "lucide-react";
+import { Shuffle, Sparkles } from "lucide-react";
 import TopicSelector from '@/components/TopicSelector';
 import LanguageSelector from '@/components/LanguageSelector';
 import StickerPreview from '@/components/StickerPreview';
@@ -10,6 +10,7 @@ import WallpaperPreview from '@/components/WallpaperPreview';
 import FaithCardPreview from '@/components/FaithCardPreview';
 import { BibleVerse } from '@/data/bibleVerses';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface EditTabProps {
   selectedTopics: string[];
@@ -46,12 +47,14 @@ const EditTab: React.FC<EditTabProps> = ({
   generationType,
   setGenerationType
 }) => {
+  const [useMagicalGarden, setUseMagicalGarden] = React.useState(false);
+
   const renderPreview = () => {
     switch (generationType) {
       case 'wallpapers':
         return <WallpaperPreview verse={previewVerse} language={language} />;
       case 'cards':
-        return <FaithCardPreview verse={previewVerse} language={language} />;
+        return <FaithCardPreview verse={previewVerse} language={language} useMagicalGarden={useMagicalGarden} />;
       default:
         return <StickerPreview verse={previewVerse} language={language} />;
     }
@@ -127,6 +130,29 @@ const EditTab: React.FC<EditTabProps> = ({
                 </div>
               </div>
             </RadioGroup>
+
+            {/* Magical Garden Option for Faith Cards */}
+            {generationType === 'cards' && (
+              <Card className="border-2 border-purple-200 shadow-md bg-gradient-to-r from-purple-50 to-pink-50">
+                <CardContent className="pt-6 space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="magical-garden"
+                      checked={useMagicalGarden}
+                      onCheckedChange={setUseMagicalGarden}
+                      className="text-purple-600 border-purple-400 focus:ring-purple-500"
+                    />
+                    <Label htmlFor="magical-garden" className="flex items-center space-x-2 cursor-pointer">
+                      <Sparkles className="w-4 h-4 text-purple-600" />
+                      <span className="font-medium text-purple-800">Use Magical Garden Background</span>
+                    </Label>
+                  </div>
+                  <p className="text-sm text-purple-700 ml-7">
+                    Create faith cards with a beautiful, enchanted garden background featuring angels and heavenly elements.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
             
             <div className="grid grid-cols-1 gap-y-4">
               {generationType === 'stickers' ? (

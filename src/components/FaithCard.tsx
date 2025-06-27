@@ -9,13 +9,15 @@ interface FaithCardProps {
   language: string;
   theme?: string;
   title?: string;
+  useMagicalGarden?: boolean; // New prop for magical garden theme
 }
 
 const FaithCard: React.FC<FaithCardProps> = ({ 
   verse, 
   language,
   theme = "Faith",
-  title
+  title,
+  useMagicalGarden = false
 }) => {
   const [backgroundImage, setBackgroundImage] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
@@ -36,8 +38,16 @@ const FaithCard: React.FC<FaithCardProps> = ({
     const loadBackground = async () => {
       setIsLoading(true);
       try {
-        const bg = await backgroundService.getCardBackground(verse, { useAI: true });
-        setBackgroundImage(bg);
+        // Check if we should use the magical garden background
+        if (useMagicalGarden) {
+          setBackgroundImage(backgroundService.getMagicalGardenBackground());
+        } else {
+          const bg = await backgroundService.getCardBackground(verse, { 
+            useAI: true, 
+            preferMagical: Math.random() > 0.7 // 30% chance for magical garden
+          });
+          setBackgroundImage(bg);
+        }
       } catch (error) {
         console.error('Failed to load background:', error);
         setBackgroundImage(backgroundService.getFallbackBackground());
@@ -47,7 +57,7 @@ const FaithCard: React.FC<FaithCardProps> = ({
     };
 
     loadBackground();
-  }, [verse]);
+  }, [verse, useMagicalGarden]);
 
   // Dynamic text sizing based on content length and container size
   useEffect(() => {
@@ -512,6 +522,9 @@ const FaithCard: React.FC<FaithCardProps> = ({
   // Card title based on theme or topics
   const cardTitle = title || theme || verse.topics[0] || "Faith Declaration";
   
+  // Determine if we should use magical styling based on background
+  const isMagicalTheme = useMagicalGarden || backgroundImage.includes('bck4.png');
+  
   return (
     <div className="faith-card w-full h-full flex flex-col overflow-hidden">
       <AspectRatio ratio={3/4} className="w-full h-full">
@@ -536,21 +549,37 @@ const FaithCard: React.FC<FaithCardProps> = ({
             }}
           />
           
-          {/* Content overlay for better text readability */}
+          {/* Content overlay for better text readability - adjusted for magical theme */}
           {backgroundImage && (
-            <div className="absolute inset-0 bg-white bg-opacity-75" />
+            <div className={`absolute inset-0 ${isMagicalTheme ? 'bg-white bg-opacity-60' : 'bg-white bg-opacity-75'}`} />
+          )}
+          
+          {/* Magical sparkle overlay for magical garden theme */}
+          {isMagicalTheme && (
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-4 left-4 w-2 h-2 bg-yellow-300 rounded-full opacity-70 animate-pulse"></div>
+              <div className="absolute top-8 right-6 w-1 h-1 bg-pink-300 rounded-full opacity-60 animate-pulse delay-300"></div>
+              <div className="absolute bottom-12 left-8 w-1.5 h-1.5 bg-blue-300 rounded-full opacity-50 animate-pulse delay-700"></div>
+              <div className="absolute bottom-6 right-4 w-1 h-1 bg-purple-300 rounded-full opacity-60 animate-pulse delay-1000"></div>
+            </div>
           )}
           
           {/* Content container */}
           <div className="relative z-10 h-full flex flex-col p-4 sm:p-6">
-            {/* Top section with title - Bold and colorful like the image */}
+            {/* Top section with title - Enhanced for magical theme */}
             <div 
               ref={titleRef}
-              className={`text-center font-black ${textSizes.title} text-gray-900 mb-4 sm:mb-6 pb-2 sm:pb-3 border-b-2 border-gray-300 tracking-wide uppercase`}
+              className={`text-center font-black ${textSizes.title} mb-4 sm:mb-6 pb-2 sm:pb-3 border-b-2 tracking-wide uppercase ${
+                isMagicalTheme 
+                  ? 'text-purple-800 border-purple-300' 
+                  : 'text-gray-900 border-gray-300'
+              }`}
               style={{ 
                 fontFamily: 'Inter, "Comic Neue", sans-serif',
-                textShadow: '2px 2px 4px rgba(0,0,0,0.1)',
-                background: 'linear-gradient(45deg, #1f2937, #374151)',
+                textShadow: isMagicalTheme ? '2px 2px 4px rgba(147, 51, 234, 0.3)' : '2px 2px 4px rgba(0,0,0,0.1)',
+                background: isMagicalTheme 
+                  ? 'linear-gradient(45deg, #7c3aed, #a855f7, #ec4899)' 
+                  : 'linear-gradient(45deg, #1f2937, #374151)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text'
@@ -558,39 +587,45 @@ const FaithCard: React.FC<FaithCardProps> = ({
               {cardTitle}
             </div>
             
-            {/* Verse section - centered content with larger, bolder text */}
+            {/* Verse section - centered content with enhanced magical styling */}
             <div className="flex flex-col flex-grow justify-center">
-              {/* Verse text - Much larger and bolder like the image */}
+              {/* Verse text - Enhanced for magical theme */}
               <div 
                 ref={verseRef}
-                className={`text-center font-black text-gray-900 leading-relaxed mb-4 sm:mb-6 ${textSizes.verse} tracking-wide`}
+                className={`text-center font-black leading-relaxed mb-4 sm:mb-6 ${textSizes.verse} tracking-wide ${
+                  isMagicalTheme ? 'text-gray-800' : 'text-gray-900'
+                }`}
                 style={{ 
                   fontFamily: 'Inter, "Comic Neue", sans-serif',
-                  textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
+                  textShadow: isMagicalTheme ? '1px 1px 3px rgba(147, 51, 234, 0.2)' : '1px 1px 2px rgba(0,0,0,0.1)',
                   lineHeight: '1.4'
                 }}>
                 "{renderVerseText()}"
               </div>
               
-              {/* Reference - Styled like the image with color accent */}
+              {/* Reference - Enhanced for magical theme */}
               <div 
                 ref={referenceRef}
                 className={`text-center ${textSizes.reference} font-bold mb-4 sm:mb-6`}
                 style={{ 
                   fontFamily: 'Inter, "Comic Neue", sans-serif',
-                  color: '#dc2626',
+                  color: isMagicalTheme ? '#7c3aed' : '#dc2626',
                   textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
                 }}>
                 {formatReference()}
               </div>
               
-              {/* AI-generated contextual phrase - Larger and more prominent */}
+              {/* AI-generated contextual phrase - Enhanced for magical theme */}
               <div 
                 ref={commentaryRef}
-                className={`text-center font-bold italic text-gray-800 ${textSizes.commentary} border-t-2 border-gray-300 pt-4 sm:pt-6 leading-relaxed`}
+                className={`text-center font-bold italic leading-relaxed ${textSizes.commentary} border-t-2 pt-4 sm:pt-6 ${
+                  isMagicalTheme 
+                    ? 'text-purple-700 border-purple-300' 
+                    : 'text-gray-800 border-gray-300'
+                }`}
                 style={{ 
                   fontFamily: 'Inter, "Comic Neue", sans-serif',
-                  textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+                  textShadow: isMagicalTheme ? '1px 1px 2px rgba(147, 51, 234, 0.2)' : '1px 1px 2px rgba(0,0,0,0.1)'
                 }}>
                 {getContextualPhrase()}
               </div>

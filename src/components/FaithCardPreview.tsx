@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import FaithCard from './FaithCard';
 import { BibleVerse } from '@/data/bibleVerses';
@@ -8,15 +7,20 @@ import { RefreshCw } from 'lucide-react';
 interface FaithCardPreviewProps {
   verse: BibleVerse | null;
   language: string;
+  useMagicalGarden?: boolean;
 }
 
-const FaithCardPreview: React.FC<FaithCardPreviewProps> = ({ verse, language }) => {
+const FaithCardPreview: React.FC<FaithCardPreviewProps> = ({ 
+  verse, 
+  language, 
+  useMagicalGarden = false 
+}) => {
   const [key, setKey] = useState(0);
   
   useEffect(() => {
     // Change key when verse changes to force re-render
     setKey(prev => prev + 1);
-  }, [verse]);
+  }, [verse, useMagicalGarden]);
   
   if (!verse) {
     return (
@@ -29,7 +33,12 @@ const FaithCardPreview: React.FC<FaithCardPreviewProps> = ({ verse, language }) 
   return (
     <div className="relative max-w-sm mx-auto">
       <div className="w-full rounded-lg overflow-hidden shadow-lg">
-        <FaithCard key={key} verse={verse} language={language} />
+        <FaithCard 
+          key={key} 
+          verse={verse} 
+          language={language} 
+          useMagicalGarden={useMagicalGarden}
+        />
       </div>
       
       <Button 
