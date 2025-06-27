@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import FaithCard from './FaithCard';
 import { BibleVerse } from '@/data/bibleVerses';
@@ -146,21 +145,92 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
   return (
     <div 
       ref={sheetRef} 
-      className="faith-card-sheet grid grid-cols-2 gap-4 relative w-[210mm] h-[297mm] p-8 mx-auto bg-white print:border-0 print:shadow-none"
+      className="faith-card-sheet relative w-[210mm] h-[297mm] mx-auto bg-white print:border-0 print:shadow-none"
       style={{ 
         pageBreakAfter: 'always',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        padding: '3mm', // 3mm bleed area
+        position: 'relative'
       }}
     >
-      {orderedVerses.slice(0, 4).map((verse, index) => (
-        <div key={`${verse.reference}-${index}`} className="faith-card-container">
-          <FaithCard 
-            verse={verse} 
-            language={language} 
-            title={cardTitles[index]} 
-          />
-        </div>
-      ))}
+      {/* Professional cutting guidelines */}
+      <div className="absolute inset-0 pointer-events-none print:block hidden">
+        {/* Outer bleed area border */}
+        <div className="absolute inset-0 border border-gray-300" style={{ borderStyle: 'solid', borderWidth: '0.5pt' }} />
+        
+        {/* Vertical center cutting line */}
+        <div 
+          className="absolute top-0 bottom-0 border-l-2 border-dashed border-gray-400"
+          style={{ 
+            left: '50%', 
+            transform: 'translateX(-50%)',
+            borderStyle: 'dashed',
+            borderWidth: '0 0 0 1pt'
+          }}
+        />
+        
+        {/* Horizontal center cutting line */}
+        <div 
+          className="absolute left-0 right-0 border-t-2 border-dashed border-gray-400"
+          style={{ 
+            top: '50%', 
+            transform: 'translateY(-50%)',
+            borderStyle: 'dashed',
+            borderWidth: '1pt 0 0 0'
+          }}
+        />
+        
+        {/* Corner registration marks */}
+        <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-black" style={{ margin: '1mm' }} />
+        <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-black" style={{ margin: '1mm' }} />
+        <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-black" style={{ margin: '1mm' }} />
+        <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-black" style={{ margin: '1mm' }} />
+      </div>
+      
+      {/* Card grid with precise dimensions */}
+      <div 
+        className="grid grid-cols-2 grid-rows-2 h-full w-full gap-0"
+        style={{
+          padding: '3mm', // Inner safe area
+          height: 'calc(297mm - 6mm)', // Total height minus bleed
+          width: 'calc(210mm - 6mm)'   // Total width minus bleed
+        }}
+      >
+        {orderedVerses.slice(0, 4).map((verse, index) => (
+          <div 
+            key={`${verse.reference}-${index}`} 
+            className="faith-card-container relative"
+            style={{
+              // Each card is exactly 1/4 of the printable area
+              width: 'calc((210mm - 12mm) / 2)', // Half width minus margins
+              height: 'calc((297mm - 12mm) / 2)', // Half height minus margins
+              padding: '2mm', // Internal padding for content safety
+              boxSizing: 'border-box'
+            }}
+          >
+            {/* Card content area with safe margins */}
+            <div 
+              className="w-full h-full"
+              style={{
+                border: '0.5pt solid #e5e7eb', // Light border for cutting reference
+                borderRadius: '2mm',
+                overflow: 'hidden'
+              }}
+            >
+              <FaithCard 
+                verse={verse} 
+                language={language} 
+                title={cardTitles[index]} 
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {/* Print instructions (hidden on screen, visible in print) */}
+      <div className="hidden print:block absolute bottom-1 right-1 text-xs text-gray-500">
+        Cut along dashed lines • 3mm bleed included
+      </div>
     </div>
   );
 };

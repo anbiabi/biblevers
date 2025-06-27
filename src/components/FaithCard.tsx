@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { BibleVerse } from '@/data/bibleVerses';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { backgroundService } from '@/services/BackgroundService';
@@ -19,6 +19,18 @@ const FaithCard: React.FC<FaithCardProps> = ({
 }) => {
   const [backgroundImage, setBackgroundImage] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
+  const [textSizes, setTextSizes] = useState({
+    title: 'text-xl',
+    verse: 'text-base',
+    reference: 'text-sm',
+    commentary: 'text-sm'
+  });
+  
+  const titleRef = useRef<HTMLDivElement>(null);
+  const verseRef = useRef<HTMLDivElement>(null);
+  const referenceRef = useRef<HTMLDivElement>(null);
+  const commentaryRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadBackground = async () => {
@@ -36,6 +48,69 @@ const FaithCard: React.FC<FaithCardProps> = ({
 
     loadBackground();
   }, [verse]);
+
+  // Dynamic text sizing based on content length and container size
+  useEffect(() => {
+    const adjustTextSizes = () => {
+      if (!containerRef.current) return;
+
+      const containerHeight = containerRef.current.offsetHeight;
+      const containerWidth = containerRef.current.offsetWidth;
+      
+      const verseText = renderVerseText();
+      const commentaryText = getContextualPhrase();
+      
+      // Calculate optimal sizes based on content length and container dimensions
+      const titleLength = (title || theme).length;
+      const verseLength = verseText.length;
+      const commentaryLength = commentaryText.length;
+      
+      // Base sizes for different screen sizes
+      const isSmallContainer = containerHeight < 400 || containerWidth < 300;
+      const isMediumContainer = containerHeight < 600 || containerWidth < 400;
+      
+      let newSizes = {
+        title: 'text-xl',
+        verse: 'text-base',
+        reference: 'text-sm',
+        commentary: 'text-sm'
+      };
+
+      if (isSmallContainer) {
+        // Small containers - compact sizing
+        newSizes = {
+          title: titleLength > 15 ? 'text-sm' : 'text-base',
+          verse: verseLength > 150 ? 'text-xs' : verseLength > 100 ? 'text-sm' : 'text-base',
+          reference: 'text-xs',
+          commentary: commentaryLength > 200 ? 'text-xs' : 'text-sm'
+        };
+      } else if (isMediumContainer) {
+        // Medium containers - balanced sizing
+        newSizes = {
+          title: titleLength > 15 ? 'text-base' : 'text-lg',
+          verse: verseLength > 150 ? 'text-sm' : verseLength > 100 ? 'text-base' : 'text-lg',
+          reference: 'text-sm',
+          commentary: commentaryLength > 200 ? 'text-sm' : 'text-base'
+        };
+      } else {
+        // Large containers - generous sizing
+        newSizes = {
+          title: titleLength > 15 ? 'text-lg' : 'text-2xl',
+          verse: verseLength > 150 ? 'text-base' : verseLength > 100 ? 'text-lg' : 'text-xl',
+          reference: 'text-base',
+          commentary: commentaryLength > 200 ? 'text-base' : 'text-lg'
+        };
+      }
+      
+      setTextSizes(newSizes);
+    };
+
+    // Adjust on mount and resize
+    adjustTextSizes();
+    window.addEventListener('resize', adjustTextSizes);
+    
+    return () => window.removeEventListener('resize', adjustTextSizes);
+  }, [verse, language, title, theme]);
 
   const renderVerseText = () => {
     switch (language) {
@@ -440,7 +515,7 @@ const FaithCard: React.FC<FaithCardProps> = ({
   return (
     <div className="faith-card w-full h-full flex flex-col overflow-hidden">
       <AspectRatio ratio={3/4} className="w-full h-full">
-        <div className="w-full h-full flex flex-col border border-gray-200 rounded-lg overflow-hidden relative">
+        <div ref={containerRef} className="w-full h-full flex flex-col border border-gray-200 rounded-lg overflow-hidden relative">
           {/* Loading overlay */}
           {isLoading && (
             <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
@@ -467,48 +542,56 @@ const FaithCard: React.FC<FaithCardProps> = ({
           )}
           
           {/* Content container */}
-          <div className="relative z-10 h-full flex flex-col p-6">
+          <div className="relative z-10 h-full flex flex-col p-4 sm:p-6">
             {/* Top section with title - Bold and colorful like the image */}
-            <div className="text-center font-black text-2xl text-gray-900 mb-8 pb-3 border-b-2 border-gray-300 tracking-wide uppercase" 
-                 style={{ 
-                   fontFamily: 'Inter, "Comic Neue", sans-serif',
-                   textShadow: '2px 2px 4px rgba(0,0,0,0.1)',
-                   background: 'linear-gradient(45deg, #1f2937, #374151)',
-                   WebkitBackgroundClip: 'text',
-                   WebkitTextFillColor: 'transparent',
-                   backgroundClip: 'text'
-                 }}>
+            <div 
+              ref={titleRef}
+              className={`text-center font-black ${textSizes.title} text-gray-900 mb-4 sm:mb-6 pb-2 sm:pb-3 border-b-2 border-gray-300 tracking-wide uppercase`}
+              style={{ 
+                fontFamily: 'Inter, "Comic Neue", sans-serif',
+                textShadow: '2px 2px 4px rgba(0,0,0,0.1)',
+                background: 'linear-gradient(45deg, #1f2937, #374151)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
               {cardTitle}
             </div>
             
             {/* Verse section - centered content with larger, bolder text */}
             <div className="flex flex-col flex-grow justify-center">
               {/* Verse text - Much larger and bolder like the image */}
-              <div className="text-center font-black text-gray-900 leading-relaxed mb-6 text-xl tracking-wide"
-                   style={{ 
-                     fontFamily: 'Inter, "Comic Neue", sans-serif',
-                     textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
-                     lineHeight: '1.4'
-                   }}>
+              <div 
+                ref={verseRef}
+                className={`text-center font-black text-gray-900 leading-relaxed mb-4 sm:mb-6 ${textSizes.verse} tracking-wide`}
+                style={{ 
+                  fontFamily: 'Inter, "Comic Neue", sans-serif',
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
+                  lineHeight: '1.4'
+                }}>
                 "{renderVerseText()}"
               </div>
               
               {/* Reference - Styled like the image with color accent */}
-              <div className="text-center text-lg font-bold mb-6"
-                   style={{ 
-                     fontFamily: 'Inter, "Comic Neue", sans-serif',
-                     color: '#dc2626',
-                     textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
-                   }}>
+              <div 
+                ref={referenceRef}
+                className={`text-center ${textSizes.reference} font-bold mb-4 sm:mb-6`}
+                style={{ 
+                  fontFamily: 'Inter, "Comic Neue", sans-serif',
+                  color: '#dc2626',
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+                }}>
                 {formatReference()}
               </div>
               
               {/* AI-generated contextual phrase - Larger and more prominent */}
-              <div className="text-center font-bold italic text-gray-800 text-lg border-t-2 border-gray-300 pt-6 leading-relaxed"
-                   style={{ 
-                     fontFamily: 'Inter, "Comic Neue", sans-serif',
-                     textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
-                   }}>
+              <div 
+                ref={commentaryRef}
+                className={`text-center font-bold italic text-gray-800 ${textSizes.commentary} border-t-2 border-gray-300 pt-4 sm:pt-6 leading-relaxed`}
+                style={{ 
+                  fontFamily: 'Inter, "Comic Neue", sans-serif',
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+                }}>
                 {getContextualPhrase()}
               </div>
             </div>

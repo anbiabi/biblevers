@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Bubblegum+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Inter:wght@300;400;500;600;700;800;900&family=Bubblegum+Sans&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -111,6 +111,15 @@
     position: relative;
     background: white;
     margin: 0 auto;
+  }
+
+  .faith-card-sheet {
+    width: 210mm;
+    height: 297mm;
+    position: relative;
+    background: white;
+    margin: 0 auto;
+    box-sizing: border-box;
   }
 
   .wallpaper-sheet {
@@ -276,6 +285,25 @@
   margin-bottom: 0;
 }
 
+/* Faith Card specific styles */
+.faith-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  font-family: 'Inter', 'Comic Neue', sans-serif;
+}
+
+.faith-card-container {
+  height: 100%;
+  page-break-inside: avoid !important;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
 /* Print-specific sticker styles */
 @media print {
   body {
@@ -292,6 +320,16 @@
     width: 210mm !important;
     height: 297mm !important;
   }
+
+  .faith-card-sheet {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 3mm !important;
+    page-break-after: always !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    box-sizing: border-box !important;
+  }
   
   .sticker {
     display: flex !important;
@@ -305,6 +343,13 @@
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
     padding: 4px !important;
     position: relative !important;
+  }
+
+  .faith-card-container {
+    page-break-inside: avoid !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: 0.5pt solid rgba(0, 0, 0, 0.1) !important;
   }
   
   /* Print verse text styling - bold and prominent */
