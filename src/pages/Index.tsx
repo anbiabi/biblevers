@@ -11,6 +11,7 @@ import AISettingsPanel from '@/components/AISettingsPanel';
 import { backgroundService } from '@/services/BackgroundService';
 import { wallpaperBackgroundService } from '@/services/WallpaperBackgroundService';
 import { toast } from "sonner";
+import AdSenseComponent from '@/components/AdSenseComponent';
 
 export default function Index() {
   // Auth state
@@ -183,6 +184,13 @@ export default function Index() {
         {/* Usage Limit Banner */}
         <UsageLimitBanner />
         
+        {/* AdSense Ad - Top of App */}
+        <div className="mb-8 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg p-4">
+          <div className="min-h-[90px] flex items-center justify-center">
+            <AdSenseComponent />
+          </div>
+        </div>
+        
         {/* Content area - IMPORTANT: Wrapping all content in Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full animate-scale-in">
           <div className="mb-8">
@@ -221,6 +229,13 @@ export default function Index() {
                 generationType={generationType}
               />
             </TabsContent>
+          </div>
+          
+          {/* AdSense Ad - Bottom of App */}
+          <div className="mt-8 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg p-4">
+            <div className="min-h-[250px] flex items-center justify-center">
+              <AdSenseComponent adFormat="rectangle" />
+            </div>
           </div>
           
           {/* Tabs navigation moved to the bottom */}
