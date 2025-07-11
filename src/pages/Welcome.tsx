@@ -235,12 +235,17 @@ const Welcome = () => {
         </div>
       </section>
 
-      {/* Ad Placement 1 */}
+      {/* Google AdSense Ad Placement 1 - Leaderboard */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl p-8 text-center">
-          <div className="w-full h-24 bg-gray-300 rounded-lg flex items-center justify-center text-gray-500">
-            Advertisement Space (728x90)
-          </div>
+          <ins 
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="ca-pub-5147010217156651"
+            data-ad-slot="1234567890"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
         </div>
       </div>
 
@@ -349,12 +354,17 @@ const Welcome = () => {
         </div>
       </section>
 
-      {/* Ad Placement 2 */}
+      {/* Google AdSense Ad Placement 2 - Medium Rectangle */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl p-8 text-center">
-          <div className="w-80 h-64 bg-gray-300 rounded-lg flex items-center justify-center text-gray-500 mx-auto">
-            Advertisement Space (300x250)
-          </div>
+          <ins 
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="ca-pub-5147010217156651"
+            data-ad-slot="0987654321"
+            data-ad-format="rectangle"
+            data-full-width-responsive="true"
+          />
         </div>
       </div>
 
