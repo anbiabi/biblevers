@@ -159,7 +159,7 @@ const EditTab: React.FC<EditTabProps> = ({
                 <Button 
                   className="w-full h-12 text-lg shadow-lg transition transform hover:scale-105 bg-gradient-to-r from-blue-600 to-indigo-600"
                   onClick={handleGenerate}
-                  disabled={isGenerating}
+                  disabled={isGenerating || selectedTopics.length === 0}
                 >
                   {isGenerating ? "Generating..." : "Generate Sticker Sheets"}
                 </Button>
@@ -175,7 +175,7 @@ const EditTab: React.FC<EditTabProps> = ({
                 <Button 
                   className="w-full h-12 text-lg shadow-lg transition transform hover:scale-105 bg-gradient-to-r from-purple-600 to-pink-600"
                   onClick={handleGenerateWallpapers}
-                  disabled={isGenerating}
+                  disabled={isGenerating || selectedTopics.length === 0}
                 >
                   {isGenerating ? "Generating..." : "Generate Phone Wallpapers"}
                 </Button>

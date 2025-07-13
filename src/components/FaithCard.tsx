@@ -42,7 +42,14 @@ const FaithCard: React.FC<FaithCardProps> = ({
             useAI: true, 
             preferMagical: Math.random() > 0.7 // 30% chance for magical garden
           });
-          setBackgroundImage(bg);
+          
+          // Validate background URL
+          if (bg && (bg.startsWith('http') || bg.startsWith('/'))) {
+            setBackgroundImage(bg);
+          } else {
+            console.warn('Invalid background URL, using fallback');
+            setBackgroundImage(backgroundService.getFallbackBackground());
+          }
         }
       } catch (error) {
         console.error('Failed to load background:', error);

@@ -138,23 +138,33 @@ class BackgroundService {
     if (options.usePicsum !== false) {
       try {
         const picsumUrl = this.getPicsumBackground(verse, options.preferMagical);
-        console.log('Using background:', picsumUrl, 'for verse:', verse.reference);
-        return picsumUrl;
+        
+        // Validate URL before returning
+        if (picsumUrl && (picsumUrl.startsWith('http') || picsumUrl.startsWith('/'))) {
+          console.log('Using background:', picsumUrl, 'for verse:', verse.reference);
+          return picsumUrl;
+        }
       } catch (error) {
         console.warn('Picsum Photos failed, falling back to magical garden:', error);
       }
     }
     
-    // Fallback to magical garden or local sample images
-    if (options.preferMagical || Math.random() > 0.5) {
-      console.log('Using magical garden background for verse:', verse.reference);
-      return '/bck4.png';
+    // Additional fallback validation
+    try {
+      // Fallback to magical garden or local sample images
+      if (options.preferMagical || Math.random() > 0.5) {
+        console.log('Using magical garden background for verse:', verse.reference);
+        return picsumUrl;
+      }
+      
+      const fallbackIndex = options.fallbackIndex ?? Math.floor(Math.random() * FALLBACK_BACKGROUNDS.length);
+      const selectedBackground = FALLBACK_BACKGROUNDS[fallbackIndex % FALLBACK_BACKGROUNDS.length];
+      console.log('Using local fallback background:', selectedBackground, 'for verse:', verse.reference);
+      return selectedBackground;
+    } catch (error) {
+      console.error('All background methods failed, using default:', error);
+      return '/bck4.png'; // Ultimate fallback
     }
-    
-    const fallbackIndex = options.fallbackIndex ?? Math.floor(Math.random() * FALLBACK_BACKGROUNDS.length);
-    const selectedBackground = FALLBACK_BACKGROUNDS[fallbackIndex % FALLBACK_BACKGROUNDS.length];
-    console.log('Using local fallback background:', selectedBackground, 'for verse:', verse.reference);
-    return selectedBackground;
   }
 
   getFallbackBackground(index?: number): string {

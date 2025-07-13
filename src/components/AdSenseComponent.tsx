@@ -15,9 +15,11 @@ const AdSenseComponent: React.FC<AdSenseProps> = ({
 }) => {
   useEffect(() => {
     try {
-      // Initialize AdSense ads
-      if (typeof window !== 'undefined' && window.adsbygoogle) {
-        window.adsbygoogle.push({});
+      // Initialize AdSense ads with proper error handling
+      if (typeof window !== 'undefined') {
+        // Ensure adsbygoogle array exists
+        (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+        (window as any).adsbygoogle.push({});
       }
     } catch (error) {
       console.error('AdSense error:', error);

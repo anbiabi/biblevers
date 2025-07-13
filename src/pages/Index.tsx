@@ -59,6 +59,7 @@ export default function Index() {
       // If we have more than 4, trim to 4
       if (selectedTopics.length > 4) {
         setSelectedTopics(selectedTopics.slice(0, 4));
+        toast.info('For faith cards, only 4 topics are allowed. Selection trimmed to first 4.');
       }
     }
   }, [generationType]);

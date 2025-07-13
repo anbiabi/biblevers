@@ -86,13 +86,6 @@ export const useSheetGenerator = () => {
       return;
     }
     
-    // Check if we should show contribution prompt
-    if ((generationType === 'stickers' || generationType === 'cards') && 
-        shouldShowContributionPrompt(generationType)) {
-      // This is now handled in the PreviewTab component
-      return;
-    }
-    
     try {
       toast.info("Preparing your PNG images. This might take a moment...");
       
@@ -115,6 +108,11 @@ export const useSheetGenerator = () => {
           }
           await generateImage(sheetRefs.current[i], filename);
         }
+      }
+      
+      // Track download for authenticated users
+      if (isAuthenticated) {
+        incrementDownloadCount(generationType);
       }
       
       toast.success("PNG image download ready!");
@@ -142,13 +140,6 @@ export const useSheetGenerator = () => {
       return;
     }
     
-    // Check if we should show contribution prompt
-    if ((generationType === 'stickers' || generationType === 'cards') && 
-        shouldShowContributionPrompt(generationType)) {
-      // This is now handled in the PreviewTab component
-      return;
-    }
-    
     try {
       toast.info("Preparing your PDF. This might take a moment...");
       
@@ -171,6 +162,12 @@ export const useSheetGenerator = () => {
             filename = "bible-sheets.pdf";
         }
         await generatePDF(elements, filename);
+        
+        // Track download for authenticated users
+        if (isAuthenticated) {
+          incrementDownloadCount(generationType);
+        }
+        
         toast.success("PDF download ready!");
       } else {
         toast.error("Could not find sheet elements to convert to PDF.");

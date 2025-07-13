@@ -22,7 +22,14 @@ const Wallpaper: React.FC<WallpaperProps> = ({ verse, language, category = 'auto
           useAI: true, 
           category: category as any 
         });
-        setBackgroundImage(bg);
+        
+        // Validate background URL
+        if (bg && (bg.startsWith('http') || bg.startsWith('/'))) {
+          setBackgroundImage(bg);
+        } else {
+          console.warn('Invalid background URL, using fallback');
+          setBackgroundImage(wallpaperBackgroundService.getFallbackWallpaperBackground());
+        }
       } catch (error) {
         console.error('Failed to load wallpaper background:', error);
         setBackgroundImage(wallpaperBackgroundService.getFallbackWallpaperBackground());

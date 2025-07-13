@@ -91,6 +91,11 @@ export const generateImage = async (
   filename: string = "bible-stickers.png"
 ): Promise<void> => {
   try {
+    // Validate element exists
+    if (!element) {
+      throw new Error('Element not found for image generation');
+    }
+    
     // Create a copy of the element with proper positioning
     const tempContainer = document.createElement('div');
     tempContainer.style.position = 'absolute';
@@ -114,6 +119,9 @@ export const generateImage = async (
     // Append to body temporarily (will be removed after)
     document.body.appendChild(tempContainer);
     
+    // Wait for any images to load
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
     // Create a canvas from the DOM element
     const canvas = await html2canvas(tempContainer, {
       scale: 3, // Higher scale for better quality (300 DPI)
@@ -122,6 +130,8 @@ export const generateImage = async (
       backgroundColor: "white",
       width: 210 * 3.779528, // A4 width in pixels (at 96 DPI)
       height: 297 * 3.779528, // A4 height in pixels (at 96 DPI)
+      allowTaint: true,
+      foreignObjectRendering: true
     });
     
     // Remove temporary container
@@ -148,6 +158,11 @@ export const generatePDF = async (
   filename: string = "bible-stickers.pdf"
 ): Promise<void> => {
   try {
+    // Validate elements exist
+    if (!elements || elements.length === 0) {
+      throw new Error('No elements found for PDF generation');
+    }
+    
     // Create a new PDF with appropriate dimensions
     const pdf = new jsPDF({
       orientation: "portrait",
@@ -158,6 +173,11 @@ export const generatePDF = async (
     
     // For each element (sheet)
     for (let i = 0; i < elements.length; i++) {
+      if (!elements[i]) {
+        console.warn(`Element ${i} is null, skipping...`);
+        continue;
+      }
+      
       // Add a new page for each sheet except the first one
       if (i > 0) {
         pdf.addPage('a4', 'portrait');
@@ -186,6 +206,9 @@ export const generatePDF = async (
       // Append to body temporarily
       document.body.appendChild(tempContainer);
       
+      // Wait for any images to load
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       // Convert the element to canvas
       const canvas = await html2canvas(tempContainer, {
         scale: 2, // Higher scale for better quality (300 DPI)
@@ -194,6 +217,8 @@ export const generatePDF = async (
         backgroundColor: "white",
         width: 210 * 3.779528, // A4 width in pixels
         height: 297 * 3.779528, // A4 height in pixels
+        allowTaint: true,
+        foreignObjectRendering: true
       });
       
       // Remove temporary container

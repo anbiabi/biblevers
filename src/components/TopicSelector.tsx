@@ -60,6 +60,8 @@ const TopicSelector: React.FC<TopicSelectorProps> = ({ selectedTopics, onChange,
     
     if (generationType === 'cards') {
       toast.info("Selected 4 random topics for your faith cards.");
+    } else {
+      toast.info(`Selected ${count} random topics.`);
     }
   };
 

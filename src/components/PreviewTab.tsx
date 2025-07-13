@@ -86,7 +86,6 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
   const handleDownloadClick = () => {
     // Allow wallpaper downloads for everyone
     if (generationType === 'wallpapers') {
-      incrementDownloadCount('wallpapers');
       handleDownload();
       return;
     }
@@ -107,7 +106,6 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
     if (shouldShowContributionPrompt(generationType)) {
       setShowContributionModal(true);
     } else {
-      incrementDownloadCount(generationType);
       handleDownload();
     }
   };
@@ -115,7 +113,6 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
   const handlePdfDownloadClick = () => {
     // Allow wallpaper downloads for everyone
     if (generationType === 'wallpapers') {
-      incrementDownloadCount('wallpapers');
       handlePdfDownload();
       return;
     }
@@ -136,7 +133,6 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
     if (shouldShowContributionPrompt(generationType)) {
       setShowContributionModal(true);
     } else {
-      incrementDownloadCount(generationType);
       handlePdfDownload();
     }
   };
@@ -145,7 +141,6 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
     setShowContributionModal(false);
     
     if (shouldProceed) {
-      incrementDownloadCount(generationType);
       handleDownload();
     }
   };
