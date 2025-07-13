@@ -151,40 +151,40 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
       style={{ 
         pageBreakAfter: 'always',
         boxSizing: 'border-box',
-        padding: '3mm', // 3mm bleed area
+        padding: '5mm',
         position: 'relative'
       }}
     >
-      {/* Professional cutting guidelines - ONLY in the middle of the sheet */}
+      {/* Cutting guidelines */}
       <div className="absolute inset-0 pointer-events-none print:block hidden">
         {/* Vertical center cutting line */}
         <div 
-          className="absolute top-0 bottom-0 border-l border-dashed border-gray-400"
+          className="absolute top-0 bottom-0 border-l border-dashed border-gray-300"
           style={{ 
             left: '50%', 
             transform: 'translateX(-50%)',
-            borderWidth: '0.5pt'
+            borderWidth: '0.25pt'
           }}
         />
         
         {/* Horizontal center cutting line */}
         <div 
-          className="absolute left-0 right-0 border-t border-dashed border-gray-400"
+          className="absolute left-0 right-0 border-t border-dashed border-gray-300"
           style={{ 
             top: '50%', 
             transform: 'translateY(-50%)',
-            borderWidth: '0.5pt'
+            borderWidth: '0.25pt'
           }}
         />
       </div>
       
-      {/* Card grid with precise dimensions */}
+      {/* Card grid */}
       <div 
-        className="grid grid-cols-2 grid-rows-2 h-full w-full gap-0"
+        className="grid grid-cols-2 grid-rows-2 h-full w-full gap-1"
         style={{
-          padding: '3mm', // Inner safe area
-          height: 'calc(297mm - 6mm)', // Total height minus bleed
-          width: 'calc(210mm - 6mm)'   // Total width minus bleed
+          padding: '2mm',
+          height: 'calc(297mm - 10mm)',
+          width: 'calc(210mm - 10mm)'
         }}
       >
         {orderedVerses.slice(0, 4).map((verse, index) => (
@@ -192,19 +192,17 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
             key={`${verse.reference}-${index}`} 
             className="faith-card-container relative"
             style={{
-              // Each card is exactly 1/4 of the printable area
-              width: 'calc((210mm - 12mm) / 2)', // Half width minus margins
-              height: 'calc((297mm - 12mm) / 2)', // Half height minus margins
-              padding: '2mm', // Internal padding for content safety
+              width: 'calc((210mm - 12mm) / 2)',
+              height: 'calc((297mm - 12mm) / 2)',
+              padding: '1mm',
               boxSizing: 'border-box'
             }}
           >
-            {/* Card content area with safe margins */}
             <div 
               className="w-full h-full"
               style={{
-                border: '0.5pt solid #e5e7eb', // Light border for cutting reference
-                borderRadius: '2mm',
+                border: '0.25pt solid #f3f4f6',
+                borderRadius: '1mm',
                 overflow: 'hidden'
               }}
             >
