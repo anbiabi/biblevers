@@ -41,14 +41,6 @@ const FaithCardPreview: React.FC<FaithCardPreviewProps> = ({
         />
       </div>
       
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="absolute top-2 right-2 bg-white bg-opacity-70 shadow-sm hover:bg-green-100"
-        onClick={() => setKey(prev => prev + 1)}
-      >
-        <RefreshCw size={16} className="text-green-600" />
-      </Button>
     </div>
   );
 };
