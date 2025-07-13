@@ -151,7 +151,7 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
       style={{ 
         pageBreakAfter: 'always',
         boxSizing: 'border-box',
-        padding: '5mm',
+        padding: '3mm',
         position: 'relative'
       }}
     >
@@ -180,11 +180,10 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
       
       {/* Card grid */}
       <div 
-        className="grid grid-cols-2 grid-rows-2 h-full w-full gap-1"
+        className="grid grid-cols-2 grid-rows-2 h-full w-full gap-0.5"
         style={{
-          padding: '2mm',
-          height: 'calc(297mm - 10mm)',
-          width: 'calc(210mm - 10mm)'
+          height: 'calc(297mm - 6mm)',
+          width: 'calc(210mm - 6mm)'
         }}
       >
         {orderedVerses.slice(0, 4).map((verse, index) => (
@@ -192,9 +191,9 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
             key={`${verse.reference}-${index}`} 
             className="faith-card-container relative"
             style={{
-              width: 'calc((210mm - 12mm) / 2)',
-              height: 'calc((297mm - 12mm) / 2)',
-              padding: '1mm',
+              width: 'calc((210mm - 6mm) / 2)',
+              height: 'calc((297mm - 6mm) / 2)',
+              padding: '0.5mm',
               boxSizing: 'border-box'
             }}
           >
