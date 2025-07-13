@@ -155,16 +155,6 @@ const FaithCardSheet: React.FC<FaithCardSheetProps> = ({
         position: 'relative'
       }}
     >
-      {/* Title showing selected topics */}
-      <div className="text-center mb-3 print:block">
-        <h2 className="text-lg font-bold text-amber-800 font-comic">
-          {selectedTopics.length > 0 
-            ? `Faith Cards: ${selectedTopics.join(', ')}`
-            : 'Faith Cards Collection'
-          }
-        </h2>
-      </div>
-
       {/* Cutting guidelines */}
       <div className="absolute inset-0 pointer-events-none print:block hidden">
         {/* Vertical center cutting line */}

@@ -552,6 +552,19 @@ const FaithCard: React.FC<FaithCardProps> = ({
           
           {/* Content container */}
           <div className="relative z-10 h-full flex flex-col p-4 sm:p-6">
+            {/* Card Title - Big and fun */}
+            <div 
+              className="text-center font-fredoka font-bold text-2xl sm:text-3xl mb-3 text-white drop-shadow-lg"
+              style={{
+                textShadow: '2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(255,255,255,0.3)',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))'
+              }}
+            >
+              {cardTitle.toUpperCase()}
+            </div>
             {/* Verse text - Using handwriting font */}
             <div 
               ref={verseRef}

@@ -66,7 +66,9 @@ export default {
 			},
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],
-				comic: ['Bubblegum Sans', 'Comic Neue', 'cursive']
+				comic: ['Bubblegum Sans', 'Comic Neue', 'cursive'],
+				fredoka: ['Fredoka', 'sans-serif'],
+				nunito: ['Nunito', 'sans-serif']
 			},
 			keyframes: {
 				'accordion-down': {
