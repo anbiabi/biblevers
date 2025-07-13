@@ -29,11 +29,7 @@ const WallpaperSheet: React.FC<WallpaperSheetProps> = ({
   return (
     <div 
       ref={sheetRef} 
-      className="wallpaper-sheet flex items-center justify-center relative w-full h-auto mx-auto bg-white"
-      style={{ 
-        pageBreakAfter: 'always',
-        boxSizing: 'border-box'
-      }}
+      className="wallpaper-sheet flex items-center justify-center relative w-full h-auto mx-auto"
     >
       <div className="max-w-sm w-full">
         <Wallpaper verse={verse} language={language} />
