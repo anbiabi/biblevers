@@ -154,7 +154,7 @@ class BackgroundService {
       // Fallback to magical garden or local sample images
       if (options.preferMagical || Math.random() > 0.5) {
         console.log('Using magical garden background for verse:', verse.reference);
-        return picsumUrl;
+        return `https://picsum.photos/512/768?random=${Math.floor(Math.random() * 1000)}`;
       }
       
       const fallbackIndex = options.fallbackIndex ?? Math.floor(Math.random() * FALLBACK_BACKGROUNDS.length);

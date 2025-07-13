@@ -139,7 +139,7 @@ const EditTab: React.FC<EditTabProps> = ({
                     <Checkbox
                       id="magical-garden"
                       checked={useMagicalGarden}
-                      onCheckedChange={setUseMagicalGarden}
+                      onCheckedChange={(checked) => setUseMagicalGarden(checked === true)}
                       className="text-purple-600 border-purple-400 focus:ring-purple-500"
                     />
                     <Label htmlFor="magical-garden" className="flex items-center space-x-2 cursor-pointer">

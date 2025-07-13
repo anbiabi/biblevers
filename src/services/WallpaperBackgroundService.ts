@@ -290,7 +290,8 @@ class WallpaperBackgroundService {
     // Determine category for fallback
     let category = options.category;
     if (category === 'auto' || !category) {
-      category = this.selectCategoryBasedOnVerse(verse);
+      const selectedCategory = this.selectCategoryBasedOnVerse(verse);
+      category = selectedCategory as "nature" | "christmas" | "easter" | "cross" | "spring" | "summer" | "autumn" | "winter" | "auto";
     }
 
     // Get backgrounds for the selected category
