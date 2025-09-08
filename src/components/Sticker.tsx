@@ -33,8 +33,8 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
     }
   };
 
-  // Calculate text size class based on verse length with better space utilization
-  const getTextSizeClass = () => {
+  // Calculate proportional font size with randomization for visual appeal
+  const getProportionalFontSize = () => {
     let text = '';
     
     switch (language) {
@@ -57,12 +57,21 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
         text = verse.text.english;
     }
     
-    // More aggressive text sizing to utilize space better
-    // Use larger fonts and tighter thresholds
-    if (text.length > 200) return 'text-sm leading-tight';
-    if (text.length > 120) return 'text-base leading-tight';
-    if (text.length > 80) return 'text-lg leading-tight';
-    return 'text-xl leading-tight';
+    // Base font size calculation - proportional to available space and inversely to text length
+    // Assume container height of ~140px (37.125mm) and width of ~100px
+    const containerArea = 140 * 100; // Approximate sticker area in pixels
+    const textLength = text.length;
+    
+    // Calculate base font size inversely proportional to text length
+    // More text = smaller font, less text = bigger font
+    let baseFontSize = Math.max(12, Math.min(28, containerArea / (textLength * 25)));
+    
+    // Add randomization factor for visual variety (±15% variation)
+    const randomFactor = 0.85 + (Math.random() * 0.3); // Range: 0.85 to 1.15
+    const finalFontSize = Math.round(baseFontSize * randomFactor);
+    
+    // Ensure minimum and maximum bounds
+    return Math.max(10, Math.min(32, finalFontSize));
   };
   
   const formatReference = () => {
@@ -463,11 +472,14 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
       );
     } else {
       const textContent = renderVerseText();
-      const textSizeClass = getTextSizeClass();
+      const fontSize = getProportionalFontSize();
       
       return (
         <div className="flex flex-col h-full justify-center items-center p-2 print:py-1">
-          <div className={`font-comic ${textSizeClass} font-semibold text-center min-h-0 flex-grow flex items-center justify-center print:text-2xl print:font-bold print:leading-tight print:mb-0`}>
+          <div 
+            className="font-comic font-semibold text-center min-h-0 flex-grow flex items-center justify-center print:text-2xl print:font-bold print:leading-tight print:mb-0"
+            style={{ fontSize: `${fontSize}px`, lineHeight: '1.2' }}
+          >
             {textContent}
           </div>
           <div className="font-comic font-bold text-xs text-center mt-2 print:text-xs print:font-normal print:opacity-70 print:mt-0">
