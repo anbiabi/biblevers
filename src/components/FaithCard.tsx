@@ -62,42 +62,42 @@ const FaithCard: React.FC<FaithCardProps> = ({
     loadBackground();
   }, [verse, useMagicalGarden]);
 
-  // Calculate proportional font size with randomization for visual appeal
-  const getProportionalFontSize = () => {
-    const verseText = renderVerseText();
-    
-    // Base font size calculation - proportional to available space and inversely to text length
-    // Assume larger container for faith cards compared to stickers
-    const containerArea = 300 * 400; // Approximate faith card area in pixels
-    const textLength = verseText.length;
-    
-    // Calculate base font size inversely proportional to text length
-    let baseFontSize = Math.max(16, Math.min(36, containerArea / (textLength * 20)));
-    
-    // Add randomization factor for visual variety (±15% variation)
-    const randomFactor = 0.85 + (Math.random() * 0.3); // Range: 0.85 to 1.15
-    const finalFontSize = Math.round(baseFontSize * randomFactor);
-    
-    // Ensure minimum and maximum bounds
-    return Math.max(14, Math.min(40, finalFontSize));
-  };
-
-  const getReferenceFontSize = () => {
-    const verseFontSize = getProportionalFontSize();
-    // Reference should be about 40% of verse font size
-    return Math.max(10, Math.round(verseFontSize * 0.4));
-  };
-
-  // Dynamic text sizing based on proportional calculation
+  // Dynamic text sizing based on content length
   useEffect(() => {
     const adjustTextSizes = () => {
-      const verseFontSize = getProportionalFontSize();
-      const referenceFontSize = getReferenceFontSize();
+      if (!containerRef.current || !verseRef.current) return;
+      
+      const verseText = renderVerseText();
+      const verseLength = verseText.length;
+      
+      let verseFontSize = 'text-xl';
+      let referenceFontSize = 'text-lg';
+      let commentaryFontSize = 'text-lg';
+      
+      // Adjust verse text size based on length
+      if (verseLength > 300) {
+        verseFontSize = 'text-base';
+      } else if (verseLength > 200) {
+        verseFontSize = 'text-lg';
+      } else if (verseLength > 100) {
+        verseFontSize = 'text-xl';
+      } else {
+        verseFontSize = 'text-2xl';
+      }
+      
+      // Adjust reference and commentary sizes proportionally
+      if (verseFontSize === 'text-base') {
+        referenceFontSize = 'text-sm';
+        commentaryFontSize = 'text-sm';
+      } else if (verseFontSize === 'text-lg') {
+        referenceFontSize = 'text-base';
+        commentaryFontSize = 'text-base';
+      }
       
       setTextSizes({
-        verse: `${verseFontSize}px`,
-        reference: `${referenceFontSize}px`,
-        commentary: `${referenceFontSize}px`
+        verse: verseFontSize,
+        reference: referenceFontSize,
+        commentary: commentaryFontSize
       });
     };
 
@@ -569,25 +569,22 @@ const FaithCard: React.FC<FaithCardProps> = ({
             {/* Verse text - Using handwriting font */}
             <div 
               ref={verseRef}
-              className="text-center font-bold leading-tight mb-4 sm:mb-6 flex-grow flex items-center justify-center"
+              className={`text-center font-bold ${textSizes.verse} leading-tight mb-4 sm:mb-6 flex-grow flex items-center justify-center`}
               style={{ 
                 fontFamily: randomHandwritingFont,
                 color: '#1f2937',
-                textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
-                fontSize: textSizes.verse,
-                lineHeight: '1.2'
+                textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
               }}>
               "{renderVerseText()}"
             </div>
             
             {/* Reference - Colored and right aligned */}
             <div 
-              className="text-right font-bold mb-4 sm:mb-6"
+              className={`text-right ${textSizes.reference} font-bold mb-4 sm:mb-6`}
               style={{ 
                 fontFamily: 'Inter, sans-serif',
                 color: '#1f2937',
-                textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
-                fontSize: textSizes.reference
+                textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
               }}>
               {formatReference()}
             </div>
@@ -597,11 +594,10 @@ const FaithCard: React.FC<FaithCardProps> = ({
             
             {/* AI-generated contextual phrase - Combined section */}
             <div 
-              className="text-center font-bold italic text-purple-700"
+              className={`text-center font-bold italic ${textSizes.commentary} text-purple-700`}
               style={{ 
                 fontFamily: 'Inter, sans-serif',
-                textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
-                fontSize: textSizes.commentary
+                textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
               }}>
               {getContextualPhrase()}
             </div>
