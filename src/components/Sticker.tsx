@@ -33,7 +33,7 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
     }
   };
 
-  // Calculate text size class based on verse length
+  // Calculate text size class based on verse length with better space utilization
   const getTextSizeClass = () => {
     let text = '';
     
@@ -57,9 +57,12 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
         text = verse.text.english;
     }
     
-    if (text.length > 150) return 'text-xs';
-    if (text.length > 100) return 'text-sm';
-    return 'text-base';
+    // More aggressive text sizing to utilize space better
+    // Use larger fonts and tighter thresholds
+    if (text.length > 200) return 'text-sm leading-tight';
+    if (text.length > 120) return 'text-base leading-tight';
+    if (text.length > 80) return 'text-lg leading-tight';
+    return 'text-xl leading-tight';
   };
   
   const formatReference = () => {
@@ -453,9 +456,9 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
     if (language === 'bilingual') {
       return (
         <>
-          <div className="font-comic text-xs sm:text-sm mb-0.5 text-center print:text-xl print:font-bold print:leading-tight min-h-0 flex-grow flex items-center justify-center">{verse.text.english}</div>
-          <div className="font-comic text-xs sm:text-sm text-center print:text-xl print:font-bold print:leading-tight min-h-0 flex-grow flex items-center justify-center">{verse.text.korean || ''}</div>
-          <div className="font-comic font-bold text-xs mt-0 text-center print:text-xs print:font-normal print:opacity-70 print:mt-0">- {formatReference()}</div>
+          <div className="font-comic text-sm mb-1 text-center print:text-xl print:font-bold print:leading-tight min-h-0 flex-grow flex items-center justify-center px-2">{verse.text.english}</div>
+          <div className="font-comic text-sm text-center print:text-xl print:font-bold print:leading-tight min-h-0 flex-grow flex items-center justify-center px-2">{verse.text.korean || ''}</div>
+          <div className="font-comic font-bold text-xs mt-1 text-center print:text-xs print:font-normal print:opacity-70 print:mt-0">- {formatReference()}</div>
         </>
       );
     } else {
@@ -463,11 +466,11 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
       const textSizeClass = getTextSizeClass();
       
       return (
-        <div className="flex flex-col h-full justify-center items-center p-0 print:py-1">
-          <div className={`font-comic ${textSizeClass} text-center min-h-0 flex-grow flex items-center justify-center print:text-2xl print:font-bold print:leading-tight print:mb-0`}>
+        <div className="flex flex-col h-full justify-center items-center p-2 print:py-1">
+          <div className={`font-comic ${textSizeClass} font-semibold text-center min-h-0 flex-grow flex items-center justify-center print:text-2xl print:font-bold print:leading-tight print:mb-0`}>
             {textContent}
           </div>
-          <div className="font-comic font-bold text-xs text-center mt-0 print:text-xs print:font-normal print:opacity-70 print:mt-0">
+          <div className="font-comic font-bold text-xs text-center mt-2 print:text-xs print:font-normal print:opacity-70 print:mt-0">
             - {formatReference()}
           </div>
         </div>
@@ -477,10 +480,10 @@ const Sticker: React.FC<StickerProps> = ({ verse, language, gradient }) => {
 
   return (
     <div 
-      className="sticker w-full h-full rounded-lg flex flex-col items-center justify-center p-0"
+      className="sticker w-full h-full rounded-lg flex flex-col items-center justify-center"
       style={{ background: gradient }}
     >
-      <div className="flex flex-col h-full w-full justify-center items-center py-1 px-1.5">
+      <div className="flex flex-col h-full w-full justify-center items-center">
         {renderVerseContent()}
       </div>
     </div>
