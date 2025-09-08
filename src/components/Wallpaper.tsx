@@ -58,6 +58,32 @@ const Wallpaper: React.FC<WallpaperProps> = ({ verse, language, category = 'auto
     }
   };
 
+  // Calculate proportional font size with randomization for visual appeal
+  const getProportionalFontSize = () => {
+    const verseText = renderVerseText();
+    
+    // Base font size calculation - proportional to available space and inversely to text length
+    // Assume mobile wallpaper dimensions (9:16 aspect ratio)
+    const containerArea = 300 * 500; // Approximate wallpaper area in pixels
+    const textLength = verseText.length;
+    
+    // Calculate base font size inversely proportional to text length
+    let baseFontSize = Math.max(18, Math.min(42, containerArea / (textLength * 15)));
+    
+    // Add randomization factor for visual variety (±15% variation)
+    const randomFactor = 0.85 + (Math.random() * 0.3); // Range: 0.85 to 1.15
+    const finalFontSize = Math.round(baseFontSize * randomFactor);
+    
+    // Ensure minimum and maximum bounds
+    return Math.max(16, Math.min(48, finalFontSize));
+  };
+
+  const getReferenceFontSize = () => {
+    const verseFontSize = getProportionalFontSize();
+    // Reference should be about 35% of verse font size
+    return Math.max(12, Math.round(verseFontSize * 0.35));
+  };
+
   const formatReference = () => {
     if (language === 'korean') {
       const referenceMap: {[key: string]: string} = {
@@ -459,12 +485,23 @@ const Wallpaper: React.FC<WallpaperProps> = ({ verse, language, category = 'auto
           {/* Content container */}
           <div className="relative z-10 h-full flex flex-col justify-center items-center p-8 text-center">
             {/* Verse text */}
-            <div className="text-white font-serif text-lg leading-relaxed mb-6 max-w-sm drop-shadow-lg">
+            <div 
+              className="text-white font-serif leading-relaxed mb-6 max-w-sm drop-shadow-lg"
+              style={{ 
+                fontSize: `${getProportionalFontSize()}px`,
+                lineHeight: '1.2'
+              }}
+            >
               "{renderVerseText()}"
             </div>
             
             {/* Reference */}
-            <div className="text-white text-sm font-medium drop-shadow-lg">
+            <div 
+              className="text-white font-medium drop-shadow-lg"
+              style={{ 
+                fontSize: `${getReferenceFontSize()}px`
+              }}
+            >
               {formatReference()}
             </div>
           </div>
