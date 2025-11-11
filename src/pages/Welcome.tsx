@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Heart, Printer, Smartphone, Users, Star, CheckCircle, Play, Gift, Coffee, Menu, X, Zap, Globe, Download, Palette } from "lucide-react";
+import { ArrowRight, Heart, Printer, Smartphone, Users, Star, CheckCircle, Play, Gift, Coffee, Menu, X, Zap, Globe, Download, Palette, Mail } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import { ContactForm } from '@/components/ContactForm';
+import { EmailSignup } from '@/components/EmailSignup';
 
 const Welcome = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [isContactOpen, setIsContactOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -199,6 +202,9 @@ const Welcome = () => {
           </div>
         </div>
       </section>
+
+      {/* Email Signup Section */}
+      <EmailSignup />
 
       {/* Features Section */}
       <section id="features" className="py-20 px-4 sm:px-6 lg:px-8">
@@ -404,14 +410,24 @@ const Welcome = () => {
           <p className="text-gray-400 mb-4">
             Made with ❤️ for spreading God's Word • Free to use • No account required
           </p>
-          <p className="text-gray-500 text-sm">
-            Questions? Contact us at{' '}
-            <a href="mailto:support@bibleversecreatoor.com" className="text-blue-400 hover:underline">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
+            <Button
+              onClick={() => setIsContactOpen(true)}
+              variant="outline"
+              className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white"
+            >
+              <Mail className="w-4 h-4 mr-2" />
+              Contact Us
+            </Button>
+            <a href="mailto:support@bibleversecreatoor.com" className="text-blue-400 hover:underline text-sm">
               support@bibleversecreatoor.com
             </a>
-          </p>
+          </div>
         </div>
       </footer>
+
+      {/* Contact Form Dialog */}
+      <ContactForm open={isContactOpen} onOpenChange={setIsContactOpen} />
     </div>
   );
 };
