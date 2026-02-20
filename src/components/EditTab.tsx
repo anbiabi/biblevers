@@ -1,4 +1,5 @@
 import React from 'react';
+import AdSenseComponent from '@/components/AdSenseComponent';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -83,6 +84,13 @@ const EditTab: React.FC<EditTabProps> = ({
               />
             </CardContent>
           </Card>
+        </div>
+      </div>
+
+      {/* AdSense - Between sections */}
+      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg p-3">
+        <div className="min-h-[90px] flex items-center justify-center">
+          <AdSenseComponent adSlot="mid-edit" />
         </div>
       </div>
 

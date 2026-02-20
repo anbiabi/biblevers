@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AdSenseComponent from '@/components/AdSenseComponent';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Printer, FileText, Leaf } from "lucide-react";
@@ -190,42 +191,60 @@ const PreviewTab: React.FC<PreviewTabProps> = ({
         </CardContent>
       </Card>
 
+      {/* AdSense - Above sheets */}
+      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg p-3">
+        <div className="min-h-[90px] flex items-center justify-center">
+          <AdSenseComponent adSlot="pre-preview" />
+        </div>
+      </div>
+
       <div className="space-y-12">
         {generatedSheets.map((verses, index) => (
-          <div key={index} className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Leaf className="text-orange-500 w-5 h-5" />
-              <h3 className="text-lg font-medium text-orange-700 font-comic">
-                {generationType === 'wallpapers' ? `Wallpaper ${index + 1}` : `Sheet ${index + 1}`}
-              </h3>
+          <React.Fragment key={index}>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Leaf className="text-orange-500 w-5 h-5" />
+                <h3 className="text-lg font-medium text-orange-700 font-comic">
+                  {generationType === 'wallpapers' ? `Wallpaper ${index + 1}` : `Sheet ${index + 1}`}
+                </h3>
+              </div>
+              
+              <div 
+                ref={(el) => sheetRefs.current[index] = el}
+                className="overflow-auto max-w-full shadow-md"
+              >
+                {generationType === 'stickers' ? (
+                  <StickerSheet
+                    verses={verses}
+                    language={language}
+                    randomGradients={randomGradients}
+                    selectedTopics={selectedTopics}
+                  />
+                ) : generationType === 'cards' ? (
+                  <FaithCardSheet
+                    verses={verses}
+                    language={language}
+                    selectedTopics={selectedTopics}
+                  />
+                ) : (
+                  <WallpaperSheet
+                    verses={verses}
+                    language={language}
+                    selectedTopics={selectedTopics}
+                  />
+                )}
+              </div>
             </div>
-            
-            <div 
-              ref={(el) => sheetRefs.current[index] = el}
-              className="overflow-auto max-w-full shadow-md"
-            >
-              {generationType === 'stickers' ? (
-                <StickerSheet
-                  verses={verses}
-                  language={language}
-                  randomGradients={randomGradients}
-                  selectedTopics={selectedTopics}
-                />
-              ) : generationType === 'cards' ? (
-                <FaithCardSheet
-                  verses={verses}
-                  language={language}
-                  selectedTopics={selectedTopics}
-                />
-              ) : (
-                <WallpaperSheet
-                  verses={verses}
-                  language={language}
-                  selectedTopics={selectedTopics}
-                />
-              )}
-            </div>
-          </div>
+
+            {/* AdSense between sheets (show after every 2nd sheet) */}
+            {index > 0 && index % 2 === 1 && index < generatedSheets.length - 1 && (
+              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg p-3">
+                <div className="min-h-[90px] flex items-center justify-center">
+                  <AdSenseComponent adSlot={`between-sheets-${index}`} />
+                </div>
+              </div>
+            )}
+          </React.Fragment>
         ))}
       </div>
       
